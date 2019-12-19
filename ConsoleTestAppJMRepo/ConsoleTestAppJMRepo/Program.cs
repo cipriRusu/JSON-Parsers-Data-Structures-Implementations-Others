@@ -6,8 +6,9 @@ namespace ConsoleTestAppJMRepo
     {
         static void Main(string[] args)
         {
-            var firstvar = "firstTestLine";
+            var firstvar = "EditedFirstLine";
 			var secvar = "secondTestLine";
+			var thirdVar = "ThirdTestLine";
         }
     }
 }
