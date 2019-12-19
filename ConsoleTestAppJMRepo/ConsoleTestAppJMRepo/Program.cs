@@ -8,7 +8,6 @@ namespace ConsoleTestAppJMRepo
         {
             var firstvar = "EditedFirstLine";
 			var secvar = "secondTestLine";
-			var thirdVar = "ThirdTestLine";
         }
     }
 }
