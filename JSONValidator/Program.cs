@@ -9,9 +9,19 @@ namespace JSONValidator
 
         }
 
-        public static bool ValidateJson(string inputTestValue)
+        public static bool ValidateJson(string inputValue)
         {
-            return true;
+            return ValidateJsonString(inputValue);
+        }
+
+        private static bool ValidateJsonString(string inputValue)
+        {
+            for (int i = 0; i < inputValue.Length; i++)
+            {
+                return inputValue[0] == '\"' && inputValue[inputValue.Length - 1] == '\"';
+            }
+
+            return false;
         }
     }
 }

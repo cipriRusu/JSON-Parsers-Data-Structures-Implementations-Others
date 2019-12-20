@@ -12,5 +12,12 @@ namespace JSONValidatorTest
             string inputTestValue = "\"\"";
             Assert.True(Program.ValidateJson(inputTestValue));
         }
+        
+        [Fact]
+        public void ValidateJsonReturnsFalseForQuotationsOneSide()
+        {
+            string inputTestValue = "\"teststring";
+            Assert.False(Program.ValidateJson(inputTestValue));
+        }
     }
 }
