@@ -6,9 +6,19 @@ namespace JSONValidatorTest
 {
     public class ValidateJsonInput
     {
-        public static bool JsonValidator(string inputJsonString)
+        public static bool JsonValidator(string inputJsonValue)
         {
-            return true;
+            return JsonStringValidator(inputJsonValue);
+        }
+
+        private static bool JsonStringValidator(string inputJsonString)
+        {
+            if (inputJsonString.Length > 1)
+            {
+                return (inputJsonString[0] == '\"') && inputJsonString[inputJsonString.Length - 1] == '\"';
+            }
+
+            return false;
         }
     }
 }
