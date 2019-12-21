@@ -6,12 +6,7 @@ namespace JSONValidatorTest
 {
     public class ValidateJsonInput
     {
-        public static bool JsonValidator(string inputJsonValue)
-        {
-            return JsonStringValidator(inputJsonValue);
-        }
-
-        private static bool JsonStringValidator(string inputJsonString)
+        public static bool JsonStringValidator(string inputJsonString)
         {
             if (inputJsonString.Length > 1)
             {

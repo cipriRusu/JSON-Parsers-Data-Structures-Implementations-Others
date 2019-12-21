@@ -9,14 +9,14 @@ namespace JSONValidatorTest
         public void JsonValidatorReturnsTrueForEmptyCorrectJsonString()
         {
             var inputJsonString = "\"\"";
-            Assert.True(ValidateJsonInput.JsonValidator(inputJsonString));
+            Assert.True(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
 
         [Fact]
         public void JsonValidatorReturnsFalseForAbsentQuotations()
         {
             var inputJsonString = "";
-            Assert.False(ValidateJsonInput.JsonValidator(inputJsonString));
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
     }
 }
