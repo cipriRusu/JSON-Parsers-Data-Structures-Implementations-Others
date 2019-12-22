@@ -8,12 +8,12 @@ namespace JSONValidatorTest
     {
         public static bool JsonStringValidator(string inputJsonString)
         {
-            if (inputJsonString.Length > 1)
-            {
-                return (inputJsonString[0] == '\"') && inputJsonString[inputJsonString.Length - 1] == '\"';
-            }
+            return IsStringDelimitedByQuotes(inputJsonString);
+        }
 
-            return false;
+        private static bool IsStringDelimitedByQuotes(string input)
+        {
+            return input[0].Equals('"') && input[input.Length - 1].Equals('"') ? true : false;
         }
     }
 }

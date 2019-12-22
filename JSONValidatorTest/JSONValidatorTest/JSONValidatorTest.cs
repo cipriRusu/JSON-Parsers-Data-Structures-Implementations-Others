@@ -3,20 +3,34 @@ using Xunit;
 
 namespace JSONValidatorTest
 {
-    public class JSONValidatorTest
+    public class ValidateJsonInputTest
     {
         [Fact]
-        public void JsonValidatorReturnsTrueForEmptyCorrectJsonString()
+        public void JsonStringValidatorReturnsFalseForAbsentQuotations()
         {
-            var inputJsonString = "\"\"";
-            Assert.True(ValidateJsonInput.JsonStringValidator(inputJsonString));
+            var inputJsonString = "InputString";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
 
         [Fact]
-        public void JsonValidatorReturnsFalseForAbsentQuotations()
+        public void JsonStringValidatorReturnsFalseForAbsentQLeft()
         {
-            var inputJsonString = "";
+            var inputJsonString = "\"InputString";
             Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsFalseForAbsentQRight()
+        {
+            var inputJsonString = "InputString\"";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsTrueForPresentQuotations()
+        {
+            var inputJsonString = "\"InputString\"";
+            Assert.True(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
     }
 }
