@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json.Bson;
 using Xunit;
 
 namespace JSONValidatorTest
@@ -52,6 +51,20 @@ namespace JSONValidatorTest
         public void JsonStringValidatorReturnsFalseForMultipleEscapeSequencesOneValidOneInvalid()
         {
             var inputJsonString = "\"I\\nput\\String\"";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsTrueForValidUnicodeValue()
+        {
+            var inputJsonString = "\"\\u009A\\u009a\"";
+            Assert.True(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsFalseForInvalidUnicodeValue()
+        {
+            var inputJsonString = "\"\\u009X\\u009x\"";
             Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Text;
 
 namespace JSONValidatorTest
@@ -22,8 +22,45 @@ namespace JSONValidatorTest
             {
                 return false;
             }
-            
+
+            if (IsUnicodeValuePresent(inputJsonString))
+            {
+                return IsUnicodeValueValid(inputJsonString);
+            }
+
             return true;
+        }
+
+        private static bool IsUnicodeValueValid(string input)
+        {
+            const int PREFIXOFFSETVALUE = 2;
+            const int UNICODEVALUELENGTH = 4;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == '\\' && input[i + 1] == 'u')
+                {
+                    var extractedUnicode = input.Substring(i+ PREFIXOFFSETVALUE, UNICODEVALUELENGTH);
+                    if (!IsExtractedUnicodeStringValid(extractedUnicode))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private static bool IsUnicodeValuePresent(string input)
+        {
+            for (var i = 0; i < input.Length; i++)
+            {
+                if (input[i] == '\\' && input[i + 1] == 'u')
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool IsEscapeValueValid(string input)
@@ -41,7 +78,7 @@ namespace JSONValidatorTest
 
         private static bool IsEscapeCharValid(char input)
         {
-            var possibleEscapeChars = new char[] { '"', '\\', '/', 'b', 'f', 'n', 'r', 't' };
+            var possibleEscapeChars = new char[] { '"', '\\', '/', 'b', 'f', 'n', 'r', 't', 'u'};
 
             for (int i = 0; i < possibleEscapeChars.Length; i++)
             {
@@ -70,6 +107,20 @@ namespace JSONValidatorTest
             }
 
             return false;
+        }
+
+        private static bool IsExtractedUnicodeStringValid(string input)
+        {
+            input = input.ToLower();
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (!(input[i] >= '0' && input[i] <= '9' || input[i] >= 'a' && input[i] <= 'f'))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
