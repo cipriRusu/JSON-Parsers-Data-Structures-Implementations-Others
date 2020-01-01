@@ -32,9 +32,14 @@ namespace JSONValidatorTest
 
         public static bool JsonNumberValidator(string inputJsonNumber)
         {
-            if (decimal.TryParse(inputJsonNumber, out decimal value))
+            if (decimal.TryParse(inputJsonNumber, out decimal decimalValue))
             {
-                return inputJsonNumber.Length == value.ToString(CultureInfo.CurrentCulture).Length;
+                return inputJsonNumber.Length == decimalValue.ToString(CultureInfo.CurrentCulture).Length;
+            }
+
+            if (float.TryParse(inputJsonNumber, out float floatValue))
+            {
+                return true;
             }
 
             return false;

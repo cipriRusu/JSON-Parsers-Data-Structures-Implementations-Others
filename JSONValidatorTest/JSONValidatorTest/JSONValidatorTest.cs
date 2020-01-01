@@ -102,5 +102,19 @@ namespace JSONValidatorTest
             var inputJsonNumber = "0134";
             Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
         }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsTrueForValidDecimal()
+        {
+            var inputJsonNumber = "12.32";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsTrueForValidExponentialValue()
+        {
+            var inputJsonNumber = "12.123e3";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
     }
 }
