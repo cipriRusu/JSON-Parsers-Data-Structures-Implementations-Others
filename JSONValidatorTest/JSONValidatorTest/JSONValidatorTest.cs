@@ -116,5 +116,33 @@ namespace JSONValidatorTest
             var inputJsonNumber = "12.123e3";
             Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
         }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsTrueForValidExponentialPosExponent()
+        {
+            var inputJsonNumber = "12.123E+2";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsTrueForValidExponentialNegExponent()
+        {
+            var inputJsonNumber = "12.123E-3";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsFalseForValidExponentialNoExponent()
+        {
+            var inputJsonNumber = "12.123E";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsFalseForValidDecimalNoTrailingValues()
+        {
+            var inputJsonNumber = "12.";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
     }
 }
