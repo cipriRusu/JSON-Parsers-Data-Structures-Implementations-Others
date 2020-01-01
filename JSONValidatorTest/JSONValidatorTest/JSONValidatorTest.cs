@@ -67,5 +67,19 @@ namespace JSONValidatorTest
             var inputJsonString = "\"\\u009X\\u009x\"";
             Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
+
+        [Fact]
+        public static void JsonStringValidatorReturnsTrueForComplexValidValue()
+        {
+            var inputJsonString = "\"InputComplexValid\\nValue\\u00AB\"";
+            Assert.True(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public static void JsonStringValidatorReturnsFalseForComplexInvalidValue()
+        {
+            var inputJsonString = "\"InputComplexValid\\gValue\\u00AB\"";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
     }
 }
