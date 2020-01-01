@@ -83,10 +83,24 @@ namespace JSONValidatorTest
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValid()
+        public static void JsonNumberValidatorReturnsTrueForValidPositiveInteger()
         {
             var inputJsonNumber = "126";
             Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsTrueForValidNegativeInteger()
+        {
+            var inputJsonNumber = "-121";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+        }
+
+        [Fact]
+        public static void JsonNumberValidatorReturnsFalseForIntegerWithLeadingZero()
+        {
+            var inputJsonNumber = "0134";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
         }
     }
 }

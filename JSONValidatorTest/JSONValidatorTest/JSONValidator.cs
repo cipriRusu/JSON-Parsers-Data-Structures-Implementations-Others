@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace JSONValidatorTest
 {
@@ -31,7 +32,12 @@ namespace JSONValidatorTest
 
         public static bool JsonNumberValidator(string inputJsonNumber)
         {
-            return true;
+            if (decimal.TryParse(inputJsonNumber, out decimal value))
+            {
+                return inputJsonNumber.Length == value.ToString(CultureInfo.CurrentCulture).Length;
+            }
+
+            return false;
         }
 
         private static bool IsUnicodeValueValid(string input)
