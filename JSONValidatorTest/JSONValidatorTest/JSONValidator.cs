@@ -29,6 +29,11 @@ namespace JSONValidatorTest
             return true;
         }
 
+        public static bool JsonNumberValidator(string inputJsonNumber)
+        {
+            return true;
+        }
+
         private static bool IsUnicodeValueValid(string input)
         {
             const int PREFIXOFFSETVALUE = 2;
