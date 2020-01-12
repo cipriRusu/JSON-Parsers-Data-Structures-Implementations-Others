@@ -6,6 +6,34 @@ namespace JSONValidatorTest
     public class ValidateJsonInputTest
     {
         [Fact]
+        public void JsonStringValidatorReturnsFalseForInputNullValue()
+        {
+            string inputJsonString = null;
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsFalseForEmptyUnicodeString()
+        {
+            var inputJsonString = "\"TestValue\\u\"";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsFalseForSingleQuotationString()
+        {
+            var inputJsonString = "\"";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringTestReturnsFalseForUnderLengthUnicodeString()
+        {
+            var inputJsonString = "\"\\\"";
+            Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
         public void JsonStringValidatorReturnsFalseForAbsentQuotations()
         {
             var inputJsonString = "InputString";
@@ -17,6 +45,13 @@ namespace JSONValidatorTest
         {
             var inputJsonString = "\"InputString";
             Assert.False(ValidateJsonInput.JsonStringValidator(inputJsonString));
+        }
+
+        [Fact]
+        public void JsonStringValidatorReturnsTrueForEmptyString()
+        {
+            var inputJsonString = "\"\"";
+            Assert.True(ValidateJsonInput.JsonStringValidator(inputJsonString));
         }
 
         [Fact]
@@ -83,66 +118,115 @@ namespace JSONValidatorTest
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValidPositiveInteger()
+        public void ValidateJsonNumberInputReturnsFalseForEmptyString()
         {
-            var inputJsonNumber = "126";
-            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValidNegativeInteger()
+        public void ValidateJsonNumberInputReturnsTrueForValidInteger()
         {
-            var inputJsonNumber = "-121";
-            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "1200";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsFalseForIntegerWithLeadingZero()
+        public void ValidateJsonNumberInputReturnsFalseForLeadingZeroInteger()
         {
-            var inputJsonNumber = "0134";
-            Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "01200";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValidDecimal()
+        public void ValidateJsonNumberInputReturnsFalseForLetterInNumber()
         {
-            var inputJsonNumber = "12.32";
-            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "100A23";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValidExponentialValue()
+        public void ValidateJsonNumberInputReturnsTrueForNegativeNumber()
         {
-            var inputJsonNumber = "12.123e3";
-            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "-1200";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValidExponentialPosExponent()
+        public void ValidateJsonNumberInputReturnsTrueForValidNegativeDecimalNumber()
         {
-            var inputJsonNumber = "12.123E+2";
-            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "-12.223";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsTrueForValidExponentialNegExponent()
+        public void ValidateJsonNumberInputReturnsFalseForNoValueAfterDecimalPoint()
         {
-            var inputJsonNumber = "12.123E-3";
-            Assert.True(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "122.";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsFalseForValidExponentialNoExponent()
+        public void ValidateJsonNumberInputReturnsTrueForValidNegativeDecimalWithExponent()
         {
-            var inputJsonNumber = "12.123E";
-            Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "-1222.123313E+34";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]
-        public static void JsonNumberValidatorReturnsFalseForValidDecimalNoTrailingValues()
+        public void ValidateJsonNumberInputReturnsFalseForInvalidNegativeValue()
         {
-            var inputJsonNumber = "12.";
-            Assert.False(ValidateJsonInput.JsonNumberValidator(inputJsonNumber));
+            string JsonNumberInput = "-0121";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsTrueForValidExponentialInteger()
+        {
+            string JsonNumberInput = "111E+3";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsFalseForExponentialNoExponent()
+        {
+            string JsonNumberInput = "121E+";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsFalseForExponentAfterDecimal()
+        {
+            string JsonNumberInput = "122.E+2";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsTrueForExponentOnly()
+        {
+            string JsonNumberInput = "E+23132432423";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsFalseForTwoDecimalPoints()
+        {
+            string JsonNumberInput = "111.111E+2.11";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsFalseForTwoExponents()
+        {
+            string JsonNumberInput = "11.1214E+23E344";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberReturnsFalseForNegativeDoubleLeadingZero()
+        {
+            string JsonNumberInput = "-00.011211+E+23";
+            Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
     }
 }
