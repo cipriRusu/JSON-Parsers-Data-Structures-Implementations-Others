@@ -202,9 +202,9 @@ namespace JSONValidatorTest
         }
 
         [Fact]
-        public void ValidateJsonNumberInputReturnsTrueForExponentOnly()
+        public void ValidateJsonNumberInputReturnsTrueForZeroAndExponent()
         {
-            string JsonNumberInput = "E+23132432423";
+            string JsonNumberInput = "0E+232145566";
             Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
@@ -220,6 +220,13 @@ namespace JSONValidatorTest
         {
             string JsonNumberInput = "11.1214E+23E344";
             Assert.False(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
+        }
+
+        [Fact]
+        public void ValidateJsonNumberInputReturnsTrueForValidNegativeWithLeadingZero()
+        {
+            string JsonNumberInput = "-0.000121E+23";
+            Assert.True(ValidateJsonInput.JsonNumberValidator(JsonNumberInput));
         }
 
         [Fact]

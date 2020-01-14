@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using Xunit.Sdk;
@@ -10,20 +11,19 @@ namespace JSONValidatorTest
     public class ValidateJsonInput
     {
         static readonly Range digit = new Range('0', '9');
+        static readonly Range digitNoZero = new Range('1', '9');
 
         private enum NumberState
         {
             Invalid,
             StartState,
             NaturalNumberState,
-            NegativeNumberState,
-            NegativeNumberStateLeadingZero,
-            NegativeNumberStateNoLeadingZero,
-            NegativeNumberStateLeadingZeroBeforeDecimalPoint,
-            NextToDecimalPointState,
-            AfterDecimalPoint,
+            LeadingZeroState,
+            LeadingNegativeState,
+            DecimalState,
+            FractionalState,
             ExponentialState,
-            PostExponentialState,
+            PostExponentialState
         }
 
         public static bool JsonStringValidator(string inputJsonString)
@@ -72,23 +72,17 @@ namespace JSONValidatorTest
                     case NumberState.NaturalNumberState:
                         currentState = HandleNaturalNumberState(current);
                         break;
-                    case NumberState.NegativeNumberState:
-                        currentState = HandleNegativeNumberState(current);
+                    case NumberState.LeadingZeroState:
+                        currentState = HandleLeadingZeroState(current);
                         break;
-                    case NumberState.NegativeNumberStateLeadingZero:
-                        currentState = HandleNegativeNumberStateLeadingZero(current);
+                    case NumberState.LeadingNegativeState:
+                        currentState = HandleLeadingNegativeState(current);
                         break;
-                    case NumberState.NegativeNumberStateNoLeadingZero:
-                        currentState = HandleNegativeNumberStateNoLeadingZero(current);
+                    case NumberState.DecimalState:
+                        currentState = HandleDecimalState(current);
                         break;
-                    case NumberState.NegativeNumberStateLeadingZeroBeforeDecimalPoint:
-                        currentState = HandleNegativeNumberStateLeadingZeroBeforeDecimalPoint(current);
-                        break;
-                    case NumberState.NextToDecimalPointState:
-                        currentState = HandleNextToDecimalPointState(current);
-                        break;
-                    case NumberState.AfterDecimalPoint:
-                        currentState = HandleAfterDecimalPointState(current);
+                    case NumberState.FractionalState:
+                        currentState = HandleFractionalState(current);
                         break;
                     case NumberState.ExponentialState:
                         currentState = HandleExponentialState(current);
@@ -99,12 +93,12 @@ namespace JSONValidatorTest
                 }
             }
 
-            if (currentState == NumberState.ExponentialState ||
-                currentState == NumberState.NextToDecimalPointState) { return false; }
+            if (currentState == NumberState.DecimalState) return false;
+
+            if (currentState == NumberState.ExponentialState) return false;
 
             return currentState != NumberState.Invalid;
         }
-
 
         private static bool IsUnicodeValueValid(string input)
         {
@@ -222,13 +216,11 @@ namespace JSONValidatorTest
 
         private static NumberState HandleStartState(char current)
         {
-            if (current.Equals('-')) return NumberState.NegativeNumberState;
+            if (current.Equals('-')) return NumberState.LeadingNegativeState;
 
-            if (current.Equals('0')) return NumberState.Invalid;
+            if (current.Equals('0')) return NumberState.LeadingZeroState;
 
             if (digit.Contains(current)) return NumberState.NaturalNumberState;
-
-            if (IsCharacterExponentialSign(current)) return NumberState.ExponentialState;
 
             return NumberState.Invalid;
         }
@@ -237,68 +229,50 @@ namespace JSONValidatorTest
         {
             if (digit.Contains(current)) return NumberState.NaturalNumberState;
 
-            if (current.Equals('.')) return NumberState.NextToDecimalPointState;
+            if (current.Equals('.')) return NumberState.DecimalState;
 
-            if (IsCharacterExponentialSign(current)) return NumberState.ExponentialState;
-
-            return NumberState.Invalid;
-        }
-
-        private static NumberState HandleNegativeNumberState(char current)
-        {
-            if (current.Equals('0')) return NumberState.NegativeNumberStateLeadingZero;
-
-            if (digit.Contains(current)) return NumberState.NegativeNumberStateNoLeadingZero;
+            if (current.Equals('E') || current.Equals('e')) return NumberState.ExponentialState;
 
             return NumberState.Invalid;
         }
 
-        private static NumberState HandleNegativeNumberStateLeadingZero(char current)
+        private static NumberState HandleLeadingZeroState(char current)
         {
-            if (current.Equals('.')) return NumberState.AfterDecimalPoint;
+            if (current == '.') return NumberState.DecimalState;
+
+            if (current == 'E' || current == 'e') return NumberState.ExponentialState;
 
             return NumberState.Invalid;
         }
 
-        private static NumberState HandleNegativeNumberStateNoLeadingZero(char current)
+        private static NumberState HandleLeadingNegativeState(char current)
         {
-            if (digit.Contains(current)) return NumberState.NegativeNumberStateNoLeadingZero;
+            if (digitNoZero.Contains(current)) return NumberState.NaturalNumberState;
 
-            if (current == '.') return NumberState.NextToDecimalPointState;
+            if (current == '0') return NumberState.LeadingZeroState;
 
             return NumberState.Invalid;
         }
 
-        private static NumberState HandleNegativeNumberStateLeadingZeroBeforeDecimalPoint(char current)
+        private static NumberState HandleDecimalState(char current)
         {
-            if (digit.Contains(current)) return NumberState.AfterDecimalPoint;
+            if (digit.Contains(current)) return NumberState.FractionalState;
 
             return NumberState.Invalid;
         }
 
-        private static NumberState HandleAfterDecimalPointState(char current)
+        private static NumberState HandleFractionalState(char current)
         {
-            if (digit.Contains(current)) return NumberState.AfterDecimalPoint;
+            if (digit.Contains(current)) return NumberState.FractionalState;
 
-            if (IsCharacterExponentialSign(current)) return NumberState.ExponentialState;
+            if (current == 'E' || current == 'e') return NumberState.ExponentialState;
 
-            return NumberState.Invalid;
-        }
-
-        private static NumberState HandleNextToDecimalPointState(char current)
-        {
-            if (digit.Contains(current)) return NumberState.AfterDecimalPoint;
-
-            if (IsCharacterExponentialSign(current)) return NumberState.Invalid;
-
-            return NumberState.Invalid;
+                return NumberState.Invalid;
         }
 
         private static NumberState HandleExponentialState(char current)
         {
-            if (IsCharacterPlusOrMinus(current)) return NumberState.ExponentialState;
-
-            if (current.Equals('.')) return NumberState.Invalid;
+            if (current == '+' || current == '-') return NumberState.ExponentialState;
 
             if (digit.Contains(current)) return NumberState.PostExponentialState;
 
@@ -309,19 +283,7 @@ namespace JSONValidatorTest
         {
             if (digit.Contains(current)) return NumberState.PostExponentialState;
 
-            if (current.Equals('.')) return NumberState.Invalid;
-
             return NumberState.Invalid;
-        }
-
-        private static bool IsCharacterExponentialSign(char current)
-        {
-            return current == 'E' || current == 'e';
-        }
-
-        private static bool IsCharacterPlusOrMinus(char current)
-        {
-            return current == '+' || current == '-';
         }
     }
 }
