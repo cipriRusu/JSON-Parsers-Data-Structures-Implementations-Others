@@ -171,17 +171,67 @@ namespace JSONValidatorAlternativeVersion
         }
 
         [Fact]
+        public void ChoiceReturnsValidOutputForValidCharAndSequenceNestedInChoice()
+        {
+            var range = new Range('0', '5');
+            var character = new Character('b');
+            var charAndSequenceNestedInChoice = new Choice(new Sequence(character), range);
+
+            Assert.Equal("bb", charAndSequenceNestedInChoice.Match("5bb").RemainingText());
+        }
+
+        [Fact]
+        public void ChoiceReturnValidOutputForValidCharAndSequenceNestedInChoiceReversed()
+        {
+            var range = new Range('0', '5');
+            var character = new Character('b');
+            var charAndSequenceNestedInChoice = new Choice(range, character);
+
+            Assert.Equal("55", charAndSequenceNestedInChoice.Match("b55").RemainingText());
+        }
+
+        [Fact]
         public void ChoiceReturnValidOutputForValidSequenceAndCharNestedInChoice()
         {
             var range = new Range('0', '5');
             var character = new Character('b');
             var sequenceAndCharNestedInChoice =
-                new Choice(new Sequence(range, range, character));
+                new Choice(new Sequence(range, range), character);
 
-            Assert.Equal("", sequenceAndCharNestedInChoice.Match("55b").
+            Assert.Equal("b", sequenceAndCharNestedInChoice.Match("55b").
+                RemainingText());
+        }
+        
+        [Fact]
+        public void ChoiceReturnValidOutputForValidSequenceAndCharNestedInChoiceReversed()
+        {
+            var range = new Range('0', '5');
+            var character = new Character('b');
+            var sequenceAndCharNestedInChoice =
+                new Choice(new Sequence(range, range), character);
+
+            Assert.Equal("55", sequenceAndCharNestedInChoice.Match("b55").
                 RemainingText());
         }
 
+        [Fact]
+        public void ChoiceReturnsValidOuputForValidSequenceAndSequenceNested()
+        {
+            var range = new Range('0', '5');
+            var secRange = new Range('6', '9');
+            var sequenceAndSequenceInChoice = new Choice(new Sequence(range, range), new Sequence(secRange, secRange));
 
+            Assert.Equal("99", sequenceAndSequenceInChoice.Match("5599").RemainingText());
+        }
+
+        [Fact]
+        public void ChoiceReturnsValidOuputForValidSequenceAndSequenceNestedReversed()
+        {
+            var range = new Range('0', '5');
+            var secRange = new Range('6', '9');
+            var sequenceAndSequenceInChoice = new Choice(new Sequence(range, range), new Sequence(secRange, secRange));
+
+            Assert.Equal("55", sequenceAndSequenceInChoice.Match("9955").RemainingText());
+        }
     }
 }
