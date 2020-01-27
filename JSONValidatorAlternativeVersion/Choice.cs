@@ -5,16 +5,15 @@ namespace JSONValidatorAlternativeVersion
     internal class Choice : IPattern
     {
         private readonly IPattern[] patterns;
+
         public Choice(params IPattern[] patterns)
         { this.patterns = patterns; }
 
         public IMatch Match(string text)
         {
-            IMatch match = new Match(text, true);
-
             foreach (var pattern in patterns)
             {
-                match = pattern.Match(match.RemainingText());
+                var match = pattern.Match(text);
 
                 if (match.Success())
                 {
@@ -22,7 +21,7 @@ namespace JSONValidatorAlternativeVersion
                 }
             }
 
-            return match;
+            return new Match(text, false);
         }
     }
 }

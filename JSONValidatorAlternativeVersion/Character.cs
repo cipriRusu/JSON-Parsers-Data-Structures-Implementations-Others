@@ -12,7 +12,7 @@ namespace JSONValidatorAlternativeVersion
         public IMatch Match(string text)
         {
             return !string.IsNullOrEmpty(text)
-                   && text[0] == charPattern
+                   && text[0] == charPattern        
                 ? new Match(text.Substring(1), true)
                 : new Match(text, false);
         }
