@@ -7,11 +7,12 @@ namespace JSONValidatorAlternativeVersion
         private readonly IPattern pattern;
 
         public Many(IPattern pattern)
-        { this.pattern = pattern; }
+        { this.pattern = pattern ?? null; }
 
         public IMatch Match(string text)
         {
             var match = pattern.Match(text);
+
             while (match.Success())
             {
                 match = pattern.Match(match.RemainingText());
