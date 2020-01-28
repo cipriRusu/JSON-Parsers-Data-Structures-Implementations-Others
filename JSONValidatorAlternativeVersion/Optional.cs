@@ -17,12 +17,7 @@ namespace JSONValidatorAlternativeVersion
         {
             var match = currentPattern.Match(text);
 
-            if(match.Success())
-            {
-                return new Match(match.RemainingText(), match.Success());
-            }
-
-            return new Match(text, true);
+            return match.Success() ? match : new Match(text, true);
         }
     }
 }

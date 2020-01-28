@@ -8,17 +8,23 @@ namespace JSONValidatorAlternativeVersion
     {
         private readonly string prefixValue;
         public Text(string prefix)
-        {
-            prefixValue = prefix ?? null;
-        }
+        { prefixValue = prefix; }
 
         public IMatch Match(string text)
         {
-            return text == null || prefixValue == null ? new Match(null, false)
-                : text.Contains(prefixValue) &&
-                text.Substring(0, prefixValue.Length) == prefixValue
+            return !IsAnyValueNull(prefixValue, text) && IsPrefixLeadingString(prefixValue, text)
                 ? new Match(text.Substring(prefixValue.Length), true)
                 : new Match(text, false);
+        }
+
+        private bool IsAnyValueNull(string prefixValue, string text)
+        {
+            return prefixValue == null || text == null;
+        }
+
+        private bool IsPrefixLeadingString(string prefixValue, string text)
+        {
+            return text.Contains(prefixValue) && text.Substring(0, prefixValue.Length).Equals(prefixValue);
         }
     }
 }
