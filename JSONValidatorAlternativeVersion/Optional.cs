@@ -22,7 +22,7 @@ namespace JSONValidatorAlternativeVersion
                 return new Match(match.RemainingText(), match.Success());
             }
 
-            return new Match(text, false);
+            return new Match(text, true);
         }
     }
 }
