@@ -146,5 +146,29 @@ namespace JSONValidatorAlternativeVersion
 
             Assert.Equal("", listTextObject.Match("1; 22  ;\n 333 \t; 22").RemainingText());
         }
+
+        [Fact]
+        public void MatchReturnsFalseForStringComprisedOnlyOfElementsNoSeparators()
+        {
+            var digits = new OneOrMore(new Range('0', '9'));
+            var whitespace = new Many(new Any(" \r\n\t"));
+            var separator = new Sequence(whitespace, new Character(';'), whitespace);
+
+            var listTextObject = new List(digits, separator);
+
+            Assert.False(listTextObject.Match("01234").Success());
+        }
+
+        [Fact]
+        public void ReturnTextReturnsValidStringOutputForElementsNoSeparatorsOnly()
+        {
+            var digits = new OneOrMore(new Range('0', '9'));
+            var whitespace = new Many(new Any(" \r\n\t"));
+            var separator = new Sequence(whitespace, new Character(';'), whitespace);
+
+            var listTextObject = new List(digits, separator);
+
+            Assert.Equal("01234", listTextObject.Match("01234").RemainingText());
+        }
     }
 }

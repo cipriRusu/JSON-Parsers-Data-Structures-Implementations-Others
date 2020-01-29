@@ -8,12 +8,12 @@ namespace JSONValidatorAlternativeVersion
 
         public List(IPattern element, IPattern separator)
         {
-            var listSequence = new Sequence(
-                new Many(
-                    new Choice(
-                        new Sequence(separator, element, separator),
-                        new Sequence(separator, element), element)));
-            this.pattern = listSequence;
+            var alternateSequencePattern =
+                new Sequence(
+                    new Optional(element),
+                    new Many(new Sequence(separator, element)));
+
+            this.pattern = alternateSequencePattern;
         }
 
         public IMatch Match(string text)
