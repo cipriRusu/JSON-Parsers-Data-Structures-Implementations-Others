@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace JSONValidatorAlternativeVersion
 {
@@ -8,12 +10,8 @@ namespace JSONValidatorAlternativeVersion
 
         public List(IPattern element, IPattern separator)
         {
-            var alternateSequencePattern =
-                new Sequence(
-                    new Optional(element),
-                    new Many(new Sequence(separator, element)));
-
-            this.pattern = alternateSequencePattern;
+            pattern = new Sequence(new Optional(element), 
+                new Many(new Sequence(separator, element)));
         }
 
         public IMatch Match(string text)
