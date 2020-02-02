@@ -10,8 +10,7 @@ namespace JSONValidatorAlternativeVersion
 
         public List(IPattern element, IPattern separator)
         {
-            pattern = new Sequence(new Optional(element), 
-                new Many(new Sequence(separator, element)));
+            pattern = new Choice(new Sequence(element, new Many(new Sequence(separator, element))), new Optional(element));
         }
 
         public IMatch Match(string text)
