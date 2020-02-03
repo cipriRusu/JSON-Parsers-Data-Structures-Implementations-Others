@@ -8,14 +8,14 @@ namespace JSONValidatorAlternativeVersion
     public class NumberTest
     {
         [Fact]
-        private void NumberReturnsTrueForValidJsonInputNumericValuesOnly()
+        public void NumberReturnsTrueForValidJsonInputNumericValuesOnly()
         {
             var number = new Number();
             Assert.True(number.Match("1234").Success());
         }
 
         [Fact]
-        private void ReturnTextReturnsEmptyStringForValidValue()
+        public void ReturnTextReturnsEmptyStringForValidValue()
         {
             var number = new Number();
             Assert.Equal("", number.Match("1234").RemainingText());
@@ -96,6 +96,34 @@ namespace JSONValidatorAlternativeVersion
         {
             var number = new Number();
             Assert.True(number.Match("-0.123").Success());
+        }
+
+        [Fact]
+        public void ReturnTextReturnsValidStringForValidNegativeDecimalValue()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("-0.123").RemainingText());
+        }
+
+        [Fact]
+        public void SuccessReturnsTrueForValidExponentialInFractionar()
+        {
+            var number = new Number();
+            Assert.True(number.Match("1231.34E+2").Success());
+        }
+
+        [Fact]
+        public void ReturnTextReturnsEmptyStringForValidExponentialInFractionar()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("1231.34E+2").RemainingText());
+        }
+
+        [Fact]
+        public void SuccessReturnsFalseForInvalidPlacedExponentialValue()
+        {
+            var number = new Number();
+            Assert.False(number.Match("1234.E+234").Success());
         }
     }
 }
