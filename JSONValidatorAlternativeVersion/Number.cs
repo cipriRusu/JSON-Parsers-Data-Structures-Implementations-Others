@@ -21,15 +21,24 @@ namespace JSONValidatorAlternativeVersion
 
             var integer = new Sequence(
                 new Optional(minus),
-                new Optional(new Sequence(zero, point)), 
-                natural); 
+                natural);
 
-            var fractional = new Sequence(point, digits);
+            var exponential = 
+                new Sequence(
+                    exponent,
+                    new Optional(new Choice(plus, minus)),
+                    digits);
 
-            var exponential = new Sequence(exponent, new Choice(plus, minus), digits);
+            var fractional = 
+                new Sequence(
+                    point,
+                    digits);
 
             pattern = 
-                new Sequence(integer, new Optional(fractional), new Optional(exponential));
+                new Sequence(
+                    integer, 
+                    new Optional(fractional),
+                    new Optional(exponential));
         }
 
         public IMatch Match(string text)

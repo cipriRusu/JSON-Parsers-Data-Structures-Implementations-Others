@@ -120,6 +120,20 @@ namespace JSONValidatorAlternativeVersion
         }
 
         [Fact]
+        public void SuccessReturnsTrueForExponentialOnlyValue()
+        {
+            var number = new Number();
+            Assert.True(number.Match("0E+222431").Success());
+        }
+
+        [Fact]
+        public void SuccessReturnsTrueForValidExponentialValueNoPlusMinus()
+        {
+            var number = new Number();
+            Assert.True(number.Match("123.34E32").Success());
+        }
+
+        [Fact]
         public void SuccessReturnsFalseForInvalidPlacedExponentialValue()
         {
             var number = new Number();
