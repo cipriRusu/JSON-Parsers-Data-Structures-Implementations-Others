@@ -25,14 +25,14 @@ namespace JSONValidatorAlternativeVersion
         public void NumberReturnFalseForInvalidJsonInputNumericValuesOnly()
         {
             var number = new Number();
-            Assert.False(number.Match("01234").Success());
+            Assert.True(number.Match("01234").Success());
         }
 
         [Fact]
         public void ReturnTextReturnsValidStringForInvalidInputNumericValuesOnly()
         {
             var number = new Number();
-            Assert.Equal("01234", number.Match("01234").RemainingText());
+            Assert.Equal("1234", number.Match("01234").RemainingText());
         }
 
         [Fact]
@@ -53,14 +53,14 @@ namespace JSONValidatorAlternativeVersion
         public void SuccesReturnsFalseForNegativeAndLeadingZeroValue()
         {
             var number = new Number();
-            Assert.False(number.Match("-01234").Success());
+            Assert.True(number.Match("-01234").Success());
         }
 
         [Fact]
         public void ReturnTextReturnsValidStringForInvalidNegativeInput()
         {
             var number = new Number();
-            Assert.Equal("-01234", number.Match("-01234").RemainingText());
+            Assert.Equal("1234", number.Match("-01234").RemainingText());
         }
 
         [Fact]
@@ -81,14 +81,14 @@ namespace JSONValidatorAlternativeVersion
         public void SuccessReturnsFalseForInvalidNegativeNumberWithDecimal()
         {
             var number = new Number();
-            Assert.False(number.Match("-0123.1").Success());
+            Assert.True(number.Match("-0123.1").Success());
         }
 
         [Fact]
         public void ReturnTextReturnsValidStringForInValidDecimalNumberValue()
         {
             var number = new Number();
-            Assert.Equal("-0123.4", number.Match("-0123.4").RemainingText());
+            Assert.Equal("123.4", number.Match("-0123.4").RemainingText());
         }
 
         [Fact]
@@ -134,10 +134,12 @@ namespace JSONValidatorAlternativeVersion
         }
 
         [Fact]
-        public void SuccessReturnsFalseForInvalidPlacedExponentialValue()
+        public void RemainingTextReturnsValidOutputForWronglyPlacedExponentialValue()
         {
             var number = new Number();
-            Assert.False(number.Match("1234.E+234").Success());
+            IMatch match = number.Match("1234.E+234");
+            Assert.True(match.Success());
+            Assert.Equal(".E+234", match.RemainingText());
         }
     }
 }
