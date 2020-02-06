@@ -31,7 +31,7 @@ namespace JSONValidatorAlternativeVersion
                new Sequence(
                    new Optional(digits),
                    new Any("Ee"),
-                   new Any("+-"),
+                   new Optional(new Any("+-")),
                    digits);
 
             pattern = 

@@ -52,5 +52,33 @@ namespace JSONValidatorAlternativeVersion
             var testRangeObject = new Range('a', 'i');
             Assert.Equal("jfi", testRangeObject.Match("jfi").RemainingText());
         }
+
+        [Fact]
+        public void RangeReturnsTrueForValidExcludedCharacter()
+        {
+            var testRangeObject = new Range('a', 'e', "u");
+            Assert.True(testRangeObject.Match("abcde").Success());
+        }
+
+        [Fact]
+        public void RangeReturnsFullStringOutputForExcludedCharacter()
+        {
+            var testRangeObject = new Range('a', 'e', "cb");
+            Assert.Equal("c1234", testRangeObject.Match("c1234").RemainingText());
+        }
+
+        [Fact]
+        public void RangeReturnsCorrectOutputForExcludedCharacter()
+        {
+            var testRangeObject = new Range('a', 'e', "cb");
+            Assert.Equal("1234", testRangeObject.Match("a1234").RemainingText());
+        }
+
+        [Fact]
+        public void RangeReturnsFalseForValidExcludedCharacterIncludedInString()
+        {
+            var testRangeObject = new Range('a', 'e', "u");
+            Assert.False(testRangeObject.Match("u1234").Success());
+        }
     }
 }

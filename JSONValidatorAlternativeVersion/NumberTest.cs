@@ -8,6 +8,20 @@ namespace JSONValidatorAlternativeVersion
     public class NumberTest
     {
         [Fact]
+        public void NumberReturnsTrueForValidInputMinusZero()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("-0").RemainingText());
+        }
+
+        [Fact]
+        public void ReturnsValidStringForInvalidInputMinusLeadingZero()
+        {
+            var number = new Number();
+            Assert.Equal("12", number.Match("-012").RemainingText());
+        }
+
+        [Fact]
         public void NumberReturnsTrueForValidJsonInputNumericValuesOnly()
         {
             var number = new Number();
