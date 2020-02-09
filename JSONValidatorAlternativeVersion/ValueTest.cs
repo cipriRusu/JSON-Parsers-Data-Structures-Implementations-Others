@@ -144,5 +144,53 @@ namespace JSONValidatorAlternativeVersion
                 array.Match("[121.4566 \"somethingElse\"]").
                 RemainingText());
         }
+
+        [Fact]
+        public void MatchReturnsTrueForEmptyObject()
+        {
+            var obj = new Value();
+            Assert.True(obj.Match("{}").Success());
+        }
+
+        [Fact]
+        public void MatchReturnsTrueForValidSingleElement()
+        {
+            var obj = new Value();
+            Assert.True(obj.Match(
+                "{ \"name\":\"John\" }").
+                Success());
+        }
+
+        [Fact]
+        public void MatchReturnsTrueForValidObjectMultipleElements()
+        {
+            var obj = new Value();
+            Assert.True(obj.Match(
+                "{ \"name\":\"John\", \"age\":30 }").
+                Success());
+        }
+
+        [Fact]
+        public void MatchReturnsFalseForInvalidObjectMissingComma()
+        {
+            var obj = new Value();
+            Assert.False(obj.Match(
+                "{ \"name\":\"John\", \"age\":30 \"car\":null }").
+                Success());
+        }
+
+        [Fact]
+        public void MatchReturnsTrueForValidObjectContainingAllTypesOfValues()
+        {
+            var obj = new Value();
+            Assert.True(obj.Match("{ \"name\": \"John\", \"age\": 30, \"hasCar\": true, \"isIll\": false, \"needsMoney\": null}").Success()); ;
+        }
+
+        [Fact]
+        public void MatchReturnsFalseForInvalidObjectContainingInvalidValue()
+        {
+            var obj = new Value();
+            Assert.False(obj.Match("{ \"name\": \"John\", \"age\": 30, \"hasCar\": true, \"isIll\": fals, \"needsMoney\": null}").Success());
+        }
     }
 }

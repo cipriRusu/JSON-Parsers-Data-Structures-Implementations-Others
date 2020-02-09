@@ -26,11 +26,29 @@ namespace JSONValidatorAlternativeVersion
                     new Text("null"));
 
             var array = new Sequence(
-                openbracket, 
+                openbracket,
                 new List(pattern, new Sequence(comma, whitespace)),
                 closedbracket);
 
+            var objectValues =
+                 new Sequence(
+                     whitespace,
+                     new String(),
+                     whitespace,
+                     separator,
+                     whitespace,
+                     pattern);
+
+            var obj =
+                new Sequence(
+                    openAccolade,
+                    whitespace,
+                    new List(objectValues, comma),
+                    whitespace,
+                    closedAccolade);
+
             pattern.Add(array);
+            pattern.Add(obj);
 
             this.pattern = new Sequence(whitespace, pattern, whitespace);
         }
