@@ -4,10 +4,12 @@ namespace JSONValidatorAlternativeVersion
 {
     internal class Choice : IPattern
     {
-        private readonly IPattern[] patterns;
+        private IPattern[] patterns;
 
         public Choice(params IPattern[] patterns)
-        { this.patterns = patterns; }
+        {
+            this.patterns = patterns;
+        }
 
         public IMatch Match(string text)
         {
@@ -22,6 +24,12 @@ namespace JSONValidatorAlternativeVersion
             }
 
             return new Match(text, false);
+        }
+
+        internal void Add(IPattern array)
+        {
+            System.Array.Resize(ref patterns, patterns.Length + 1);
+            patterns[patterns.Length - 1] = array;
         }
     }
 }

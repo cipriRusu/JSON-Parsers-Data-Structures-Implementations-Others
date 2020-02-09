@@ -201,7 +201,7 @@ namespace JSONValidatorAlternativeVersion
             Assert.Equal("b", sequenceAndCharNestedInChoice.Match("55b").
                 RemainingText());
         }
-        
+
         [Fact]
         public void ChoiceReturnValidOutputForValidSequenceAndCharNestedInChoiceReversed()
         {
