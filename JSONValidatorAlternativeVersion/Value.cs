@@ -9,15 +9,15 @@ namespace JSONValidatorAlternativeVersion
         public readonly IPattern pattern;
         public Value()
         {
-            var openbracket = new Character('[');
-            var closedbracket = new Character(']');
-            var openAccolade = new Character('{');
-            var closedAccolade = new Character('}');
-            var comma = new Character(',');
-            var separator = new Character(':');
             var whitespace = new Many(new Any(" \n\r\t"));
+            var openbracket = new Sequence(whitespace, new Character('['), whitespace);
+            var closedbracket = new Sequence(whitespace, new Character(']'), whitespace);
+            var openAccolade = new Sequence(whitespace, new Character('{'), whitespace);
+            var closedAccolade = new Sequence(whitespace, new Character('}'), whitespace);
+            var separator = new Sequence(whitespace, new Character(':'), whitespace);
+            var comma = new Sequence(new Character(','), whitespace);
 
-            var pattern =
+            var value =
                 new Choice(
                     new String(),
                     new Number(),
@@ -26,31 +26,26 @@ namespace JSONValidatorAlternativeVersion
                     new Text("null"));
 
             var array = new Sequence(
-                openbracket,
-                new List(pattern, new Sequence(comma, whitespace)),
-                closedbracket);
+                openbracket, new List(value, comma), closedbracket);
 
-            var objectValues =
-                 new Sequence(
-                     whitespace,
-                     new String(),
-                     whitespace,
-                     separator,
-                     whitespace,
-                     pattern);
+            var elements =
+                new List(
+                    new Sequence(
+                        whitespace,
+                        new String(),
+                        separator, 
+                        value), 
+                    comma);
 
-            var obj =
-                new Sequence(
-                    openAccolade,
-                    whitespace,
-                    new List(objectValues, comma),
-                    whitespace,
-                    closedAccolade);
+            var obj = new Sequence(
+                openAccolade,
+                elements,
+                closedAccolade);
 
-            pattern.Add(array);
-            pattern.Add(obj);
+            value.Add(array);
+            value.Add(obj);
 
-            this.pattern = new Sequence(whitespace, pattern, whitespace);
+            this.pattern = new Sequence(whitespace, value, whitespace);
         }
 
         public IMatch Match(string text)
