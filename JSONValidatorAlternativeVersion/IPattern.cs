@@ -2,7 +2,7 @@
 
 namespace JSONValidatorAlternativeVersion
 {
-    interface IPattern
+    public interface IPattern
     {
         IMatch Match(string text);
     }

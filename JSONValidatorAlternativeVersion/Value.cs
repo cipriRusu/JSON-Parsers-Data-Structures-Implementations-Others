@@ -4,7 +4,7 @@ using System.Text;
 
 namespace JSONValidatorAlternativeVersion
 {
-    class Value : IPattern
+    public class Value : IPattern
     {
         public readonly IPattern pattern;
         public Value()
@@ -33,8 +33,8 @@ namespace JSONValidatorAlternativeVersion
                     new Sequence(
                         whitespace,
                         new String(),
-                        separator, 
-                        value), 
+                        separator,
+                        value),
                     comma);
 
             var obj = new Sequence(

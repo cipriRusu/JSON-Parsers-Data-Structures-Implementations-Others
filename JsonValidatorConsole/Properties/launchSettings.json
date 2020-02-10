@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "JsonValidatorConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\sysuser\\Desktop\\jsonTest.txt"
+    }
+  }
+}
