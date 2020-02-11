@@ -16,8 +16,8 @@ namespace JsonValidatorConsole
         {
             var jsonValueValidator = new Value();
 
-            return jsonValueValidator.Match(textContent).Success() &&
-                jsonValueValidator.Match(textContent).RemainingText().Length == 0;
+            return !jsonValueValidator.Match(textContent).Success() ? 
+                false : jsonValueValidator.Match(textContent).RemainingText().Length == 0;
         }
     }
 }
