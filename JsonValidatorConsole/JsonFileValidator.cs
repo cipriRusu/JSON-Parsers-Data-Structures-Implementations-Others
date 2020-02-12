@@ -10,7 +10,9 @@ namespace JsonValidatorConsole
         private readonly string textContent;
 
         public JsonValidator(string importedTextContent)
-        { textContent = importedTextContent; }
+        {
+            textContent = importedTextContent; 
+        }
 
         public bool IsValid()
         {
