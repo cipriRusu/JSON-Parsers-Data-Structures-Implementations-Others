@@ -8,30 +8,26 @@ namespace ArrayImplementation
     {
         private const int initialSize = 4;
         private int[] contained;
-        private int count = 0;
+        public int Count { get; private set; } = 0;
+
+        public int this[int index]
+        {
+            get { return index < Count ? contained[index] : -1; }
+            set => contained[index] = value;
+        }
 
         public IntArray()
-        { contained = new int[initialSize]; }
+        {
+            contained = new int[initialSize];
+            Array.Fill(contained, -1);
+        }
 
         public void Add(int input)
         {
             EnsureCapacity();
 
-            contained[count] = input;
-            count++;
-        }
-
-        public int Count()
-        { return count; }
-
-        public int Element(int index)
-        {
-            return count > index ? contained[index] : -1;
-        }
-
-        public void SetElement(int index, int newElement)
-        {
-            contained[index] = newElement;
+            contained[Count] = input;
+            Count++;
         }
 
         public bool Contains(int expectedElement)
@@ -43,7 +39,7 @@ namespace ArrayImplementation
         {
             for (int i = 0; i < contained.Length; i++)
             {
-                if (contained[i] == value && count > 0)
+                if (contained[i] == value && Count > 0)
                 {
                     return i;
                 }
@@ -56,15 +52,15 @@ namespace ArrayImplementation
         {
             EnsureCapacity();
 
-            Array.Copy(contained, index, contained, index + 1, 
+            Array.Copy(contained, index, contained, index + 1,
                 contained.Length - index - 1);
             contained[index] = element;
-            count++;
+            Count++;
         }
 
         public void Clear()
         {
-            count = 0;
+            Count = 0;
         }
 
         public void Remove(int element)
@@ -79,16 +75,16 @@ namespace ArrayImplementation
 
         public void RemoveAt(int index)
         {
-            Array.Copy(contained, index + 1, contained, 
+            Array.Copy(contained, index + 1, contained,
                 index, contained.Length - index - 2);
-            count--;
+            Count--;
         }
 
         private void EnsureCapacity()
         {
-            if (count == contained.Length)
+            if (Count == contained.Length)
             {
-                Array.Resize(ref contained, count * 2);
+                Array.Resize(ref contained, Count * 2);
             }
         }
     }

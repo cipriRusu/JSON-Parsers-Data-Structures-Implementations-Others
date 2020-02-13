@@ -6,14 +6,6 @@ namespace ArrayImplementation
     public class IntArrayTest
     {
         [Fact]
-        public void AddedElementIsPresentIntoArray()
-        {
-            var testArray = new IntArray();
-            testArray.Add(1);
-            Assert.Equal(1, testArray.Count());
-        }
-
-        [Fact]
         public void ElementReturnsProperValueForGivenIndex()
         {
             var testArray = new IntArray();
@@ -23,7 +15,7 @@ namespace ArrayImplementation
             testArray.Add(2);
             testArray.Add(5);
 
-            Assert.Equal(9, testArray.Element(2));
+            Assert.Equal(9, testArray[2]);
         }
 
         [Fact]
@@ -36,7 +28,7 @@ namespace ArrayImplementation
             testArray.Add(2);
             testArray.Add(5);
 
-            Assert.Equal(-1, testArray.Element(9));
+            Assert.Equal(-1, testArray[9]);
         }
 
 
@@ -50,9 +42,9 @@ namespace ArrayImplementation
             testArray.Add(2);
             testArray.Add(5);
 
-            testArray.SetElement(2, 21);
+            testArray[2] = 21;
 
-            Assert.Equal(21, testArray.Element(2));
+            Assert.Equal(21, testArray[2]);
         }
 
         [Fact]
@@ -106,7 +98,7 @@ namespace ArrayImplementation
 
             testArray.Insert(3, 21);
 
-            Assert.Equal(21, testArray.Element(3));
+            Assert.Equal(21, testArray[3]);
         }
 
         [Fact]
@@ -139,8 +131,8 @@ namespace ArrayImplementation
 
             testArray.Remove(4);
 
-            Assert.Equal(5, testArray.Element(3));
-            Assert.Equal(-1, testArray.Element(5));
+            Assert.Equal(5, testArray[3]);
+            Assert.Equal(-1, testArray[5]);
         }
 
         [Fact]
@@ -156,7 +148,36 @@ namespace ArrayImplementation
 
             testArray.RemoveAt(3);
 
-            Assert.Equal(10, testArray.Element(3));
+            Assert.Equal(10, testArray[3]);
+        }
+
+        [Fact]
+        public void CountPropertyReturnsProperCountValue()
+        {
+            var testArray = new IntArray();
+            testArray.Add(1);
+
+            Assert.Equal(1, testArray.Count);
+        }
+
+        [Fact]
+        public void IndexerPropertyReturnsProperValueForValidIndex()
+        {
+            var testArray = new IntArray();
+            testArray.Add(1);
+            testArray.Add(4);
+
+            Assert.Equal(4, testArray[1]);
+        }
+
+        [Fact]
+        public void IndexerPropertySetsProperValueToArrayIndex()
+        {
+            var testArray = new IntArray();
+            testArray.Add(1);
+            testArray[0] = 4;
+
+            Assert.Equal(4, testArray[0]);
         }
     }
 }
