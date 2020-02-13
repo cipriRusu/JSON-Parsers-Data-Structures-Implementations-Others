@@ -8,18 +8,18 @@ namespace ArrayImplementation
     {
         private const int initialSize = 4;
         private int[] contained;
+        
+        public IntArray()
+        {
+            contained = new int[initialSize];
+        }
+
         public int Count { get; private set; } = 0;
 
         public int this[int index]
         {
             get { return index < Count ? contained[index] : -1; }
             set => contained[index] = value;
-        }
-
-        public IntArray()
-        {
-            contained = new int[initialSize];
-            Array.Fill(contained, -1);
         }
 
         public void Add(int input)
