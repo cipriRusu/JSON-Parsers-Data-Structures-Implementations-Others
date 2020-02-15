@@ -8,7 +8,7 @@ namespace ArrayImplementation
     {
         private const int initialSize = 4;
         private int[] contained;
-        
+
         public IntArray()
         {
             contained = new int[initialSize];
@@ -22,7 +22,7 @@ namespace ArrayImplementation
             set => contained[index] = value;
         }
 
-        public void Add(int input)
+        public virtual void Add(int input)
         {
             EnsureCapacity();
 
@@ -30,7 +30,7 @@ namespace ArrayImplementation
             Count++;
         }
 
-        public bool Contains(int expectedElement)
+        public virtual bool Contains(int expectedElement)
         {
             return IndexOf(expectedElement) != -1;
         }
@@ -48,7 +48,7 @@ namespace ArrayImplementation
             return -1;
         }
 
-        public void Insert(int index, int element)
+        public virtual void Insert(int index, int element)
         {
             EnsureCapacity();
 
@@ -75,8 +75,17 @@ namespace ArrayImplementation
 
         public void RemoveAt(int index)
         {
-            Array.Copy(contained, index + 1, contained,
+            if (Count > initialSize)
+            {
+                Array.Copy(contained, index + 1, contained,
                 index, contained.Length - index - 2);
+            }
+            else
+            {
+                Array.Copy(contained, index + 1, contained, index,
+                    contained.Length - index - 1);
+            }
+
             Count--;
         }
 
