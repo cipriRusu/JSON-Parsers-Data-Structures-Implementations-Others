@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ArrayImplementation
 {
@@ -16,7 +14,7 @@ namespace ArrayImplementation
 
         public int Count { get; private set; } = 0;
 
-        public int this[int index]
+        public virtual int this[int index]
         {
             get { return index < Count ? contained[index] : -1; }
             set => contained[index] = value;
@@ -37,12 +35,9 @@ namespace ArrayImplementation
 
         public int IndexOf(int value)
         {
-            for (int i = 0; i < contained.Length; i++)
+            for (int i = 0; i <= Count; i++)
             {
-                if (contained[i] == value && Count > 0)
-                {
-                    return i;
-                }
+                if (this[i] == value) return i;
             }
 
             return -1;
@@ -53,7 +48,8 @@ namespace ArrayImplementation
             EnsureCapacity();
 
             Array.Copy(contained, index, contained, index + 1,
-                contained.Length - index - 1);
+            contained.Length - index - 1);
+
             contained[index] = element;
             Count++;
         }
@@ -73,18 +69,10 @@ namespace ArrayImplementation
             }
         }
 
-        public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
-            if (Count > initialSize)
-            {
-                Array.Copy(contained, index + 1, contained,
-                index, contained.Length - index - 2);
-            }
-            else
-            {
-                Array.Copy(contained, index + 1, contained, index,
-                    contained.Length - index - 1);
-            }
+            Array.Copy(contained, index + 1, contained,
+            index, contained.Length - index - 1);
 
             Count--;
         }

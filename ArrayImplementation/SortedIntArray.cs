@@ -1,37 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ArrayImplementation
 {
     internal class SortedIntArray : IntArray
     {
+        public override int this[int index]
+        {
+            set
+            {
+                if (CheckIndexAndValue(index - 1, index + 1, value))
+                {
+                    base[index] = value;
+                }
+            }
+        }
+
         public override void Add(int value)
         {
             base.Add(value);
-            Sort();
-        }
 
-        public override void Insert(int index, int element)
-        {
-            base.Insert(index, element);
-            Sort();
-        }
-
-        private void Sort()
-        {
-            for (int i = 0; i < this.Count - 1; i++)
+            for (int j = Count - 1; j > 0; j--)
             {
-                for (int j = 0; j < this.Count - i - 1; j++)
+                if (this[j] >= this[j - 1])
                 {
-                    if (this[j] > this[j + 1])
-                    {
-                        var temp = this[j];
-                        this[j] = this[j + 1];
-                        this[j + 1] = temp;
-                    }
+                    return;
                 }
+
+                Swap(j - 1, j);
             }
+        }
+
+        public override void Insert(int index, int value)
+        {
+            if (CheckIndexAndValue(index - 1, index, value))
+            {
+                base.Insert(index, value);
+            }
+        }
+
+        private bool CheckIndexAndValue(int firstIndex, int secondIndex, int value)
+        {
+            return 
+                !(secondIndex < 0 || secondIndex > Count) ? 
+                (firstIndex < 0 || this[firstIndex] <= value) && 
+                (secondIndex == Count || value <= this[secondIndex]) : false;
+        }
+
+        private void Swap(int i, int j)
+        {
+            var temp = base[j];
+            base[j] = base[i];
+            base[i] = temp;
         }
     }
 }
