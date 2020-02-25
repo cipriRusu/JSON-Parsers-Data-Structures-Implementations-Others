@@ -40,10 +40,10 @@ namespace ArrayImplementation
 
         private bool CheckIndexAndValue(int firstIndex, int secondIndex, int value)
         {
-            return 
-                !(secondIndex < 0 || secondIndex > Count) ? 
-                (firstIndex < 0 || this[firstIndex] <= value) && 
-                (secondIndex == Count || value <= this[secondIndex]) : false;
+            return firstIndex >= -1 && firstIndex < Count &&
+                secondIndex >= 0 && secondIndex <= Count &&
+                (firstIndex < 0 || this[firstIndex] <= value) &&
+                (secondIndex == Count || value <= this[secondIndex]);
         }
 
         private void Swap(int i, int j)
