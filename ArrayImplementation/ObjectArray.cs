@@ -3,9 +3,8 @@ using System.Collections;
 
 namespace ArrayImplementation
 {
-    internal class ObjectArray : IEnumerable
+    public class ObjectArray : IEnumerable
     {
-        private object[] _objects;
         private const int initialSize = 4;
         private object[] contained;
 
@@ -14,21 +13,11 @@ namespace ArrayImplementation
             contained = new object[initialSize];
         }
 
-        public ObjectArray(Object[] objectsArray)
-        {
-            _objects = new Object[objectsArray.Length];
-
-            for(int i = 0; i < objectsArray.Length; i++)
-            {
-                _objects[i] = objectsArray[i];
-            }
-        }
-
         public int Count { get; private set; } = 0;
 
         public object this[int index]
         {
-            get { return contained[index]; }
+            get => contained[index];
             set => contained[index] = value;
         }
 
@@ -52,9 +41,9 @@ namespace ArrayImplementation
 
         public int IndexOf(object input)
         {
-            for (int i = 0; i < contained.Length; i++)
+            for (int i = 0; i < Count; i++)
             {
-                if (object.Equals(contained[i], input))
+                if (Equals(contained[i], input))
                 {
                     return i;
                 }
@@ -66,19 +55,18 @@ namespace ArrayImplementation
         public void Insert(int index, object input)
         {
             EnsureCapacity();
-            if (index < Count)
-            {
-                Array.Copy(contained, index, contained, index + 1,
-                    contained.Length - index - 1);
+            if (index >= Count) { return; }
 
-                contained[index] = input;
-                Count++;
-            }
+            Array.Copy(contained, index, contained, index + 1,
+                contained.Length - index - 1);
+
+            contained[index] = input;
+            Count++;
         }
 
         public void Remove(object input)
         {
-            var index = IndexOf(input);
+            int index = IndexOf(input);
 
             if (index != -1)
             {
@@ -88,18 +76,12 @@ namespace ArrayImplementation
 
         public void RemoveAt(int index)
         {
-            if (index < Count)
-            {
-                Array.Copy(contained, index + 1, contained,
-                index, contained.Length - index - 1);
+            if (index >= Count) { return; }
 
-                Count--;
-            }
-        }
+            Array.Copy(contained, index + 1, contained,
+            index, contained.Length - index - 1);
 
-        public IEnumerator GetEnumerator()
-        {
-            return new ObjectEnumerator(_objects);
+            Count--;
         }
 
         private void EnsureCapacity()
@@ -107,6 +89,18 @@ namespace ArrayImplementation
             if (Count == contained.Length)
             {
                 Array.Resize(ref contained, Count * 2);
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                var value = contained[i];
+                if (i < Count)
+                {
+                    yield return value;
+                }
             }
         }
     }

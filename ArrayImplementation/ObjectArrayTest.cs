@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace ArrayImplementation
 {
@@ -388,7 +389,7 @@ namespace ArrayImplementation
         public void ObjectArrayRemoveAtRemovesIntegerFromHeterogenous()
         {
             var objarr = new ObjectArray();
-            
+
             objarr.Add("one");
             objarr.Add(2);
             objarr.Add(3.0);
@@ -409,6 +410,63 @@ namespace ArrayImplementation
             objarr.Remove(3F);
 
             Assert.NotEqual(3F, objarr[2]);
+        }
+
+        [Fact]
+        public void ObjectArrayReturnsForEmptyUninitializedArray()
+        {
+            var objarr = new ObjectArray { };
+
+            Assert.Equal(0, objarr.Count);
+        }
+
+        [Fact]
+        public void ObjectArrayGetEnumeratorReturnsValidValue()
+        {
+            var objarr = new ObjectArray { 3, 4, "test", 4.0 };
+
+            var objarrtestenum = objarr.GetEnumerator();
+            objarrtestenum.MoveNext();
+
+            Assert.Equal(3, objarrtestenum.Current);
+        }
+
+        [Fact]
+        public void ObjectArrayGetEnumeratorReturnsValidValueAfterSeveralInvokes()
+        {
+            var objarr = new ObjectArray { 3, 4, "test", 4.0 };
+
+            var objarrtestenum = objarr.GetEnumerator();
+            objarrtestenum.MoveNext();
+            objarrtestenum.MoveNext();
+
+            Assert.Equal(4, objarrtestenum.Current);
+        }
+
+        [Fact]
+        public void ObjectArrayGetEnumeratorReturnsTrueForInsideArray()
+        {
+            var objarr = new ObjectArray { 3, 4, "test", 4.0 };
+
+            var objarrtestenum = objarr.GetEnumerator();
+            objarrtestenum.MoveNext();
+            objarrtestenum.MoveNext();
+
+            Assert.True(objarrtestenum.MoveNext());
+        }
+
+        [Fact]
+        public void ObjectArrayGetEnumeratorReturnsFalseForEndOfArray()
+        {
+            var objarr = new ObjectArray { 3, 4, "test", 4.0 };
+
+            var objarrtestenum = objarr.GetEnumerator();
+            objarrtestenum.MoveNext();
+            objarrtestenum.MoveNext();
+            objarrtestenum.MoveNext();
+            objarrtestenum.MoveNext();
+
+            Assert.False(objarrtestenum.MoveNext());
         }
     }
 }
