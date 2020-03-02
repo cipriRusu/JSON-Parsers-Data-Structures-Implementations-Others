@@ -16,13 +16,13 @@ namespace ArrayImplementation
 
         public int Count { get; private set; } = 0;
 
-        public T this[int index]
+        public virtual T this[int index]
         {
             get => contained[index];
             set => contained[index] = value;
         }
 
-        public void Add(T input)
+        public virtual void Add(T input)
         {
             EnsureCapacity();
 
@@ -53,13 +53,12 @@ namespace ArrayImplementation
             return -1;
         }
 
-        public void Insert(int index, T input)
+        public virtual void Insert(int index, T input)
         {
             EnsureCapacity();
-            if (index >= Count) { return; }
 
             Array.Copy(contained, index, contained, index + 1,
-                contained.Length - index - 1);
+               contained.Length - index - 1);
 
             contained[index] = input;
             Count++;
@@ -109,5 +108,7 @@ namespace ArrayImplementation
         {
             return GetEnumerator();
         }
+
+    
     }
 }
