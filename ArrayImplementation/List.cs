@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace ArrayImplementation
 {
-    public class ObjectArray : IEnumerable
+    public class List<T> : IEnumerable<T>
     {
         private const int initialSize = 4;
-        private object[] contained;
+        private T[] contained;
 
-        public ObjectArray()
+        public List()
         {
-            contained = new object[initialSize];
+            contained = new T[initialSize];
         }
 
         public int Count { get; private set; } = 0;
 
-        public object this[int index]
+        public T this[int index]
         {
             get => contained[index];
             set => contained[index] = value;
         }
 
-        public void Add(object input)
+        public void Add(T input)
         {
             EnsureCapacity();
 
@@ -29,7 +30,7 @@ namespace ArrayImplementation
             Count++;
         }
 
-        public bool Contains(object input)
+        public bool Contains(T input)
         {
             return IndexOf(input) != -1;
         }
@@ -39,7 +40,7 @@ namespace ArrayImplementation
             Count = 0;
         }
 
-        public int IndexOf(object input)
+        public int IndexOf(T input)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -52,7 +53,7 @@ namespace ArrayImplementation
             return -1;
         }
 
-        public void Insert(int index, object input)
+        public void Insert(int index, T input)
         {
             EnsureCapacity();
             if (index >= Count) { return; }
@@ -64,7 +65,7 @@ namespace ArrayImplementation
             Count++;
         }
 
-        public void Remove(object input)
+        public void Remove(T input)
         {
             int index = IndexOf(input);
 
@@ -92,7 +93,7 @@ namespace ArrayImplementation
             }
         }
 
-        public IEnumerator GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
             {
@@ -102,6 +103,11 @@ namespace ArrayImplementation
                     yield return value;
                 }
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
