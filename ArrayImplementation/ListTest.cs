@@ -315,7 +315,7 @@ namespace ArrayImplementation
 
             var sourceArray = new int[list.Count];
 
-            Assert.Throws<IndexOutOfRangeException>(() => list.CopyTo(sourceArray, -4));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.CopyTo(sourceArray, -4));
         }
 
         [Fact]

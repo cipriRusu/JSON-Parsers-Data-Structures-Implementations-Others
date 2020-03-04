@@ -18,7 +18,7 @@ namespace ArrayImplementation
 
         public bool IsReadOnly => true;
 
-        public void Add(T input)
+        public void Add(T input)    
         {
             throw new NotSupportedException();
         }

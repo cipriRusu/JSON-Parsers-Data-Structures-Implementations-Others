@@ -14,17 +14,17 @@ namespace ArrayImplementation
             contained = new T[initialSize];
         }
 
-        public int Count { get; private set; } = 0;
+        public virtual int Count { get; private set; } = 0;
 
-        public bool IsReadOnly => false;
+        public virtual bool IsReadOnly => false;
 
-        public T this[int index]
+        public virtual T this[int index]
         {
             get => contained[index];
             set => contained[index] = value;
         }
 
-        public void Add(T input)
+        public virtual void Add(T input)
         {
             EnsureCapacity();
 
@@ -32,32 +32,23 @@ namespace ArrayImplementation
             Count++;
         }
 
-        public bool Contains(T input)
+        public virtual bool Contains(T input)
         {
             return IndexOf(input) != -1;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             Count = 0;
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
+        public virtual void CopyTo(T[] array, int arrayIndex)
         {
-            if (array == null)
-            {
-                throw new NullReferenceException();
-            }
+            CheckNullArray(array);
 
-            if (array.Length < Count)
-            {
-                throw new ArgumentException();
-            }
+            CompareArrayLengthAndCount(array);
 
-            if (arrayIndex < 0 || arrayIndex > array.Length - 1)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            CheckArgumentRange(arrayIndex);
 
             int counter = 0;
             for (int i = arrayIndex; i < array.Length && counter < Count; i++)
@@ -67,7 +58,7 @@ namespace ArrayImplementation
             }
         }
 
-        public int IndexOf(T input)
+        public virtual int IndexOf(T input)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -80,25 +71,20 @@ namespace ArrayImplementation
             return -1;
         }
 
-        public void Insert(int index, T input)
+        public virtual void Insert(int index, T input)
         {
             EnsureCapacity();
+            
+            CheckArgumentRange(index);
 
-            if (index >= 0 && index <= contained.Length)
-            {
-                Array.Copy(contained, index, contained, index + 1,
-               contained.Length - index - 1);
+            Array.Copy(contained, index, contained, index + 1,
+           contained.Length - index - 1);
 
-                contained[index] = input;
-                Count++;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            contained[index] = input;
+            Count++;
         }
 
-        public bool Remove(T item)
+        public virtual bool Remove(T item)
         {
             int currentIndex = IndexOf(item);
 
@@ -111,12 +97,9 @@ namespace ArrayImplementation
             return true;
         }
 
-        public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
-            if (index < 0 || index > contained.Length)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            CheckArgumentRange(index);
 
             if (index >= Count) { return; }
 
@@ -156,6 +139,30 @@ namespace ArrayImplementation
             T temp = i;
             i = j;
             j = temp;
+        }
+
+        private void CheckArgumentRange(int index)
+        {
+            if (index < 0 || index > contained.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private static void CheckNullArray(T[] array)
+        {
+            if (array == null)
+            {
+                throw new NullReferenceException();
+            }
+        }
+
+        private void CompareArrayLengthAndCount(T[] array)
+        {
+            if (array.Length < Count)
+            {
+                throw new ArgumentException();
+            }
         }
     }
 }
