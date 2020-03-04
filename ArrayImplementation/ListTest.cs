@@ -10,7 +10,7 @@ namespace ArrayImplementation
         {
             var list = new List<int>();
 
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace ArrayImplementation
 
             list.Add(null);
 
-            Assert.Equal(1, list.Count);
+            Assert.Single(list);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace ArrayImplementation
         {
             var list = new List<string>();
 
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
         }
 
         [Fact]
@@ -97,6 +97,38 @@ namespace ArrayImplementation
         }
 
         [Fact]
+        public void ListCopyToCopiesWholeListInsideArray()
+        {
+            var list = new List<int>();
+            list.Add(4);
+            list.Add(21);
+            list.Add(12);
+            list.Add(3);
+
+            var sourceArray = new int[list.Count];
+            list.CopyTo(sourceArray, 0);
+
+            Assert.Equal(4, sourceArray[0]);
+        }
+
+        [Fact]
+        public void ListCopyToCopiesWholeList()
+        {
+            var list = new List<int>();
+            list.Add(4);
+            list.Add(21);
+            list.Add(6);
+
+            var sourceArray = new int[20];
+
+            list.CopyTo(sourceArray, 4);
+
+            Assert.Equal(0, sourceArray[0]);
+            Assert.Equal(4, sourceArray[4]);
+
+        }
+
+        [Fact]
         public void ListContainsReturnsValidForPresentElement()
         {
             var list = new List<int>();
@@ -105,7 +137,7 @@ namespace ArrayImplementation
             list.Add(2);
             list.Add(9);
 
-            Assert.True(list.Contains(9));
+            Assert.Contains(9, list);
         }
 
         [Fact]
@@ -116,7 +148,7 @@ namespace ArrayImplementation
             list.Add(4);
             list.Add(2);
 
-            Assert.False(list.Contains(3));
+            Assert.DoesNotContain(3, list);
         }
 
         [Fact]
@@ -126,7 +158,7 @@ namespace ArrayImplementation
 
             list.Contains(21);
 
-            Assert.False(list.Contains(21));
+            Assert.DoesNotContain(21, list);
         }
 
         [Fact]
@@ -140,7 +172,7 @@ namespace ArrayImplementation
 
             list.Clear();
 
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
         }
 
         [Fact]
@@ -183,34 +215,51 @@ namespace ArrayImplementation
         }
 
         [Fact]
-        public void ListRemoveRemovesIfElementIsPresent()
-        {
-            var list = new List<int>();
-            list.Add(3);
-            list.Add(5);
-            list.Add(1);
-
-            list.Remove(5);
-
-            Assert.Equal(1, list[1]);
-        }
-        
-        [Fact]
-        public void ListRemoveDoesNotChangeIfElementIsNotPresent()
+        public void ListRemoveReturnsTrueForPresentItem()
         {
             var list = new List<int>();
 
-            list.Add(3);
-            list.Add(8);
+            list.Add(4);
+            list.Add(7);
             list.Add(2);
 
-            list.Remove(5);
-
-            Assert.Equal(8, list[1]);
+            Assert.True(list.Remove(2));
         }
 
         [Fact]
-        public void ListRemoveAtRemovesIfIndexIsValid()
+        public void ListRemoveReturnsFalseForAbsentItem()
+        {
+            var list = new List<int>();
+
+            list.Add(4);
+            list.Add(7);
+            list.Add(2);
+
+            Assert.False(list.Remove(3));
+        }
+
+        [Fact]
+        public void ListRemoveRemovesElementFromList()
+        {
+            var list = new List<int>() { 2, 3, 4, 1 };
+
+            list.Remove(3);
+
+            Assert.DoesNotContain(3, list);
+        }
+
+        [Fact]
+        public void ListRemoveDoesNotChangeListIfElementIsNotPresent()
+        {
+            var list = new List<int>() { 2, 4, 8, 2, 0 };
+
+            list.Remove(7);
+
+            Assert.Equal(5, list.Count);
+        }
+
+        [Fact]
+        public void ListRemovAeAtRemovesIfIndexIsValid()
         {
             var list = new List<int>();
 
@@ -263,6 +312,12 @@ namespace ArrayImplementation
             enumerator.MoveNext();
 
             Assert.False(enumerator.MoveNext());
+        }
+
+        [Fact]
+        public void SwapMethodReturnsProperOutputForIntegerValues()
+        {
+            var test = new List<int>() { 2, 3, 7 };
         }
     }
 }

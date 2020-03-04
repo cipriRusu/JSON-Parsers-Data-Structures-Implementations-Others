@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace ArrayImplementation
 {
@@ -9,7 +10,7 @@ namespace ArrayImplementation
         {
             var sortedList = new SortedList<int>();
 
-            Assert.Equal(0, sortedList.Count);
+            Assert.Empty(sortedList);
         }
 
         [Fact]
@@ -20,7 +21,7 @@ namespace ArrayImplementation
             sortedList.Insert(sortedList.Count, 7);
             sortedList.Insert(0, 9);
 
-            Assert.Equal(1, sortedList.Count);
+            Assert.Single(sortedList);
         }
 
         [Fact]
@@ -31,10 +32,8 @@ namespace ArrayImplementation
             sortedList.Insert(sortedList.Count, "daw");
             sortedList.Insert(0, "jii");
 
-            Assert.Equal(1, sortedList.Count);
+            Assert.Single(sortedList);
         }
-
-        class Test { }
 
         [Fact]
         public void SortedListReturnsValidValueForNegativeAndPositiveValues()
@@ -55,7 +54,7 @@ namespace ArrayImplementation
 
             sortedList.Insert(sortedList.Count, 2);
 
-            Assert.Equal(1, sortedList.Count);
+            Assert.Single(sortedList);
         }
 
         [Fact]
@@ -65,7 +64,7 @@ namespace ArrayImplementation
 
             sortedList.Insert(sortedList.Count, "something");
 
-            Assert.Equal(1, sortedList.Count);
+            Assert.Single(sortedList);
         }
 
         [Fact]
@@ -286,7 +285,7 @@ namespace ArrayImplementation
             sortedList.Add(10);
             sortedList.Add(4);
 
-            Assert.True(sortedList.Contains(10));
+            Assert.Contains(10, sortedList);
         }
 
         [Fact]
@@ -298,19 +297,6 @@ namespace ArrayImplementation
             sortedList.Add(15);
 
             Assert.Equal(0, sortedList.IndexOf(3));
-        }
-
-        [Fact]
-        public void SortedListRemoveWorksAsExpectedForSortedArray()
-        {
-            var sortedList = new SortedList<int>();
-            sortedList.Add(4);
-            sortedList.Add(2);
-            sortedList.Add(10);
-
-            sortedList.Remove(10);
-
-            Assert.Equal(4, sortedList[1]);
         }
 
         [Fact]
@@ -334,7 +320,7 @@ namespace ArrayImplementation
             sortedList.Add(7);
             sortedList.Add(1);
 
-            Assert.False(sortedList.Contains(0));
+            Assert.DoesNotContain(0, sortedList);
         }
 
         [Fact]

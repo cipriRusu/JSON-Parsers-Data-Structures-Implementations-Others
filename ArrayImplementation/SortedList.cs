@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ArrayImplementation
 {
@@ -22,13 +20,19 @@ namespace ArrayImplementation
             base.Add(input);
 
             for (int j = Count - 1; j > 0; j--)
-            { 
+            {
                 if (this[j].CompareTo(this[j - 1]) >= 0)
                 {
                     return;
                 }
 
-                Swap(j - 1, j);
+                T first = base[j - 1];
+                T second = base[j];
+
+                Swap(ref first, ref second);
+
+                base[j - 1] = first;
+                base[j] = second;
             }
         }
 
@@ -38,13 +42,6 @@ namespace ArrayImplementation
             {
                 base.Insert(index, value);
             }
-        }
-
-        private void Swap(int i, int j)
-        {
-            var temp = base[j];
-            base[j] = base[i];
-            base[i] = temp;
         }
 
         private bool CheckIndexAndValue(int firstIndex, int secondIndex, T value)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ArrayImplementation
 {
-    public class List<T> : IEnumerable<T>
+    public class List<T> : IList<T>
     {
         private const int initialSize = 4;
         private T[] contained;
@@ -15,6 +15,8 @@ namespace ArrayImplementation
         }
 
         public int Count { get; private set; } = 0;
+
+        public bool IsReadOnly => false;
 
         public virtual T this[int index]
         {
@@ -38,6 +40,16 @@ namespace ArrayImplementation
         public void Clear()
         {
             Count = 0;
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            int counter = 0;
+            for (int i = arrayIndex; i < array.Length && counter < Count; i++)
+            {
+                array[i] = contained[counter];
+                counter++;
+            }
         }
 
         public int IndexOf(T input)
@@ -64,14 +76,17 @@ namespace ArrayImplementation
             Count++;
         }
 
-        public void Remove(T input)
+        public bool Remove(T item)
         {
-            int index = IndexOf(input);
+            int currentIndex = IndexOf(item);
 
-            if (index != -1)
+            if (currentIndex == -1)
             {
-                RemoveAt(index);
+                return false;
             }
+
+            RemoveAt(currentIndex);
+            return true;
         }
 
         public void RemoveAt(int index)
@@ -80,7 +95,7 @@ namespace ArrayImplementation
 
             Array.Copy(contained, index + 1, contained,
             index, contained.Length - index - 1);
-
+            
             Count--;
         }
 
@@ -96,7 +111,7 @@ namespace ArrayImplementation
         {
             for (int i = 0; i < Count; i++)
             {
-                var value = contained[i];
+                T value = contained[i];
                 if (i < Count)
                 {
                     yield return value;
@@ -108,7 +123,11 @@ namespace ArrayImplementation
         {
             return GetEnumerator();
         }
-
-    
+        public static void Swap<T>(ref T i, ref T j)
+        {
+            T temp = i;
+            i = j;
+            j = temp;
+        }
     }
 }
