@@ -18,13 +18,13 @@ namespace ArrayImplementation
 
         public bool IsReadOnly => false;
 
-        public virtual T this[int index]
+        public T this[int index]
         {
             get => contained[index];
             set => contained[index] = value;
         }
 
-        public virtual void Add(T input)
+        public void Add(T input)
         {
             EnsureCapacity();
 
@@ -44,6 +44,21 @@ namespace ArrayImplementation
 
         public void CopyTo(T[] array, int arrayIndex)
         {
+            if (array == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (array.Length < Count)
+            {
+                throw new ArgumentException();
+            }
+
+            if (arrayIndex < 0 || arrayIndex > array.Length - 1)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
             int counter = 0;
             for (int i = arrayIndex; i < array.Length && counter < Count; i++)
             {
@@ -65,15 +80,22 @@ namespace ArrayImplementation
             return -1;
         }
 
-        public virtual void Insert(int index, T input)
+        public void Insert(int index, T input)
         {
             EnsureCapacity();
 
-            Array.Copy(contained, index, contained, index + 1,
+            if (index >= 0 && index <= contained.Length)
+            {
+                Array.Copy(contained, index, contained, index + 1,
                contained.Length - index - 1);
 
-            contained[index] = input;
-            Count++;
+                contained[index] = input;
+                Count++;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
         }
 
         public bool Remove(T item)
@@ -91,11 +113,16 @@ namespace ArrayImplementation
 
         public void RemoveAt(int index)
         {
+            if (index < 0 || index > contained.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
             if (index >= Count) { return; }
 
             Array.Copy(contained, index + 1, contained,
             index, contained.Length - index - 1);
-            
+
             Count--;
         }
 
@@ -123,6 +150,7 @@ namespace ArrayImplementation
         {
             return GetEnumerator();
         }
+
         public static void Swap<T>(ref T i, ref T j)
         {
             T temp = i;

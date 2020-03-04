@@ -273,20 +273,6 @@ namespace ArrayImplementation
         }
 
         [Fact]
-        public void ListRemoveAtDoesNotRemoveIfIndexIsOutOfRange()
-        {
-            var list = new List<int>();
-
-            list.Add(4);
-            list.Add(5);
-            list.Add(1);
-
-            list.RemoveAt(7);
-
-            Assert.Equal(1, list[2]);
-        }
-
-        [Fact]
         public void ListEnumeratorReturnsTrueForFurtherElementsAhead()
         {
             var list = new List<int>();
@@ -315,9 +301,63 @@ namespace ArrayImplementation
         }
 
         [Fact]
-        public void SwapMethodReturnsProperOutputForIntegerValues()
+        public void CopyingToNullArrayThrowsArgumentNullException()
         {
-            var test = new List<int>() { 2, 3, 7 };
+            var list = new List<int>() { 2, 3, 4 };
+
+            Assert.Throws<NullReferenceException>(() => list.CopyTo(null, 4));
+        }
+
+        [Fact]
+        public void CopyToArrayInvalidIndexThrowsArgumentOutOfRangeException()
+        {
+            var list = new List<int> { 3, 4, 5 };
+
+            var sourceArray = new int[list.Count];
+
+            Assert.Throws<IndexOutOfRangeException>(() => list.CopyTo(sourceArray, -4));
+        }
+
+        [Fact]
+        public void CopyToArrayShortedLengthThrowsArgumentException()
+        {
+            var list = new List<int> { 4, 7, 8 };
+
+            var sourceArray = new int[2];
+
+            Assert.Throws<ArgumentException>(() => list.CopyTo(sourceArray, 1));
+        }
+
+        [Fact]
+        public void InsertIndexOutRangeThrowsArgumentOutOfRangeExceptionOverLength()
+        {
+            var list = new List<int> { 3, 5, 1 };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(9, 6));
+        }
+
+        [Fact]
+        public void InsertIndexOutOfRangeThrowsArgumentOutOfRangeExceptionIndexUnderLength()
+        {
+            var list = new List<int> { 3, 4, 6, 1 };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(-2, 3));
+        }
+
+        [Fact]
+        public void RemoveAtOutOfRangeIndexThrowsArgumentOutOfRangeException()
+        {
+            var list = new List<int> { 4, 6, 1 };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(8));
+        }
+
+        [Fact]
+        public void RemoveAtOutOfRangeIndexThrowsArgumentOurOfRangeExceptionForNegativeIndex()
+        {
+            var list = new List<int> { 4, 1, 4, 6 };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(-4));
         }
     }
 }
