@@ -685,5 +685,21 @@ namespace ArrayAndListImplementation
 
             Assert.Throws<InvalidOperationException>(() => lList.Remove(new Node<int>(10)));
         }
+
+        [Fact]
+        public void RemoveFirstReturnsInvalidOperationExceptionForEmptyList()
+        {
+            var lList = new LinkedList<int>();
+
+            Assert.Throws<InvalidOperationException>(() => lList.RemoveFirst());
+        }
+
+        [Fact]
+        public void RemoveLastReturnsInvalidOperationExceptionForEmptyList()
+        {
+            var lList = new LinkedList<int>();
+
+            Assert.Throws<InvalidOperationException>(()=> lList.RemoveLast());
+        }
     }
 }

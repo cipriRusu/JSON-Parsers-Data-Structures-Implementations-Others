@@ -85,6 +85,8 @@ namespace ArrayAndListImplementation
         public void Clear()
         {
             Count = 0;
+            sentinel.Next = sentinel;
+            sentinel.Previous = sentinel;
         }
 
         public bool Contains(T item)
@@ -142,9 +144,17 @@ namespace ArrayAndListImplementation
             NodeRemove(FindNode(nodeToRemove));
         }
 
-        public void RemoveFirst() => Remove(First);
+        public void RemoveFirst()
+        {
+            InvalidOperationForEmptyList();
+            Remove(First);
+        }
 
-        public void RemoveLast() => Remove(Last);
+        public void RemoveLast()
+        {
+            InvalidOperationForEmptyList();
+            Remove(Last);
+        }
 
         private Node<T> FindNode(Node<T> nodeToFind)
         {
@@ -228,6 +238,14 @@ namespace ArrayAndListImplementation
         {
             if (Count > array.Length)
             { throw new ArgumentException("Number of list elements is greater than array length"); }
+        }
+
+        private void InvalidOperationForEmptyList()
+        {
+            if (Count == 0)
+            {
+                throw new InvalidOperationException("List is Empty");
+            }
         }
 
         private IEnumerable<Node<T>> GetAllNodes()
