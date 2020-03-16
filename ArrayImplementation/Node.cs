@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace ArrayAndListImplementation
+namespace DataStructures
 {
     public class Node<T>
     {

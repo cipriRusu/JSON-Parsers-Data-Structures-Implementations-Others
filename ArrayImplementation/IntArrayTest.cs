@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace ArrayImplementation
+namespace DataStructures
 {
     public class IntArrayTest
     {

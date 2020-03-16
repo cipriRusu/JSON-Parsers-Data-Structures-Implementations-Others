@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ArrayImplementation
+namespace DataStructures
 {
     public class SortedIntArrayTest
     {

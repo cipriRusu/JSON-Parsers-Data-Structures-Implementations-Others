@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ArrayAndListImplementation
+namespace DataStructures
 {
     public class LinkedList<T> : ICollection<T>
     {

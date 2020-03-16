@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ArrayAndListImplementation;
 using Xunit;
 
-namespace ArrayAndListImplementation
+namespace DataStructures
 {
     public class LinkedListTest
     {

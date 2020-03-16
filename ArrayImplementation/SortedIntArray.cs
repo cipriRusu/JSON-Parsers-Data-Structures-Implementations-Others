@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ArrayImplementation
+namespace DataStructures
 {
     internal class SortedIntArray : IntArray
     {

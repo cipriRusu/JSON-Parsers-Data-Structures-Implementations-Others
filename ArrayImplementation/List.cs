@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ArrayImplementation
+namespace DataStructures
 {
     public class List<T> : IList<T>
     {
