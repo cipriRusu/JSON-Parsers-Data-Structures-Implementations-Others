@@ -38,6 +38,18 @@ namespace DataStructures
         }
 
         [Fact]
+        public void DictionaryAddInitializesMultipleElementsIntoSameBucket()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(2, "a");
+            testDict.Add(7, "b");
+
+            Assert.Contains(new KeyValuePair<int, string>(2, "a"), testDict);
+            Assert.Contains(new KeyValuePair<int, string>(7, "b"), testDict);
+        }
+
+        [Fact]
         public void DictionaryAddAddsMultipleElementsInDictionary()
         {
             var testDict = new Dictionary<int, string>(5);
@@ -81,6 +93,49 @@ namespace DataStructures
             testDict.Add(2, "b");
 
             Assert.DoesNotContain(new KeyValuePair<int, string>(1, "a"), testDict);
+        }
+
+        [Fact]
+        public void DictionaryKeysReturnsAllKeysList()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            var resList = new List<int>() { 1, 2, 3, 4 };
+
+            Assert.Equal(testDict.Keys, resList);
+        }
+
+        [Fact]
+        public void DictionaryValuesReturnsAllValuesList()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            var resList = new List<string>() { "a", "b", "c", "d" };
+
+            Assert.Equal(testDict.Values, resList);
+        }
+
+        [Fact]
+        public void DictionaryTvaluePropertyGetterReturnsTkeyValue()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            Assert.Equal("b", testDict[2]);
         }
     }
 }

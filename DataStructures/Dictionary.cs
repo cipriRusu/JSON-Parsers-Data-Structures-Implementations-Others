@@ -25,13 +25,51 @@ namespace DataStructures
 
         public Tvalue this[TKey key]
         {
-            get => throw new NotImplementedException();
+            get
+            {
+                foreach(var element in this)
+                {
+                    if(element.Key.Equals(key))
+                    {
+                        return element.Value;
+                    }
+                }
+
+                return default;
+            }
+
             set => throw new NotImplementedException();
         }
 
-        public ICollection<TKey> Keys => throw new NotImplementedException();
+        public ICollection<TKey> Keys
+        {
+            get
+            {
+                var resCollection = new List<TKey>();
 
-        public ICollection<Tvalue> Values => throw new NotImplementedException();
+                foreach (var element in this)
+                {
+                    resCollection.Add(element.Key);
+                }
+
+                return resCollection;
+            }
+        }
+
+        public ICollection<Tvalue> Values
+        {
+            get
+            {
+                var valuesCollection = new List<Tvalue>();
+
+                foreach (var element in this)
+                {
+                    valuesCollection.Add(element.Value);
+                }
+
+                return valuesCollection;
+            }
+        }
 
         public int Count { get; private set; }
 
@@ -63,9 +101,9 @@ namespace DataStructures
 
         public bool Contains(KeyValuePair<TKey, Tvalue> item)
         {
-            for(var i = 0; i < elements.Length; i++)
+            for (var i = 0; i < elements.Length; i++)
             {
-                if(elements[i].key.Equals(item.Key) && elements[i].value.Equals(item.Value))
+                if (elements[i].key.Equals(item.Key) && elements[i].value.Equals(item.Value))
                 {
                     return true;
                 }
@@ -88,7 +126,7 @@ namespace DataStructures
         {
             for (int i = 0; i < buckets.Length; i++)
             {
-                for(int j = buckets[i]; j != -1; j = elements[j].Next)
+                for (int j = buckets[i]; j != -1; j = elements[j].Next)
                 {
                     yield return new KeyValuePair<TKey, Tvalue>(elements[j].key, elements[j].value);
                 }
