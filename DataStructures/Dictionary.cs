@@ -35,17 +35,18 @@ namespace DataStructures
 
         public int Count { get; private set; }
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public bool IsReadOnly => false;
 
         public void Add(TKey key, Tvalue value)
         {
             var sourceBucketIndex = Math.Abs(key.GetHashCode() % length);
-            var sourceElementIndex = 0;
+            var sourceElementIndex = Count;
 
             elements[sourceElementIndex].key = key;
             elements[sourceElementIndex].value = value;
             elements[sourceElementIndex].Next = buckets[sourceBucketIndex];
             buckets[sourceBucketIndex] = sourceElementIndex;
+            Count++;
         }
 
         public void Add(KeyValuePair<TKey, Tvalue> item)
@@ -62,7 +63,15 @@ namespace DataStructures
 
         public bool Contains(KeyValuePair<TKey, Tvalue> item)
         {
-            throw new NotImplementedException();
+            for(var i = 0; i < elements.Length; i++)
+            {
+                if(elements[i].key.Equals(item.Key) && elements[i].value.Equals(item.Value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool ContainsKey(TKey key)
