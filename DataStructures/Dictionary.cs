@@ -27,9 +27,9 @@ namespace DataStructures
         {
             get
             {
-                foreach(var element in this)
+                foreach (var element in this)
                 {
-                    if(element.Key.Equals(key))
+                    if (element.Key.Equals(key))
                     {
                         return element.Value;
                     }
@@ -38,7 +38,16 @@ namespace DataStructures
                 return default;
             }
 
-            set => throw new NotImplementedException();
+            set
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (elements[i].key.Equals(key))
+                    {
+                        elements[i].value = value;
+                    }
+                }
+            }
         }
 
         public ICollection<TKey> Keys
@@ -70,6 +79,8 @@ namespace DataStructures
                 return valuesCollection;
             }
         }
+
+
 
         public int Count { get; private set; }
 
@@ -114,12 +125,23 @@ namespace DataStructures
 
         public bool ContainsKey(TKey key)
         {
-            throw new NotImplementedException();
+            foreach (var element in this)
+            {
+                if (element.Key.Equals(key))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void CopyTo(KeyValuePair<TKey, Tvalue>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            for(int i = arrayIndex; i < Count; i++)
+            {
+                array[i] = new KeyValuePair<TKey, Tvalue>(elements[i].key, elements[i].value);
+            }
         }
 
         public IEnumerator<KeyValuePair<TKey, Tvalue>> GetEnumerator()
@@ -145,7 +167,18 @@ namespace DataStructures
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out Tvalue value)
         {
-            throw new NotImplementedException();
+            value = default;
+
+            for(int i = 0; i < Count; i++)
+            {
+                if(elements[i].key.Equals(key))
+                {
+                    value = elements[i].value;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
