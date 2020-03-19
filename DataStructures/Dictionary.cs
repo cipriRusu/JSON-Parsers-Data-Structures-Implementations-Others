@@ -26,9 +26,9 @@ namespace DataStructures
 
         public Tvalue this[TKey key]
         {
-            get => elements[GetIndex(key, out int prev)].value;
+            get => elements[GetIndex(key, out _)].value;
 
-            set => elements[GetIndex(key, out int prev)].value = value;
+            set => elements[GetIndex(key, out _)].value = value;
         }
 
         public ICollection<TKey> Keys
@@ -88,7 +88,7 @@ namespace DataStructures
 
         public bool Contains(KeyValuePair<TKey, Tvalue> item)
         {
-            return TryGetValue(item.Key, out Tvalue value);
+            return TryGetValue(item.Key, out _);
         }
 
         public bool ContainsKey(TKey key)
@@ -118,15 +118,22 @@ namespace DataStructures
         public bool Remove(TKey key)
         {
             //Check if Key is present
-            if (!TryGetValue(key, out Tvalue value)) return false;
+            if (!TryGetValue(key, out _)) return false;
 
             var bucketIndex = SourceBucketIndex(key);
 
-            //Check if key is first in bucket
+            //Check and remove if key is first in bucket
             if (GetIndex(key, out int previousIndex) != -1 && previousIndex == -1)
             {
                 elements[buckets[bucketIndex]] = new Element();
                 buckets[bucketIndex]--;
+                Count--;
+            }
+            else
+            {
+                //Check and remove if key is not first in bucket
+                freeIndex = GetIndex(key, out _);
+                elements[GetIndex(key, out _)] = new Element();
                 Count--;
             }
 
@@ -141,10 +148,9 @@ namespace DataStructures
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out Tvalue value)
         {
             value = default;
-
-            if (GetIndex(key, out int previous) != -1)
+            if (GetIndex(key, out _) != -1)
             {
-                value = elements[GetIndex(key, out int prev)].value;
+                value = elements[GetIndex(key, out _)].value;
                 return true;
             }
 
@@ -171,23 +177,6 @@ namespace DataStructures
             }
 
             return -1;
-        }
-
-        private int GetPreviousIndex(TKey key)
-        {
-            var previousIndex = -1;
-
-            for (int i = buckets[SourceBucketIndex(key)]; i != -1; i = elements[i].Next)
-            {
-                if (elements[i].key.Equals(key))
-                {
-                    return previousIndex;
-                }
-
-                previousIndex = i;
-            }
-
-            return previousIndex;
         }
 
         private int SourceBucketIndex(TKey key)

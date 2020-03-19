@@ -341,7 +341,7 @@ namespace DataStructures
         }
 
         [Fact]
-        public void DictionaryRemoveRemovesValueFromDictionaryAndUpdatesIndex()
+        public void DictionaryRemoveRemovesPresentValueFromDictionaryAndUsesEmptySpace()
         {
             var testDict = new Dictionary<int, string>(5);
 
@@ -351,9 +351,23 @@ namespace DataStructures
             testDict.Add(7, "d");
             testDict.Add(12, "e");
 
-            testDict.Remove(12);
+            testDict.Remove(7);
 
-            Assert.DoesNotContain(12, testDict);
+            Assert.DoesNotContain(7, testDict);
+        }
+
+        [Fact]
+        public void DictionaryRemoveRemovesPresentValueNotFirstInBucketAndAddsInEmptySpace()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            testDict.Remove(7);
         }
     }
 }
