@@ -26,9 +26,9 @@ namespace DataStructures
 
         public Tvalue this[TKey key]
         {
-            get => elements[GetElementIndexFromKeyValue(key)].value;
+            get => elements[GetIndex(key, out int prev)].value;
 
-            set => elements[GetElementIndexFromKeyValue(key)].value = value;
+            set => elements[GetIndex(key, out int prev)].value = value;
         }
 
         public ICollection<TKey> Keys
@@ -93,7 +93,7 @@ namespace DataStructures
 
         public bool ContainsKey(TKey key)
         {
-            return GetElementIndexFromKeyValue(key) != -1;
+            return GetIndex(key, out int prev) != -1;
         }
 
         public void CopyTo(KeyValuePair<TKey, Tvalue>[] array, int arrayIndex)
@@ -117,14 +117,17 @@ namespace DataStructures
 
         public bool Remove(TKey key)
         {
+            //Check if Key is present
             if (!TryGetValue(key, out Tvalue value)) return false;
 
             var bucketIndex = SourceBucketIndex(key);
 
-            if (GetPreviousIndex(key) == -1)
+            //Check if key is first in bucket
+            if (GetIndex(key, out int previousIndex) != -1 && previousIndex == -1)
             {
                 elements[buckets[bucketIndex]] = new Element();
                 buckets[bucketIndex]--;
+                Count--;
             }
 
             return true;
@@ -139,9 +142,9 @@ namespace DataStructures
         {
             value = default;
 
-            if (GetElementIndexFromKeyValue(key) != -1)
+            if (GetIndex(key, out int previous) != -1)
             {
-                value = elements[GetElementIndexFromKeyValue(key)].value;
+                value = elements[GetIndex(key, out int prev)].value;
                 return true;
             }
 
@@ -153,14 +156,18 @@ namespace DataStructures
             return GetEnumerator();
         }
 
-        private int GetElementIndexFromKeyValue(TKey key)
+        private int GetIndex(TKey key, out int previousIndex)
         {
+            previousIndex = -1;
+
             for (int i = buckets[SourceBucketIndex(key)]; i != -1; i = elements[i].Next)
             {
                 if (elements[i].key.Equals(key))
                 {
                     return i;
                 }
+
+                previousIndex = i;
             }
 
             return -1;
