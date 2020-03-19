@@ -298,5 +298,62 @@ namespace DataStructures
 
             Assert.Null(output);
         }
+
+        [Fact]
+        public void DictionaryRemoveReturnsFalseForAbsentValue()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            Assert.False(testDict.Remove(5));
+        }
+
+        [Fact]
+        public void DictionaryRemoveReturnsTrueForPresentValue()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            Assert.True(testDict.Remove(3));
+        }
+
+        [Fact]
+        public void DictionaryRemoveRemovesValueFromDictionary()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            testDict.Remove(2);
+
+            Assert.DoesNotContain(2, testDict);
+        }
+
+        [Fact]
+        public void DictionaryRemoveRemovesValueFromDictionaryAndUpdatesIndex()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            testDict.Remove(12);
+
+            Assert.DoesNotContain(12, testDict);
+        }
     }
 }

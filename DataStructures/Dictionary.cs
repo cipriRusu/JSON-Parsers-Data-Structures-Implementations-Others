@@ -13,6 +13,8 @@ namespace DataStructures
 
         private readonly int initialLength;
 
+        private int freeIndex = -1;
+
         public Dictionary(int length = 0)
         {
             initialLength = length;
@@ -115,7 +117,17 @@ namespace DataStructures
 
         public bool Remove(TKey key)
         {
-            throw new NotImplementedException();
+            if (!TryGetValue(key, out Tvalue value)) return false;
+
+            var bucketIndex = SourceBucketIndex(key);
+
+            if (GetPreviousIndex(key) == -1)
+            {
+                elements[buckets[bucketIndex]] = new Element();
+                buckets[bucketIndex]--;
+            }
+
+            return true;
         }
 
         public bool Remove(KeyValuePair<TKey, Tvalue> item)
@@ -152,6 +164,23 @@ namespace DataStructures
             }
 
             return -1;
+        }
+
+        private int GetPreviousIndex(TKey key)
+        {
+            var previousIndex = -1;
+
+            for (int i = buckets[SourceBucketIndex(key)]; i != -1; i = elements[i].Next)
+            {
+                if (elements[i].key.Equals(key))
+                {
+                    return previousIndex;
+                }
+
+                previousIndex = i;
+            }
+
+            return previousIndex;
         }
 
         private int SourceBucketIndex(TKey key)
