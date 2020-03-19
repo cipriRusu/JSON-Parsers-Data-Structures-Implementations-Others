@@ -210,6 +210,25 @@ namespace DataStructures
         }
 
         [Fact]
+        public void DictionaryCopyToCopiesDictionaryKeyValuePairsIntoExternalArrayFurther()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            var sourceArr = new KeyValuePair<int, string>[testDict.Count];
+
+            testDict.CopyTo(sourceArr, 2);
+
+            testDict.TryGetValue(3, out string output);
+
+            Assert.Equal(sourceArr[2].Value, output);
+        }
+
+        [Fact]
         public void DictionaryTryGetValueReturnsTrueForPresentValue()
         {
             var testDict = new Dictionary<int, string>(5);
