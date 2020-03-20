@@ -117,23 +117,25 @@ namespace DataStructures
 
         public bool Remove(TKey key)
         {
-            //Check if Key is present
             if (!TryGetValue(key, out _)) return false;
 
-            var bucketIndex = SourceBucketIndex(key);
+            var currentBucketIndex = SourceBucketIndex(key);
+            var currentElementIndex = GetIndex(key, out int previousIndex);
 
-            //Check and remove if key is first in bucket
-            if (GetIndex(key, out int previousIndex) != -1 && previousIndex == -1)
+            if (previousIndex == -1)
             {
-                elements[buckets[bucketIndex]] = new Element();
-                buckets[bucketIndex]--;
+                SetCurrentElementValues(currentElementIndex);
+
+                if (freeIndex != -1) { freeIndex = currentElementIndex; }
+
+                buckets[currentBucketIndex]--;
                 Count--;
             }
             else
             {
-                //Check and remove if key is not first in bucket
-                freeIndex = GetIndex(key, out _);
-                elements[GetIndex(key, out _)] = new Element();
+                SetCurrentElementValues(currentElementIndex);
+
+                freeIndex = currentElementIndex;
                 Count--;
             }
 
@@ -177,6 +179,13 @@ namespace DataStructures
             }
 
             return -1;
+        }
+
+        private void SetCurrentElementValues(int currentElementIndex)
+        {
+            elements[currentElementIndex].Next = freeIndex;
+            elements[currentElementIndex].key = default;
+            elements[currentElementIndex].value = default;
         }
 
         private int SourceBucketIndex(TKey key)
