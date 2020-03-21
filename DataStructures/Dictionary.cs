@@ -26,9 +26,9 @@ namespace DataStructures
 
         public Tvalue this[TKey key]
         {
-            get => elements[GetIndex(key, out _)].value;
+            get => elements[GetIndex(key, out _)].Value;
 
-            set => elements[GetIndex(key, out _)].value = value;
+            set => elements[GetIndex(key, out _)].Value = value;
         }
 
         public ICollection<TKey> Keys
@@ -67,17 +67,28 @@ namespace DataStructures
 
         public void Add(TKey key, Tvalue value)
         {
-            int sourceBucketIndex = SourceBucketIndex(key);
-            int sourceElementIndex = Count;
+            int bucketIndex = SourceBucketIndex(key);
+            int elementIndex = Count;
 
-            elements[sourceElementIndex].key = key;
-            elements[sourceElementIndex].value = value;
-            elements[sourceElementIndex].Next = buckets[sourceBucketIndex];
-            buckets[sourceBucketIndex] = sourceElementIndex;
+            if (freeIndex != -1)
+            {
+                int nextFreeIndex = elements[freeIndex].Next;
+                elementIndex = freeIndex;
+                freeIndex = nextFreeIndex;
+            }
+
+            elements[elementIndex].Key = key;
+            elements[elementIndex].Value = value;
+            elements[elementIndex].Next = buckets[bucketIndex];
+            buckets[bucketIndex] = elementIndex;
+
             Count++;
         }
 
-        public void Add(KeyValuePair<TKey, Tvalue> item) => Add(item.Key, item.Value);
+        public void Add(KeyValuePair<TKey, Tvalue> item)
+        {
+            Add(item.Key, item.Value);
+        }
 
         public void Clear()
         {
@@ -93,14 +104,14 @@ namespace DataStructures
 
         public bool ContainsKey(TKey key)
         {
-            return GetIndex(key, out int prev) != -1;
+            return GetIndex(key, out _) != -1;
         }
 
         public void CopyTo(KeyValuePair<TKey, Tvalue>[] array, int arrayIndex)
         {
             for (int i = arrayIndex; i < Count; i++)
             {
-                array[i] = new KeyValuePair<TKey, Tvalue>(elements[i].key, elements[i].value);
+                array[i] = new KeyValuePair<TKey, Tvalue>(elements[i].Key, elements[i].Value);
             }
         }
 
@@ -110,41 +121,45 @@ namespace DataStructures
             {
                 for (int j = buckets[i]; j != -1; j = elements[j].Next)
                 {
-                    yield return new KeyValuePair<TKey, Tvalue>(elements[j].key, elements[j].value);
+                    yield return new KeyValuePair<TKey, Tvalue>(elements[j].Key, elements[j].Value);
                 }
             }
         }
 
         public bool Remove(TKey key)
         {
-            if (!TryGetValue(key, out _)) return false;
-
-            var currentBucketIndex = SourceBucketIndex(key);
-            var currentElementIndex = GetIndex(key, out int previousIndex);
-
-            if (previousIndex == -1)
+            if (!TryGetValue(key, out _))
             {
-                SetCurrentElementValues(currentElementIndex);
+                return false;
+            }
 
-                if (freeIndex != -1) { freeIndex = currentElementIndex; }
+            int bucket = SourceBucketIndex(key);
+            int index = GetIndex(key, out int previousIndex);
 
-                buckets[currentBucketIndex]--;
-                Count--;
+            if (previousIndex != -1)
+            {
+                elements[previousIndex].Next = elements[index].Next;
             }
             else
             {
-                SetCurrentElementValues(currentElementIndex);
-
-                freeIndex = currentElementIndex;
-                Count--;
+                buckets[bucket] = elements[index].Next;
             }
 
+            elements[index].Next = freeIndex;
+            freeIndex = index;
+            Count--;
             return true;
         }
 
         public bool Remove(KeyValuePair<TKey, Tvalue> item)
         {
-            throw new NotImplementedException();
+            if (!ContainsKey(item.Key)) { return false; }
+            else if (TryGetValue(item.Key, out Tvalue resValue) && item.Value.Equals(resValue))
+            {
+                return Remove(item.Key);
+            }
+
+            return false;
         }
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out Tvalue value)
@@ -152,7 +167,7 @@ namespace DataStructures
             value = default;
             if (GetIndex(key, out _) != -1)
             {
-                value = elements[GetIndex(key, out _)].value;
+                value = elements[GetIndex(key, out _)].Value;
                 return true;
             }
 
@@ -170,7 +185,7 @@ namespace DataStructures
 
             for (int i = buckets[SourceBucketIndex(key)]; i != -1; i = elements[i].Next)
             {
-                if (elements[i].key.Equals(key))
+                if (elements[i].Key.Equals(key))
                 {
                     return i;
                 }
@@ -181,13 +196,6 @@ namespace DataStructures
             return -1;
         }
 
-        private void SetCurrentElementValues(int currentElementIndex)
-        {
-            elements[currentElementIndex].Next = freeIndex;
-            elements[currentElementIndex].key = default;
-            elements[currentElementIndex].value = default;
-        }
-
         private int SourceBucketIndex(TKey key)
         {
             return Math.Abs(key.GetHashCode() % initialLength);
@@ -195,9 +203,9 @@ namespace DataStructures
 
         private struct Element
         {
-            public TKey key { get; set; }
+            public TKey Key { get; set; }
             public int Next { get; set; }
-            public Tvalue value { get; set; }
+            public Tvalue Value { get; set; }
         }
     }
 }

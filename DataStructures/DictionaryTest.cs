@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace DataStructures
@@ -357,6 +356,42 @@ namespace DataStructures
         }
 
         [Fact]
+        public void DictionaryKeyReturnsAllKeysFromDictionary()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            var keysList = testDict.Keys;
+
+            Assert.True(keysList.Contains(1));
+            Assert.True(keysList.Contains(2));
+            Assert.True(keysList.Contains(10));
+            Assert.True(keysList.Contains(7));
+            Assert.True(keysList.Contains(12));
+        }
+
+        [Fact]
+        public void DictionaryKeyDoesNotReturnAbsentKey()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            var keysList = testDict.Keys;
+
+            Assert.False(keysList.Contains(20));
+        }
+
+        [Fact]
         public void DictionaryRemoveRemovesPresentValueFromDictionaryNotFirstInBucket()
         {
             var testDict = new Dictionary<int, string>(5);
@@ -371,6 +406,118 @@ namespace DataStructures
             testDict.Remove(1);
 
             Assert.Equal(3, testDict.Count);
+        }
+
+        [Fact]
+        public void DictionaryRemoveAndAddReusesPositions()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            testDict.Remove(7);
+            testDict.Remove(1);
+
+            testDict.Add(17, "f");
+            testDict.Add(19, "g");
+
+            Assert.Contains(2, testDict);
+            Assert.Contains(10, testDict);
+            Assert.Contains(12, testDict);
+            Assert.Contains(17, testDict);
+            Assert.Contains(19, testDict);
+        }
+
+        [Fact]
+        public void RemoveDoesNotRemoveAbsentKeyValuePairForPresentValues()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            testDict.Remove(new KeyValuePair<int, string>(13, "f"));
+
+            Assert.DoesNotContain(new KeyValuePair<int, string>(13, "f"), testDict);
+        }
+
+        [Fact]
+        public void RemoveReturnsFalseAbsentKeyValuePairForPresentValues()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            Assert.False(testDict.Remove(new KeyValuePair<int, string>(13, "f")));
+        }
+
+        [Fact]
+        public void RemoveDoesNotRemovePresentKeyValuePairWithDifferentValue()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            testDict.Remove(new KeyValuePair<int, string>(1, "b"));
+
+            Assert.Contains(new KeyValuePair<int, string>(1, "a"), testDict);
+        }
+
+        [Fact]
+        public void RemoveReturnsFalseForPresentKeyValuePairWithDifferentValue()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+            testDict.Add(4, "d");
+
+            Assert.False(testDict.Remove(new KeyValuePair<int, string>(1, "b")));
+        }
+
+        [Fact]
+        public void RemoveRemovesKeyValuePairOverrideForPresentValues()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            testDict.Remove(new KeyValuePair<int, string>(10, "c"));
+
+            Assert.DoesNotContain(new KeyValuePair<int, string>(10, "c"), testDict);
+        }
+
+        [Fact]
+        public void RemoveReturnsTrueForKeyValuePairOverrideForPresentValues()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(10, "c");
+            testDict.Add(7, "d");
+            testDict.Add(12, "e");
+
+            Assert.True(testDict.Remove(new KeyValuePair<int, string>(10, "c")));
         }
     }
 }
