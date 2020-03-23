@@ -42,7 +42,7 @@ namespace DataStructures
             set
             {
                 var Index = GetIndex(key);
-                if(Index >= 0 && Index <= Count)
+                if (Index >= 0 && Index <= Count)
                 {
                     elements[GetIndex(key)].Value = value;
                 }
@@ -183,22 +183,22 @@ namespace DataStructures
         {
             NullKeyException(key);
 
-            int Bucket = SourceBucketIndex(key);
-            int Index = GetIndex(key, out int previousIndex);
+            int bucket = SourceBucketIndex(key);
+            int index = GetIndex(key, out int previousIndex);
 
-            if (Index == -1) { return false; }
+            if (index == -1) { return false; }
 
             if (previousIndex != -1)
             {
-                elements[previousIndex].Next = elements[Index].Next;
+                elements[previousIndex].Next = elements[index].Next;
             }
             else
             {
-                buckets[Bucket] = elements[Index].Next;
+                buckets[bucket] = elements[index].Next;
             }
 
-            elements[Index].Next = freeIndex;
-            freeIndex = Index;
+            elements[index].Next = freeIndex;
+            freeIndex = index;
             Count--;
             return true;
         }
@@ -216,12 +216,12 @@ namespace DataStructures
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out Tvalue value)
         {
             NullKeyException(key);
-            int Index = GetIndex(key);
+            int index = GetIndex(key);
 
             value = default;
-            if (Index != -1)
+            if (index != -1)
             {
-                value = elements[Index].Value;
+                value = elements[index].Value;
                 return true;
             }
 
