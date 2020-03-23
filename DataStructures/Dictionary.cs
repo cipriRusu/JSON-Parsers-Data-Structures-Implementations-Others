@@ -9,13 +9,13 @@ namespace DataStructures
     {
         private readonly int[] buckets;
 
-        private readonly Element[] elements;
+        private Element[] elements;
 
         private readonly int initialLength;
 
         private int freeIndex = -1;
 
-        public Dictionary(int length = 0)
+        public Dictionary(int length = 1)
         {
             initialLength = length;
             buckets = new int[length];
@@ -26,9 +26,31 @@ namespace DataStructures
 
         public Tvalue this[TKey key]
         {
-            get => elements[GetIndex(key, out _)].Value;
+            get
+            {
+                var Index = GetIndex(key);
+                if (Index >= 0 && Index <= Count)
+                {
+                    return elements[Index].Value;
+                }
+                else
+                {
+                    throw new ArgumentException("Key not valid");
+                }
+            }
 
-            set => elements[GetIndex(key, out _)].Value = value;
+            set
+            {
+                var Index = GetIndex(key);
+                if(Index >= 0 && Index <= Count)
+                {
+                    elements[GetIndex(key)].Value = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Key not valid");
+                }
+            }
         }
 
         public ICollection<TKey> Keys
@@ -67,14 +89,27 @@ namespace DataStructures
 
         public void Add(TKey key, Tvalue value)
         {
+            NullKeyException(key);
+
+            if (ContainsKey(key))
+            {
+                throw new ArgumentException("An element with a same key already exists");
+            }
+
+            EnsureMaxCap();
+
             int bucketIndex = SourceBucketIndex(key);
-            int elementIndex = Count;
+            int elementIndex;
 
             if (freeIndex != -1)
             {
                 int nextFreeIndex = elements[freeIndex].Next;
                 elementIndex = freeIndex;
                 freeIndex = nextFreeIndex;
+            }
+            else
+            {
+                elementIndex = Count;
             }
 
             elements[elementIndex].Key = key;
@@ -104,7 +139,9 @@ namespace DataStructures
 
         public bool ContainsKey(TKey key)
         {
-            return GetIndex(key, out _) != -1;
+            NullKeyException(key);
+
+            return GetIndex(key) != -1;
         }
 
         public void CopyTo(KeyValuePair<TKey, Tvalue>[] array, int arrayIndex)
@@ -113,6 +150,22 @@ namespace DataStructures
             {
                 array[i] = new KeyValuePair<TKey, Tvalue>(elements[i].Key, elements[i].Value);
             }
+        }
+
+        public bool ContainsValue(Tvalue value)
+        {
+            for (int i = 0; i < buckets.Length; i++)
+            {
+                for (int j = buckets[i]; j != -1; j = elements[j].Next)
+                {
+                    if (elements[j].Value.Equals(value))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public IEnumerator<KeyValuePair<TKey, Tvalue>> GetEnumerator()
@@ -128,33 +181,31 @@ namespace DataStructures
 
         public bool Remove(TKey key)
         {
-            if (!TryGetValue(key, out _))
-            {
-                return false;
-            }
+            NullKeyException(key);
 
-            int bucket = SourceBucketIndex(key);
-            int index = GetIndex(key, out int previousIndex);
+            int Bucket = SourceBucketIndex(key);
+            int Index = GetIndex(key, out int previousIndex);
+
+            if (Index == -1) { return false; }
 
             if (previousIndex != -1)
             {
-                elements[previousIndex].Next = elements[index].Next;
+                elements[previousIndex].Next = elements[Index].Next;
             }
             else
             {
-                buckets[bucket] = elements[index].Next;
+                buckets[Bucket] = elements[Index].Next;
             }
 
-            elements[index].Next = freeIndex;
-            freeIndex = index;
+            elements[Index].Next = freeIndex;
+            freeIndex = Index;
             Count--;
             return true;
         }
 
         public bool Remove(KeyValuePair<TKey, Tvalue> item)
         {
-            if (!ContainsKey(item.Key)) { return false; }
-            else if (TryGetValue(item.Key, out Tvalue resValue) && item.Value.Equals(resValue))
+            if (TryGetValue(item.Key, out Tvalue resValue) && item.Value.Equals(resValue))
             {
                 return Remove(item.Key);
             }
@@ -164,10 +215,13 @@ namespace DataStructures
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out Tvalue value)
         {
+            NullKeyException(key);
+            int Index = GetIndex(key);
+
             value = default;
-            if (GetIndex(key, out _) != -1)
+            if (Index != -1)
             {
-                value = elements[GetIndex(key, out _)].Value;
+                value = elements[Index].Value;
                 return true;
             }
 
@@ -177,6 +231,22 @@ namespace DataStructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private static void NullKeyException(TKey key)
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException("Key value is null");
+            }
+        }
+
+        private void EnsureMaxCap()
+        {
+            if (Count == elements.Length)
+            {
+                Array.Resize(ref elements, Count * 2);
+            }
         }
 
         private int GetIndex(TKey key, out int previousIndex)
@@ -191,6 +261,19 @@ namespace DataStructures
                 }
 
                 previousIndex = i;
+            }
+
+            return -1;
+        }
+
+        private int GetIndex(TKey key)
+        {
+            for (int i = buckets[SourceBucketIndex(key)]; i != -1; i = elements[i].Next)
+            {
+                if (elements[i].Key.Equals(key))
+                {
+                    return i;
+                }
             }
 
             return -1;

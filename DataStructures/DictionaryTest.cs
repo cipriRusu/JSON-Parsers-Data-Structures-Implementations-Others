@@ -49,6 +49,20 @@ namespace DataStructures
         }
 
         [Fact]
+        public void DictionaryResizesAsAdditionExpandsMaximumCapacity()
+        {
+            var testDict = new Dictionary<int, string>();
+
+            testDict.Add(1, "a");
+            testDict.Add(2, "b");
+            testDict.Add(3, "c");
+
+            Assert.Contains(1, testDict);
+            Assert.Contains(2, testDict);
+            Assert.Contains(3, testDict);
+        }
+
+        [Fact]
         public void DictionaryAddAddsMultipleElementsInDictionary()
         {
             var testDict = new Dictionary<int, string>(5);
@@ -103,6 +117,30 @@ namespace DataStructures
             testDict.Add(5, "b");
 
             testDict.Contains(new KeyValuePair<int, string>(5, "b"));
+        }
+
+        [Fact]
+        public void DictionaryContainsValueReturnsTrueForPresentValueInCollection()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(0, "a");
+            testDict.Add(5, "b");
+
+            Assert.True(testDict.ContainsValue("b"));
+        }
+
+        [Fact]
+        public void DictionaryContainsValueReturnsFalseForAbsentValueInCollection()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(0, "a");
+            testDict.Add(1, "b");
+            testDict.Add(2, "c");
+            testDict.Add(3, "d");
+
+            Assert.False(testDict.ContainsValue("e"));
         }
 
         [Fact]
@@ -518,6 +556,98 @@ namespace DataStructures
             testDict.Add(12, "e");
 
             Assert.True(testDict.Remove(new KeyValuePair<int, string>(10, "c")));
+        }
+
+        [Fact]
+        public void DictionaryAddThrowsArgumentNullExceptionForNullKeyValue()
+        {
+            var testDict = new Dictionary<string, string>(5);
+
+            Assert.Throws<ArgumentNullException>(()=> testDict.Add(null, "a"));
+        }
+
+        [Fact]
+        public void DictionaryAddDoesNotThrowArgumentNullExceptionForNullValue()
+        {
+            var testDict = new Dictionary<string, string>(5);
+
+            testDict.Add("a", null);
+
+            Assert.Contains("a", testDict);
+        }
+
+        [Fact]
+        public void DictionaryKeyIndexableCtorThrowsArgumentNullExceptionForInvalidIndexGet()
+        {
+            var testDict = new Dictionary<int, string>();
+            testDict.Add(1, "a");
+
+            Assert.Throws<ArgumentException>(() => testDict[3]);
+        }
+
+        [Fact]
+        public void DictionaryKeyIndexableCtorGetsValidValueForValidGetter()
+        {
+            var testDict = new Dictionary<int, string>();
+            testDict.Add(1, "a");
+
+            Assert.Equal("a", testDict[1]);
+        }
+
+        [Fact]
+        public void DictionaryKeyIndexableCtorSetsValueForValidSetter()
+        {
+            var testDict = new Dictionary<int, string>();
+            testDict.Add(1, "a");
+
+            testDict[1] = "b";
+
+            Assert.Equal("b", testDict[1]);
+        }
+
+        [Fact]
+        public void DictionaryKeyIndexableCtorThrowsArgumentNullExceptionForInvalidIndexSetter()
+        {
+            var testDict = new Dictionary<int, string>();
+            testDict.Add(2, "b");
+
+            Assert.Throws<ArgumentException>(()=> testDict[1] = "a");
+        }
+
+        [Fact]
+        public void DictionaryAddThrowsArgumentExceptionForAlreadyPresentKey()
+        {
+            var testDict = new Dictionary<int, string>(5);
+
+            testDict.Add(1, "a");
+
+            Assert.Throws<ArgumentException>(() => testDict.Add(1, "b"));
+        }
+
+        [Fact]
+        public void DictionaryContainsThrowsArgumentNullExceptionForNullValue()
+        {
+            var testDict = new Dictionary<string, string>(5);
+
+            testDict.Add("a", "a");
+
+            Assert.Throws<ArgumentNullException>(() => testDict.ContainsKey(null));
+        }
+
+        [Fact]
+        public void DictionaryRemoveThrowsArgumentNullExceptionForNullValue()
+        {
+            var testDict = new Dictionary<string, string>(5);
+
+            Assert.Throws<ArgumentNullException>(()=> testDict.Remove(null));
+        }
+
+        [Fact]
+        public void DictionaryTryGetValueThrowsArgumentNullExceptionForNullValue()
+        {
+            var testDict = new Dictionary<string, string>(5);
+
+            Assert.Throws<ArgumentNullException>(() => testDict.TryGetValue(null, out string value));
         }
     }
 }
