@@ -62,12 +62,14 @@ namespace DataStructures
 
         public void Clear()
         {
+            Root = null;
             Count = 0;
         }
 
         public bool Contains(T item)
         {
-            return false;
+            var current = Root;
+            return NodeVisit(current).CompareTo(item) == 0;
         }
 
         public void CopyTo(T[] array, int arrayIndex)

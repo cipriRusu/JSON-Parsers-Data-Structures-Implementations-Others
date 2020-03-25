@@ -27,6 +27,20 @@ namespace DataStructures
         }
 
         [Fact]
+        public void BinaryTreeClearClearsExistentData()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(7);
+            binTree.Add(2);
+            binTree.Add(10);
+
+            binTree.Clear();
+
+            Assert.Empty(binTree);
+        }
+
+        [Fact]
         public void BinaryTreeContainsReturnsTrueForValidRootValue()
         {
             var binTree = new BinaryTree<int>();
@@ -85,6 +99,19 @@ namespace DataStructures
             BinTree.Add(3);
 
             Assert.Contains(3, BinTree);
+        }
+
+        [Fact]
+        public void BinaryTreeContainsReturnsFalseForAbsentValueInTree()
+        {
+            var BinTree = new BinaryTree<int>();
+
+            BinTree.Add(10);
+            BinTree.Add(1);
+            BinTree.Add(6);
+            BinTree.Add(3);
+
+            Assert.DoesNotContain(11, BinTree);
         }
     }
 }
