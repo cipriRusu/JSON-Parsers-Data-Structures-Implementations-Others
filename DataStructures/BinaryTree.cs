@@ -88,12 +88,12 @@ namespace DataStructures
 
             if (current.Left != null)
             {
-                yield return current.Left.NodeValue;
+                yield return NodeVisit(current.Left);
             }
 
             if (current.Right != null)
             {
-                yield return current.Right.NodeValue;
+                yield return NodeVisit(current.Right);
             }
         }
 
@@ -105,6 +105,21 @@ namespace DataStructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private T NodeVisit(TreeNode<T> input)
+        {
+            if (input.Left != null)
+            {
+                return NodeVisit(input.Left);
+            }
+
+            if (input.Right != null)
+            {
+                return NodeVisit(input.Right);
+            }
+
+            return input.NodeValue;
         }
 
         private class TreeNode<T> : IComparable<T> where T : IComparable<T>
