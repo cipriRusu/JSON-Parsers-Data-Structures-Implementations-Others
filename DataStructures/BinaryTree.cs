@@ -31,6 +31,7 @@ namespace DataStructures
             else
             {
                 AddNode(current, item);
+                Count++;
             }
         }
 
@@ -74,7 +75,10 @@ namespace DataStructures
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            var current = Root;
+            var count = 0;
+
+            FlattenBinaryTree(current, array, ref count);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -101,7 +105,11 @@ namespace DataStructures
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            if (!Contains(item)) return false;
+
+            var current = Root;
+
+            return true;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -122,6 +130,25 @@ namespace DataStructures
             }
 
             return input.NodeValue;
+        }
+
+        private void FlattenBinaryTree(TreeNode<T> input, T[] array, ref int index)
+        {
+            if (input.Left != null)
+            {
+                FlattenBinaryTree(input.Left, array, ref index);
+                array[index] = input.Left.NodeValue;
+                index++;
+            }
+
+            if (input.Right != null)
+            {
+                FlattenBinaryTree(input.Right, array, ref index);
+                array[index] = input.Right.NodeValue;
+                index++;
+            }
+
+            array[index] = input.NodeValue;
         }
 
         private class TreeNode<T> : IComparable<T> where T : IComparable<T>
