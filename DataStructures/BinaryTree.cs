@@ -37,7 +37,7 @@ namespace DataStructures
 
         private void AddNode(TreeNode<T> node, T value)
         {
-            if (node.NodeValue.CompareTo(value) > 0)
+            if (node.CompareTo(value) > 0)
             {
                 if (node.Left == null)
                 {
@@ -69,8 +69,7 @@ namespace DataStructures
 
         public bool Contains(T item)
         {
-            var current = Root;
-            return NodeVisit(current).CompareTo(item) == 0;
+            return FindNodeAndParent(item, out _) != null;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -78,7 +77,7 @@ namespace DataStructures
             var current = Root;
             var count = 0;
 
-            FlattenBinaryTree(current, array, ref count);
+            FlattenBinaryTreeToArray(current, array, ref count);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -94,12 +93,12 @@ namespace DataStructures
 
             if (current.Left != null)
             {
-                yield return NodeVisit(current.Left);
+                yield return NodeTraversal(current.Left);
             }
 
             if (current.Right != null)
             {
-                yield return NodeVisit(current.Right);
+                yield return NodeTraversal(current.Right);
             }
         }
 
@@ -107,7 +106,56 @@ namespace DataStructures
         {
             if (!Contains(item)) return false;
 
-            var current = Root;
+            TreeNode<T> current, parent;
+
+            current = FindNodeAndParent(item, out parent);
+
+            //Removal Node has no right node
+            if (current.Right == null)
+            {
+                if (parent == null)
+                {
+                    Root = current.Left;
+                }
+                else
+                {
+                    var getIndex = parent.NodeValue.CompareTo(item);
+
+                    if (getIndex < 0)
+                    {
+                        parent.Right = current.Left;
+                    }
+                    else if (getIndex > 0)
+                    {
+                        parent.Left = current.Left;
+                    }
+                }
+            }
+
+            //Removal Node's Right child has no left child
+            else if (current.Right.Left == null)
+            {
+                current.Right.Left = current.Left;
+
+                if(parent == null)
+                {
+                    Root = current.Right;
+                }
+
+                else
+                {
+                    var getIndex = parent.NodeValue.CompareTo(item);
+
+                    if(getIndex < 0)
+                    {
+                        parent.Right = current.Right;
+                    }
+                    else if(getIndex > 0)
+                    {
+                        parent.Left = current.Right;
+                    }
+                }
+            }
 
             return true;
         }
@@ -117,33 +165,61 @@ namespace DataStructures
             return GetEnumerator();
         }
 
-        private T NodeVisit(TreeNode<T> input)
+        private T NodeTraversal(TreeNode<T> input)
         {
             if (input.Left != null)
             {
-                return NodeVisit(input.Left);
+                return NodeTraversal(input.Left);
             }
 
             if (input.Right != null)
             {
-                return NodeVisit(input.Right);
+                return NodeTraversal(input.Right);
             }
 
             return input.NodeValue;
         }
 
-        private void FlattenBinaryTree(TreeNode<T> input, T[] array, ref int index)
+        private TreeNode<T> FindNodeAndParent(T value, out TreeNode<T> parent)
+        {
+            TreeNode<T> current = Root;
+            parent = null;
+
+            while (current != null)
+            {
+                int res = current.CompareTo(value);
+
+                if (res > 0)
+                {
+                    parent = current;
+                    current = current.Left;
+                }
+                else if (res < 0)
+                {
+                    parent = current;
+                    current = current.Right;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return current;
+        }
+
+        private void FlattenBinaryTreeToArray(TreeNode<T> input, T[] array, ref int index)
         {
             if (input.Left != null)
             {
-                FlattenBinaryTree(input.Left, array, ref index);
+                FlattenBinaryTreeToArray(input.Left, array, ref index);
                 array[index] = input.Left.NodeValue;
                 index++;
             }
 
             if (input.Right != null)
             {
-                FlattenBinaryTree(input.Right, array, ref index);
+                FlattenBinaryTreeToArray(input.Right, array, ref index);
                 array[index] = input.Right.NodeValue;
                 index++;
             }
@@ -156,6 +232,7 @@ namespace DataStructures
             public TreeNode<T> Left;
             public T NodeValue;
             public TreeNode<T> Right;
+
             public TreeNode(T value = default)
             {
                 Left = null;

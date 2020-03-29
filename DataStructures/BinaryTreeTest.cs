@@ -164,14 +164,52 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveDeletesFromSingleValidPresentNode()
+        public void BinaryTreeRemoveDeletesRootNode()
         {
             var binTree = new BinaryTree<int>();
-            binTree.Add(7);
-            binTree.Add(2);
-            binTree.Add(10);
 
-            Assert.True(binTree.Remove(10));
+            binTree.Add(4);
+            binTree.Remove(4);
+
+            Assert.Empty(binTree);
+        }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForNoRightChild()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(4);
+            binTree.Add(2);
+            binTree.Add(1);
+            binTree.Add(3);
+            binTree.Add(8);
+            binTree.Add(6);
+            binTree.Add(5);
+            binTree.Add(7);
+
+            binTree.Remove(8);
+
+            Assert.DoesNotContain(8, binTree);
+        }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForNoLeftChildOfRightChild()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(4);
+            binTree.Add(2);
+            binTree.Add(1);
+            binTree.Add(3);
+            binTree.Add(6);
+            binTree.Add(5);
+            binTree.Add(7);
+            binTree.Add(8);
+
+            binTree.Remove(6);
+
+            Assert.DoesNotContain(6, binTree);
         }
     }
 }
