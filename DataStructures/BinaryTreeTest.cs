@@ -211,5 +211,24 @@ namespace DataStructures
 
             Assert.DoesNotContain(6, binTree);
         }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForRightChildLeftMostChildReplacesRemovedNode()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(4);
+            binTree.Add(2);
+            binTree.Add(1);
+            binTree.Add(3);
+            binTree.Add(6);
+            binTree.Add(5);
+            binTree.Add(8);
+            binTree.Add(7);
+
+            binTree.Remove(6);
+
+            Assert.DoesNotContain(6, binTree);
+        }
     }
 }

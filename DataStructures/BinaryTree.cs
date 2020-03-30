@@ -48,7 +48,7 @@ namespace DataStructures
                     AddNode(node.Left, value);
                 }
             }
-            else
+            else if (node.CompareTo(value) < 0)
             {
                 if (node.Right == null)
                 {
@@ -82,23 +82,29 @@ namespace DataStructures
 
         public IEnumerator<T> GetEnumerator()
         {
-            var current = Root;
+            var rootNode = Root;
 
-            if (current == null)
+            if (rootNode == null)
             {
                 yield break;
             }
 
-            yield return current.NodeValue;
+            yield return rootNode.NodeValue;
 
-            if (current.Left != null)
+            if (rootNode.Left != null)
             {
-                yield return NodeTraversal(current.Left);
+                foreach (T i in rootNode.Left)
+                {
+                    yield return i;
+                }
             }
 
-            if (current.Right != null)
+            if (rootNode.Right != null)
             {
-                yield return NodeTraversal(current.Right);
+                foreach (T i in rootNode.Right)
+                {
+                    yield return i;
+                }
             }
         }
 
@@ -106,11 +112,8 @@ namespace DataStructures
         {
             if (!Contains(item)) return false;
 
-            TreeNode<T> current, parent;
+            var current = FindNodeAndParent(item, out TreeNode<T> parent);
 
-            current = FindNodeAndParent(item, out parent);
-
-            //Removal Node has no right node
             if (current.Right == null)
             {
                 if (parent == null)
@@ -119,38 +122,33 @@ namespace DataStructures
                 }
                 else
                 {
-                    var getIndex = parent.NodeValue.CompareTo(item);
+                    var directionindex = current.NodeValue.CompareTo(parent.NodeValue);
 
-                    if (getIndex < 0)
-                    {
-                        parent.Right = current.Left;
-                    }
-                    else if (getIndex > 0)
+                    if (directionindex < 0)
                     {
                         parent.Left = current.Left;
                     }
+                    else if (directionindex > 0)
+                    {
+                        parent.Right = current.Left;
+                    }
                 }
             }
-
-            //Removal Node's Right child has no left child
             else if (current.Right.Left == null)
             {
-                current.Right.Left = current.Left;
-
-                if(parent == null)
+                if (parent == null)
                 {
                     Root = current.Right;
                 }
-
                 else
                 {
-                    var getIndex = parent.NodeValue.CompareTo(item);
+                    var directionIndex = current.NodeValue.CompareTo(parent.NodeValue);
 
-                    if(getIndex < 0)
+                    if (directionIndex > 0)
                     {
                         parent.Right = current.Right;
                     }
-                    else if(getIndex > 0)
+                    else if (directionIndex < 0)
                     {
                         parent.Left = current.Right;
                     }
@@ -163,21 +161,6 @@ namespace DataStructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        private T NodeTraversal(TreeNode<T> input)
-        {
-            if (input.Left != null)
-            {
-                return NodeTraversal(input.Left);
-            }
-
-            if (input.Right != null)
-            {
-                return NodeTraversal(input.Right);
-            }
-
-            return input.NodeValue;
         }
 
         private TreeNode<T> FindNodeAndParent(T value, out TreeNode<T> parent)
@@ -227,7 +210,7 @@ namespace DataStructures
             array[index] = input.NodeValue;
         }
 
-        private class TreeNode<T> : IComparable<T> where T : IComparable<T>
+        private class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
         {
             public TreeNode<T> Left;
             public T NodeValue;
@@ -243,6 +226,39 @@ namespace DataStructures
             public int CompareTo([AllowNull] T other)
             {
                 return NodeValue.CompareTo(other);
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                var rootNode = this;
+
+                if (rootNode == null)
+                {
+                    yield break;
+                }
+
+                yield return rootNode.NodeValue;
+
+                if (rootNode.Left != null)
+                {
+                    foreach (T i in rootNode.Left)
+                    {
+                        yield return i;
+                    }
+                }
+
+                if (rootNode.Right != null)
+                {
+                    foreach (T i in rootNode.Right)
+                    {
+                        yield return i;
+                    }
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
             }
         }
     }
