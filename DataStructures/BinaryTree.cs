@@ -84,27 +84,18 @@ namespace DataStructures
         {
             var rootNode = root;
 
-            if (rootNode == null)
-            {
-                yield break;
-            }
+            if (rootNode == null) { yield break; }
 
             yield return rootNode.NodeValue;
 
             if (rootNode.Left != null)
             {
-                foreach (T i in rootNode.Left)
-                {
-                    yield return i;
-                }
+                yield return (rootNode.Left.NodeValue);
             }
 
             if (rootNode.Right != null)
             {
-                foreach (T i in rootNode.Right)
-                {
-                    yield return i;
-                }
+                yield return (rootNode.Right.NodeValue);
             }
         }
 
@@ -232,27 +223,18 @@ namespace DataStructures
             {
                 var rootNode = this;
 
-                if (rootNode == null)
-                {
-                    yield break;
-                }
+                if (rootNode == null) { yield break; }
 
                 yield return rootNode.NodeValue;
 
                 if (rootNode.Left != null)
                 {
-                    foreach (T i in rootNode.Left)
-                    {
-                        yield return i;
-                    }
+                    yield return (rootNode.Left.NodeValue);
                 }
 
                 if (rootNode.Right != null)
                 {
-                    foreach (T i in rootNode.Right)
-                    {
-                        yield return i;
-                    }
+                    yield return (rootNode.Right.NodeValue);
                 }
             }
 
