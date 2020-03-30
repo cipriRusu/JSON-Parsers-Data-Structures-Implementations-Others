@@ -7,11 +7,11 @@ namespace DataStructures
 {
     public class BinaryTree<T> : ICollection<T> where T : IComparable<T>
     {
-        private TreeNode<T> Root;
+        private TreeNode<T> root;
 
         public BinaryTree()
         {
-            Root = null;
+            root = null;
             Count = 0;
         }
 
@@ -21,11 +21,11 @@ namespace DataStructures
 
         public void Add(T item)
         {
-            var current = Root;
+            var current = root;
 
             if (current == null)
             {
-                Root = new TreeNode<T>(item);
+                root = new TreeNode<T>(item);
                 Count++;
             }
             else
@@ -63,7 +63,7 @@ namespace DataStructures
 
         public void Clear()
         {
-            Root = null;
+            root = null;
             Count = 0;
         }
 
@@ -74,7 +74,7 @@ namespace DataStructures
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            var current = Root;
+            var current = root;
             var count = 0;
 
             FlattenBinaryTreeToArray(current, array, ref count);
@@ -82,7 +82,7 @@ namespace DataStructures
 
         public IEnumerator<T> GetEnumerator()
         {
-            var rootNode = Root;
+            var rootNode = root;
 
             if (rootNode == null)
             {
@@ -118,7 +118,7 @@ namespace DataStructures
             {
                 if (parent == null)
                 {
-                    Root = current.Left;
+                    root = current.Left;
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace DataStructures
             {
                 if (parent == null)
                 {
-                    Root = current.Right;
+                    root = current.Right;
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace DataStructures
 
         private TreeNode<T> FindNodeAndParent(T value, out TreeNode<T> parent)
         {
-            TreeNode<T> current = Root;
+            TreeNode<T> current = root;
             parent = null;
 
             while (current != null)
