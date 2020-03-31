@@ -90,12 +90,18 @@ namespace DataStructures
 
             if (rootNode.Left != null)
             {
-                yield return (rootNode.Left.NodeValue);
+                foreach(var element in rootNode.Left)
+                {
+                    yield return element;
+                }
             }
 
             if (rootNode.Right != null)
             {
-                yield return (rootNode.Right.NodeValue);
+                foreach (var element in rootNode.Right)
+                {
+                    yield return element;
+                }
             }
         }
 
@@ -201,7 +207,7 @@ namespace DataStructures
             array[index] = input.NodeValue;
         }
 
-        private class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
+        public  class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
         {
             public TreeNode<T> Left;
             public T NodeValue;
@@ -229,12 +235,18 @@ namespace DataStructures
 
                 if (rootNode.Left != null)
                 {
-                    yield return (rootNode.Left.NodeValue);
+                    foreach (var element in rootNode.Left)
+                    {
+                        yield return element;
+                    }
                 }
 
                 if (rootNode.Right != null)
                 {
-                    yield return (rootNode.Right.NodeValue);
+                    foreach (var element in rootNode.Right)
+                    {
+                        yield return element;
+                    }
                 }
             }
 
