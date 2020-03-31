@@ -82,26 +82,18 @@ namespace DataStructures
 
         public IEnumerator<T> GetEnumerator()
         {
-            var rootNode = root;
+            var current = root;
 
-            if (rootNode == null) { yield break; }
-
-            yield return rootNode.NodeValue;
-
-            if (rootNode.Left != null)
+            if (current == null)
             {
-                foreach(var element in rootNode.Left)
-                {
-                    yield return element;
-                }
+                yield break;
             }
 
-            if (rootNode.Right != null)
+            var currentEnumerator = current.GetEnumerator();
+
+            while (currentEnumerator.MoveNext())
             {
-                foreach (var element in rootNode.Right)
-                {
-                    yield return element;
-                }
+                yield return currentEnumerator.Current;
             }
         }
 
@@ -207,7 +199,7 @@ namespace DataStructures
             array[index] = input.NodeValue;
         }
 
-        public  class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
+        private class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
         {
             public TreeNode<T> Left;
             public T NodeValue;
