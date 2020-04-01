@@ -115,7 +115,7 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeCopyToCopiesTreeValuesIntoArray()
+        public void BinaryTreeCopyToCopiesSimpleTreeValuesIntoArray()
         {
             var BinTree = new BinaryTree<int>();
 
@@ -153,7 +153,7 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveDoesNotRemoveAbsentValueFromPresentNode()
+        public void BinaryTreeRemoveDoesNotRemovesAbsentValueFromPresentNode()
         {
             var binTree = new BinaryTree<int>();
             binTree.Add(7);
@@ -175,7 +175,7 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveWorksForNoRightChild()
+        public void BinaryTreeRemoveWorksForNoRightChildInDeletionNodeRightBranchOfMainTree()
         {
             var binTree = new BinaryTree<int>();
 
@@ -194,7 +194,7 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveWorksForNoLeftChildOfRightChild()
+        public void BinaryTreeRemoveWorksForNoLeftChildOfRightChildOfNodeIntoRightBranchOfMainTree()
         {
             var binTree = new BinaryTree<int>();
 
@@ -213,7 +213,7 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveWorksForRightChildLeftMostChildReplacesRemovedNode()
+        public void BinaryTreeRemoveWorksForRightChildLeftMostChildReplacesRemovedNodeIntoDeletedNodeOf()
         {
             var binTree = new BinaryTree<int>();
 

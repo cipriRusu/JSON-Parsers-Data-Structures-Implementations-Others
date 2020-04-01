@@ -84,10 +84,7 @@ namespace DataStructures
         {
             var current = root;
 
-            if (current == null)
-            {
-                yield break;
-            }
+            if (current == null) { yield break; }
 
             var currentEnumerator = current.GetEnumerator();
 
@@ -97,54 +94,85 @@ namespace DataStructures
             }
         }
 
-        public bool Remove(T item)
+        public bool Remove(T value)
         {
-            if (!Contains(item)) return false;
+            var current = root;
+            TreeNode<T> parent = null;
 
-            var current = FindNodeAndParent(item, out TreeNode<T> parent);
+            if (!Contains(value)) return false;
 
-            if (current.Right == null)
+            if (current == null)
             {
-                if (parent == null)
-                {
-                    root = current.Left;
-                }
-                else
-                {
-                    var directionindex = current.NodeValue.CompareTo(parent.NodeValue);
+                return false;
+            }
+            else
+            {
+                Count--;
+                return RemoveNode(parent, current, value);
+            }
+        }
 
-                    if (directionindex < 0)
+        private bool RemoveNode(TreeNode<T> parent, TreeNode<T> current, T value)
+        {
+            if(current.CompareTo(value) == 0)
+            {
+                if (current.Right == null)
+                {
+                    if (parent == null)
                     {
-                        parent.Left = current.Left;
+                        root = current.Left;
+                        return true;
                     }
-                    else if (directionindex > 0)
+                    else
                     {
                         parent.Right = current.Left;
+                        return true;
                     }
                 }
-            }
-            else if (current.Right.Left == null)
-            {
-                if (parent == null)
+                else if (current.Right.Left == null)
                 {
-                    root = current.Right;
-                }
-                else
-                {
-                    var directionIndex = current.NodeValue.CompareTo(parent.NodeValue);
+                    current.Right.Left = current.Left;
 
-                    if (directionIndex > 0)
+                    if (parent == null)
+                    {
+                        root = current.Right;
+                        return true;
+                    }
+                    else
                     {
                         parent.Right = current.Right;
-                    }
-                    else if (directionIndex < 0)
-                    {
-                        parent.Left = current.Right;
+                        return true;
                     }
                 }
+                else if (current.Right.Left != null)
+                {
+                    TreeNode<T> leftmost, leftmostParent;
+                    leftmostParent = current.Right;
+                    leftmost = current.Right.Left;
+
+                    while(leftmost.Left != null)
+                    {
+                        leftmostParent = leftmost;
+                        leftmost = leftmost.Left;
+                    }
+
+                    leftmostParent.Left = leftmost.Right;
+
+                    leftmost.Left = current.Left;
+                    leftmost.Right = current.Right;
+                    parent.Right = leftmost;
+                }
+            }
+            else if (current.NodeValue.CompareTo(value) < 0)
+            {
+                RemoveNode(current, current.Right, value);
+            }
+            else if (current.NodeValue.CompareTo(value) > 0)
+            {
+                RemoveNode(current, current.Left, value);
             }
 
-            return true;
+            return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
