@@ -21,6 +21,11 @@ namespace DataStructures
 
         public void Add(T item)
         {
+            if (Contains(item))
+            {
+                throw new ArgumentException("Value already present in tree");
+            }
+
             var current = root;
 
             if (current == null)
@@ -74,6 +79,8 @@ namespace DataStructures
 
         public void CopyTo(T[] array, int arrayIndex)
         {
+            ArrayExceptions(array);
+
             var current = root;
             var count = 0;
 
@@ -269,6 +276,19 @@ namespace DataStructures
             }
 
             array[index] = input.NodeValue;
+        }
+
+        private void ArrayExceptions(T[] array)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException("Array value is null");
+            }
+
+            if (array.Length < Count)
+            {
+                throw new ArgumentException("Source array length is shorter than number of elements");
+            }
         }
 
         private class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>

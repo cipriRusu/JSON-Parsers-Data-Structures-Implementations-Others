@@ -303,5 +303,42 @@ namespace DataStructures
 
             Assert.DoesNotContain(7, binTree);
         }
+
+        [Fact]
+        public void BinaryTreeAddThrowsArgumentExceptionForDuplicateValueInTree()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(2);
+
+            Assert.Throws<ArgumentException>(()=> binTree.Add(2));
+        }
+
+        [Fact]
+        public void BinaryTreeCopyToThrowsArgumentNullExceptionForNullArrayValue()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(2);
+            binTree.Add(1);
+            binTree.Add(10);
+
+            Assert.Throws<ArgumentNullException>(() => binTree.CopyTo(null, 0));
+        }
+
+        [Fact]
+        public void BinaryTreeCopyToThrowsArgumentExceptionForUnderLengthArray()
+        {
+            var binTree = new BinaryTree<int>();
+            binTree.Add(2);
+            binTree.Add(1);
+            binTree.Add(10);
+            binTree.Add(7);
+            binTree.Add(5);
+
+            var sourceArray = new int[2];
+
+            Assert.Throws<ArgumentException>(()=> binTree.CopyTo(sourceArray, 0));
+        }
     }
 }
