@@ -114,55 +114,29 @@ namespace DataStructures
 
         private bool RemoveNode(TreeNode<T> parent, TreeNode<T> current, T value)
         {
-            if(current.CompareTo(value) == 0)
+            if (current.CompareTo(value) == 0)
             {
-                if (current.Right == null)
+                if (current.Left == null && current.Right == null && parent != null)
                 {
-                    if (parent == null)
-                    {
-                        root = current.Left;
-                        return true;
-                    }
-                    else
-                    {
-                        parent.Right = current.Left;
-                        return true;
-                    }
+                    RemoveLeafNode(parent);
+                }
+                else if (current.Right == null)
+                {
+                    RemoveNodeWithNoRightNode(parent, current);
+                    return true;
                 }
                 else if (current.Right.Left == null)
                 {
-                    current.Right.Left = current.Left;
-
-                    if (parent == null)
-                    {
-                        root = current.Right;
-                        return true;
-                    }
-                    else
-                    {
-                        parent.Right = current.Right;
-                        return true;
-                    }
+                    RemoveNodeWithNoLeftNodeOnRightChild(parent, current);
+                    return true;
                 }
                 else if (current.Right.Left != null)
                 {
-                    TreeNode<T> leftmost, leftmostParent;
-                    leftmostParent = current.Right;
-                    leftmost = current.Right.Left;
-
-                    while(leftmost.Left != null)
-                    {
-                        leftmostParent = leftmost;
-                        leftmost = leftmost.Left;
-                    }
-
-                    leftmostParent.Left = leftmost.Right;
-
-                    leftmost.Left = current.Left;
-                    leftmost.Right = current.Right;
-                    parent.Right = leftmost;
+                    RemoveNodeWithLeftNodeOnRightChild(parent, current);
+                    return true;
                 }
             }
+
             else if (current.NodeValue.CompareTo(value) < 0)
             {
                 RemoveNode(current, current.Right, value);
@@ -173,6 +147,76 @@ namespace DataStructures
             }
 
             return false;
+        }
+
+        private void RemoveLeafNode(TreeNode<T> parent)
+        {
+            if (parent.Right == null)
+            {
+                parent.Left = null;
+            }
+            else
+            {
+                parent.Right = null;
+            }
+        }
+
+        private void RemoveNodeWithNoRightNode(TreeNode<T> parent, TreeNode<T> current)
+        {
+            if (parent == null)
+            {
+                root = current.Left;
+            }
+            else
+            {
+                ParentDirectionReference(parent, current);
+            }
+        }
+
+        private void RemoveNodeWithNoLeftNodeOnRightChild(TreeNode<T> parent, TreeNode<T> current)
+        {
+            current.Right.Left = current.Left;
+
+            if (parent == null)
+            {
+                root = current.Right;
+            }
+            else
+            {
+                ParentDirectionReference(parent, current);
+            }
+        }
+
+        private void RemoveNodeWithLeftNodeOnRightChild(TreeNode<T> parent, TreeNode<T> current)
+        {
+            TreeNode<T> leftmost, leftmostParent;
+            leftmostParent = current.Right;
+            leftmost = current.Right.Left;
+
+            while (leftmost.Left != null)
+            {
+                leftmostParent = leftmost;
+                leftmost = leftmost.Left;
+            }
+
+            leftmostParent.Left = leftmost.Right;
+
+            leftmost.Left = current.Left;
+            leftmost.Right = current.Right;
+
+            ParentDirectionReference(parent, current);
+        }
+
+        private void ParentDirectionReference(TreeNode<T> parent, TreeNode<T> current)
+        {
+            if (parent.Left == current)
+            {
+                parent.Left = current.Right;
+            }
+            else
+            {
+                parent.Right = current.Right;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

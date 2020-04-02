@@ -194,7 +194,24 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveWorksForNoLeftChildOfRightChildOfNodeIntoRightBranchOfMainTree()
+        public void BinaryTreeRemoveWorksForNoRightChildInDeletionNodeLeftBranchOfMainTree()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(12);
+            binTree.Add(9);
+            binTree.Add(15);
+            binTree.Add(3);
+            binTree.Add(11);
+            binTree.Add(10);
+
+            binTree.Remove(11);
+
+            Assert.DoesNotContain(11, binTree);
+        }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForNoLeftChildOfDeletionNodeOfRightBranchOfMainTree()
         {
             var binTree = new BinaryTree<int>();
 
@@ -213,7 +230,24 @@ namespace DataStructures
         }
 
         [Fact]
-        public void BinaryTreeRemoveWorksForRightChildLeftMostChildReplacesRemovedNodeIntoDeletedNodeOf()
+        public void BinaryTreeRemoveWorksForNoLeftChildOfDeletionNodeOfLeftBranchOfMainTree()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(15);
+            binTree.Add(20);
+            binTree.Add(10);
+            binTree.Add(3);
+            binTree.Add(13);
+            binTree.Add(14);
+
+            binTree.Remove(10);
+
+            Assert.DoesNotContain(10, binTree);
+        }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForLeftMostChildOfRightChildOfDeletionNodeRightBranchOfMainTree()
         {
             var binTree = new BinaryTree<int>();
 
@@ -229,6 +263,45 @@ namespace DataStructures
             binTree.Remove(6);
 
             Assert.DoesNotContain(6, binTree);
+        }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForLeftMostChildOfRightChildOfDeletionNodeLeftBranchOfMainTree()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(30);
+            binTree.Add(40);
+            binTree.Add(35);
+            binTree.Add(24);
+            binTree.Add(20);
+            binTree.Add(26);
+            binTree.Add(25);
+            binTree.Add(28);
+            binTree.Add(27);
+
+            binTree.Remove(26);
+
+            Assert.DoesNotContain(26, binTree);
+        }
+
+        [Fact]
+        public void BinaryTreeRemoveWorksForLeafNode()
+        {
+            var binTree = new BinaryTree<int>();
+
+            binTree.Add(4);
+            binTree.Add(2);
+            binTree.Add(1);
+            binTree.Add(3);
+            binTree.Add(6);
+            binTree.Add(5);
+            binTree.Add(8);
+            binTree.Add(7);
+
+            binTree.Remove(7);
+
+            Assert.DoesNotContain(7, binTree);
         }
     }
 }
