@@ -330,6 +330,7 @@ namespace DataStructures
         public void BinaryTreeCopyToThrowsArgumentExceptionForUnderLengthArray()
         {
             var binTree = new BinaryTree<int>();
+
             binTree.Add(2);
             binTree.Add(1);
             binTree.Add(10);

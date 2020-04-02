@@ -315,6 +315,18 @@ namespace DataStructures
 
                 if (rootNode == null) { yield break; }
 
+                foreach(var element in InOrderEnumerator())
+                {
+                    yield return element;
+                }
+            }
+
+            public IEnumerable<T> PreOrderEnumerator()
+            {
+                var rootNode = this;
+
+                if (rootNode == null) { yield break; }
+
                 yield return rootNode.NodeValue;
 
                 if (rootNode.Left != null)
@@ -332,6 +344,54 @@ namespace DataStructures
                         yield return element;
                     }
                 }
+            }
+
+            public IEnumerable<T> InOrderEnumerator()
+            {
+                var rootNode = this;
+
+                if (rootNode == null) { yield break; }
+
+                if (rootNode.Left != null)
+                {
+                    foreach (var element in rootNode.Left)
+                    {
+                        yield return element;
+                    }
+                }
+
+                yield return rootNode.NodeValue;
+
+                if (rootNode.Right != null)
+                {
+                    foreach (var element in rootNode.Right)
+                    {
+                        yield return element;
+                    }
+                }
+            }
+
+            public IEnumerable<T> PostOrderEnumerator()
+            {
+                var rootNode = this;
+
+                if (rootNode.Left != null)
+                {
+                    foreach (var element in rootNode.Left)
+                    {
+                        yield return element;
+                    }
+                }
+
+                if (rootNode.Right != null)
+                {
+                    foreach (var element in rootNode.Right)
+                    {
+                        yield return element;
+                    }
+                }
+
+                yield return rootNode.NodeValue;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
