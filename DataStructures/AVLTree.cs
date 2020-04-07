@@ -352,30 +352,17 @@ namespace DataStructures
 
             private void LeftRightRotation()
             {
-                var currentNode = new AVLTreeNode<T>(this, NodeValue);
-                NodeValue = Right.Left.NodeValue;
-                Left = currentNode;
-                Right.Parent = this;
-                Right.Left = null;
+               
             }
 
             private void RightLeftRotation()
             {
-                var currentNode = new AVLTreeNode<T>(this, NodeValue);
-                NodeValue = Left.Right.NodeValue;
-                Right = currentNode;
-                Left.Parent = this;
-                Left.Right = null;
+
             }
 
             private void RightRotation()
             {
-                var RightMost = new AVLTreeNode<T>(this, NodeValue);
-                NodeValue = Left.NodeValue;
-                Right = RightMost;
-                Left = Left.Left;
-                Left.Parent = this;
-                Right.Parent = this;
+
             }
 
             private void LeftRotation()
