@@ -19,7 +19,7 @@ namespace DataStructures
 
         public int Count { get; private set; }
 
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             if (Contains(item))
             {
@@ -87,7 +87,7 @@ namespace DataStructures
             FlattenBinaryTreeToArray(current, array, ref count);
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {
             var current = root;
 
@@ -291,7 +291,7 @@ namespace DataStructures
             }
         }
 
-        private class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
+        public class TreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
         {
             public TreeNode<T> Left;
             public T NodeValue;
