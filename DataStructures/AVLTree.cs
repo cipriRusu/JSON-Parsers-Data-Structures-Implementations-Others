@@ -5,74 +5,58 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DataStructures
 {
-    public class AVLTree<T> : ICollection<T> where T : IComparable<T>
+    public class AVLTree<T> : ICollection<T> where T : IComparable
     {
-        private enum CurrentState
-        {
-            Balanced,
-            RightHeavy,
-            LeftHeavy
-        }
-
-        private AVLTreeNode<T> root;
-
         public AVLTree()
         {
             root = null;
             Count = 0;
         }
 
+        internal AVLNode<T> root;
+        public int Count { get; private set; }
         public bool IsReadOnly => false;
 
-        public int Count { get; private set; }
-
-        public virtual void Add(T item)
+        public void Add(T item)
         {
-            if (Contains(item))
+            if (root == null)
             {
-                throw new ArgumentException("Value already present in tree");
-            }
-
-            var current = root;
-
-            if (current == null)
-            {
-                root = new AVLTreeNode<T>(null, item);
                 Count++;
+                root = new AVLNode<T>(item, null, this);
             }
             else
             {
-                AddNode(current, item);
                 Count++;
+                AddNode(root, item);
             }
         }
 
-        private void AddNode(AVLTreeNode<T> node, T value)
+        private void AddNode(AVLNode<T> aVLNode, T item)
         {
-            if (node.CompareTo(value) > 0)
+            if (aVLNode.CompareTo(item) < 0)
             {
-                if (node.Left == null)
+                if (aVLNode.Right == null)
                 {
-                    node.Left = new AVLTreeNode<T>(node, value);
-                    node.Left.Balance();
+                    aVLNode.Right = new AVLNode<T>(item, aVLNode, this);
                 }
                 else
                 {
-                    AddNode(node.Left, value);
+                    AddNode(aVLNode.Right, item);
                 }
             }
-            else if (node.CompareTo(value) < 0)
+            else if (aVLNode.CompareTo(item) > 0)
             {
-                if (node.Right == null)
+                if (aVLNode.Left == null)
                 {
-                    node.Right = new AVLTreeNode<T>(node, value);
-                    node.Right.Balance();
+                    aVLNode.Left = new AVLNode<T>(item, aVLNode, this);
                 }
                 else
                 {
-                    AddNode(node.Right, value);
+                    AddNode(aVLNode.Left, item);
                 }
             }
+
+            aVLNode.Balance();
         }
 
         public void Clear()
@@ -83,420 +67,64 @@ namespace DataStructures
 
         public bool Contains(T item)
         {
-            return FindNodeAndParent(item, out _) != null;
+            return FindItem(root, item);
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
+        private bool FindItem(AVLNode<T> node, T item)
         {
-            ArrayExceptions(array);
-
-            var current = root;
-            var count = 0;
-
-            FlattenBinaryTreeToArray(current, array, ref count);
-        }
-
-        public virtual IEnumerator<T> GetEnumerator()
-        {
-            var current = root;
-
-            if (current == null) { yield break; }
-
-            var currentEnumerator = current.GetEnumerator();
-
-            while (currentEnumerator.MoveNext())
+            if (node.CompareTo(item) == 0)
             {
-                yield return currentEnumerator.Current;
+                return true;
             }
-        }
-
-        public bool Remove(T value)
-        {
-            var current = root;
-            AVLTreeNode<T> parent = null;
-
-            if (!Contains(value))
+            if (node.CompareTo(item) < 0)
             {
-                return false;
+                FindItem(node.Right, item);
             }
-
-            if (current == null)
+            else if (node.CompareTo(item) > 0)
             {
-                return false;
-            }
-            else
-            {
-                Count--;
-                return RemoveNode(parent, current, value);
-            }
-        }
-
-        private bool RemoveNode(AVLTreeNode<T> parent, AVLTreeNode<T> current, T value)
-        {
-            if (current.CompareTo(value) == 0)
-            {
-                if (current.Left == null && current.Right == null && parent != null)
-                {
-                    RemoveLeafNode(parent);
-                }
-                else if (current.Right == null)
-                {
-                    RemoveNodeWithNoRightNode(parent, current);
-                    return true;
-                }
-                else if (current.Right.Left == null)
-                {
-                    RemoveNodeWithNoLeftNodeOnRightChild(parent, current);
-                    return true;
-                }
-                else if (current.Right.Left != null)
-                {
-                    RemoveNodeWithLeftNodeOnRightChild(parent, current);
-                    return true;
-                }
-            }
-
-            else if (current.NodeValue.CompareTo(value) < 0)
-            {
-                RemoveNode(current, current.Right, value);
-            }
-            else if (current.NodeValue.CompareTo(value) > 0)
-            {
-                RemoveNode(current, current.Left, value);
+                FindItem(node.Left, item);
             }
 
             return false;
         }
 
-        private void RemoveLeafNode(AVLTreeNode<T> parent)
+        public void CopyTo(T[] array, int arrayIndex)
         {
-            if (parent.Right == null)
+            var currentValues = GetEnumerator();
+            var startIndex = 0;
+
+            while (currentValues.MoveNext())
             {
-                parent.Left = null;
-            }
-            else
-            {
-                parent.Right = null;
+                array[startIndex] = currentValues.Current;
+                startIndex++;
             }
         }
 
-        private void RemoveNodeWithNoRightNode(AVLTreeNode<T> parent, AVLTreeNode<T> current)
+        public IEnumerator<T> GetEnumerator()
         {
-            if (parent == null)
+            return InOrderTraversal(this);
+        }
+
+        private IEnumerator<T> InOrderTraversal(AVLTree<T> input)
+        {
+            if (input.root == null) { yield break; }
+
+            var current = input.root.GetEnumerator();
+
+            while(current.MoveNext())
             {
-                root = current.Left;
-            }
-            else
-            {
-                ParentDirectionReference(parent, current);
+                yield return current.Current;
             }
         }
 
-        private void RemoveNodeWithNoLeftNodeOnRightChild(AVLTreeNode<T> parent, AVLTreeNode<T> current)
+        public bool Remove(T item)
         {
-            current.Right.Left = current.Left;
-
-            if (parent == null)
-            {
-                root = current.Right;
-            }
-            else
-            {
-                ParentDirectionReference(parent, current);
-            }
-        }
-
-        private void RemoveNodeWithLeftNodeOnRightChild(AVLTreeNode<T> parent, AVLTreeNode<T> current)
-        {
-            AVLTreeNode<T> leftmost, leftmostParent;
-            leftmostParent = current.Right;
-            leftmost = current.Right.Left;
-
-            while (leftmost.Left != null)
-            {
-                leftmostParent = leftmost;
-                leftmost = leftmost.Left;
-            }
-
-            leftmostParent.Left = leftmost.Right;
-
-            leftmost.Left = current.Left;
-            leftmost.Right = current.Right;
-
-            ParentDirectionReference(parent, current);
-        }
-
-        private void ParentDirectionReference(AVLTreeNode<T> parent, AVLTreeNode<T> current)
-        {
-            if (parent.Left == current)
-            {
-                parent.Left = current.Right;
-            }
-            else
-            {
-                parent.Right = current.Right;
-            }
+            throw new NotImplementedException();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        private AVLTreeNode<T> FindNodeAndParent(T value, out AVLTreeNode<T> parent)
-        {
-            AVLTreeNode<T> current = root;
-            parent = null;
-
-            while (current != null)
-            {
-                int res = current.CompareTo(value);
-
-                if (res > 0)
-                {
-                    parent = current;
-                    current = current.Left;
-                }
-                else if (res < 0)
-                {
-                    parent = current;
-                    current = current.Right;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return current;
-        }
-
-        private void FlattenBinaryTreeToArray(AVLTreeNode<T> input, T[] array, ref int index)
-        {
-            if (input.Left != null)
-            {
-                FlattenBinaryTreeToArray(input.Left, array, ref index);
-                array[index] = input.Left.NodeValue;
-                index++;
-            }
-
-            if (input.Right != null)
-            {
-                FlattenBinaryTreeToArray(input.Right, array, ref index);
-                array[index] = input.Right.NodeValue;
-                index++;
-            }
-
-            array[index] = input.NodeValue;
-        }
-
-        private void ArrayExceptions(T[] array)
-        {
-            if (array == null)
-            {
-                throw new ArgumentNullException("Array value is null");
-            }
-
-            if (array.Length < Count)
-            {
-                throw new ArgumentException("Source array length is shorter than number of elements");
-            }
-        }
-
-        private class AVLTreeNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable<T>
-        {
-            public AVLTreeNode<T> Left;
-            public AVLTreeNode<T> Right;
-            public AVLTreeNode<T> Parent;
-            public T NodeValue;
-
-            public AVLTreeNode(AVLTreeNode<T> parent, T value = default)
-            {
-                Left = null;
-                Right = null;
-                NodeValue = value;
-                Parent = parent;
-            }
-
-            internal void Balance()
-            {
-                if (CurrentState == CurrentState.RightHeavy)
-                {
-                    if (Right != null && Right.BalanceFactor < 0)
-                    {
-                        LeftRightRotation();
-                    }
-                    else
-                    {
-                        LeftRotation();
-                    }
-                }
-
-                if (CurrentState == CurrentState.LeftHeavy)
-                {
-                    if (Left != null && Left.BalanceFactor > 0)
-                    {
-                        RightLeftRotation();
-                    }
-                    else
-                    {
-                        RightRotation();
-                    }
-                }
-
-                if (Parent != null)
-                {
-                    Parent.Balance();
-                }
-            }
-
-            private void LeftRightRotation()
-            {
-               
-            }
-
-            private void RightLeftRotation()
-            {
-
-            }
-
-            private void RightRotation()
-            {
-
-            }
-
-            private void LeftRotation()
-            {
-
-            }
-
-            public int BalanceFactor => RightHeight - LeftHeight;
-
-            public CurrentState CurrentState
-            {
-                get
-                {
-                    if (LeftHeight - RightHeight > 1)
-                    {
-                        return CurrentState.LeftHeavy;
-                    }
-                    if (RightHeight - LeftHeight > 1)
-                    {
-                        return CurrentState.RightHeavy;
-                    }
-
-                    return CurrentState.Balanced;
-                }
-            }
-
-            private int LeftHeight => GetMaximumHeight(Left);
-
-            private int RightHeight => GetMaximumHeight(Right);
-
-            private int GetMaximumHeight(AVLTreeNode<T> input)
-            {
-                if (input != null)
-                {
-                    return 1 + Math.Max(GetMaximumHeight(input.Left), GetMaximumHeight(input.Right));
-                }
-
-                return 0;
-            }
-
-            public int CompareTo([AllowNull] T other)
-            {
-                return NodeValue.CompareTo(other);
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                var rootNode = this;
-
-                if (rootNode == null) { yield break; }
-
-                foreach (var element in InOrderEnumerator())
-                {
-                    yield return element;
-                }
-            }
-
-            public IEnumerable<T> PreOrderEnumerator()
-            {
-                var rootNode = this;
-
-                if (rootNode == null) { yield break; }
-
-                yield return rootNode.NodeValue;
-
-                if (rootNode.Left != null)
-                {
-                    foreach (var element in rootNode.Left)
-                    {
-                        yield return element;
-                    }
-                }
-
-                if (rootNode.Right != null)
-                {
-                    foreach (var element in rootNode.Right)
-                    {
-                        yield return element;
-                    }
-                }
-            }
-
-            public IEnumerable<T> InOrderEnumerator()
-            {
-                var rootNode = this;
-
-                if (rootNode == null) { yield break; }
-
-                if (rootNode.Left != null)
-                {
-                    foreach (var element in rootNode.Left)
-                    {
-                        yield return element;
-                    }
-                }
-
-                yield return rootNode.NodeValue;
-
-                if (rootNode.Right != null)
-                {
-                    foreach (var element in rootNode.Right)
-                    {
-                        yield return element;
-                    }
-                }
-            }
-
-            public IEnumerable<T> PostOrderEnumerator()
-            {
-                var rootNode = this;
-
-                if (rootNode.Left != null)
-                {
-                    foreach (var element in rootNode.Left)
-                    {
-                        yield return element;
-                    }
-                }
-
-                if (rootNode.Right != null)
-                {
-                    foreach (var element in rootNode.Right)
-                    {
-                        yield return element;
-                    }
-                }
-
-                yield return rootNode.NodeValue;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
         }
     }
 }

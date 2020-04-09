@@ -8,187 +8,127 @@ namespace DataStructures
     public class AVLTreeTest
     {
         [Fact]
-        public void AVLTreeInitializesEmptyTree()
+        public void AVLTreeInitializesEmptyAVLTree()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            Assert.Empty(avlTree);
+            Assert.Empty(avl);
         }
 
         [Fact]
         public void AVLTreePopulatesWithSingleElement()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(3);
+            avl.Add(3);
 
-            Assert.Single(avlTree);
+            Assert.Single(avl);
         }
 
         [Fact]
-        public void AVLTreeClearClearsExistentData()
+        public void AVLTreeAddWorksForRightHeavyTree()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(7);
-            avlTree.Add(2);
-            avlTree.Add(10);
+            avl.Add(1);
+            avl.Add(2);
+            avl.Add(3);
 
-            avlTree.Clear();
+            var expected = new int[] { 1, 2, 3 };
+            var actual = new int[avl.Count];
+            avl.CopyTo(actual, 0);
 
-            Assert.Empty(avlTree);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void AVLTreeContainsReturnsTrueForValidRootValue()
+        public void AVLTreeAddWorksForLeftHeavyTree()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(7);
-            avlTree.Add(2);
-            avlTree.Add(10);
+            avl.Add(3);
+            avl.Add(2);
+            avl.Add(1);
 
-            Assert.Contains(7, avlTree);
+            var expected = new int[] { 1, 2, 3 };
+            var actual = new int[avl.Count];
+            avl.CopyTo(actual, 0);
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void AVLTreeContainsReturnsTrueForValidLowerThanRootValue()
+        public void AVLTreeAddWorksForLeftHeavyTreeUnbalancedLeftChild()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(7);
-            avlTree.Add(2);
-            avlTree.Add(10);
+            avl.Add(3);
+            avl.Add(1);
+            avl.Add(2);
 
-            Assert.Contains(2, avlTree);
+            var expected = new int[] { 1, 2, 3 };
+            var actual = new int[avl.Count];
+            avl.CopyTo(actual, 0);
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void AVLTreeContainsReturnsTrueForValidBiggerThanRootValue()
+        public void AVLTreeAddWorksForRightHeavyTreeUnbalancedRightChild()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(7);
-            avlTree.Add(2);
-            avlTree.Add(10);
+            avl.Add(1);
+            avl.Add(3);
+            avl.Add(2);
 
-            Assert.Contains(10, avlTree);
+            var expected = new int[] { 1, 2, 3 };
+            var actual = new int[avl.Count];
+            avl.CopyTo(actual, 0);
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void AVLTreeContainsReturnsTrueForPresentValueInUnbalancedTree()
+        public void AVLTreeCopytoWorksForSmallLengthArray()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(3);
-            avlTree.Add(2);
-            avlTree.Add(1);
+            avl.Add(1);
+            avl.Add(3);
+            avl.Add(2);
 
-            Assert.Contains(1, avlTree);
+            var actual = new int[avl.Count];
+            var expected = new int[] { 1, 2, 3 };
+
+            avl.CopyTo(actual, 0);
+
+            Assert.Equal(expected, actual);
         }
-
+        
         [Fact]
-        public void AVLTreeContainsReturnTrueForPresenValuesAfterLeftRotation()
+        public void AVLTreeCopyToWorksForMultipleRotationsArray()
         {
-            var avlTree = new AVLTree<int>();
+            var avl = new AVLTree<int>();
 
-            avlTree.Add(1);
-            avlTree.Add(2);
-            avlTree.Add(3);
+            avl.Add(2);
+            avl.Add(8);
+            avl.Add(6);
+            avl.Add(4);
+            avl.Add(10);
+            avl.Add(7);
+            avl.Add(9);
+            avl.Add(5);
+            avl.Add(3);
+            avl.Add(11);
+            avl.Add(15);
 
-            Assert.Contains(1, avlTree);
-            Assert.Contains(2, avlTree);
-            Assert.Contains(3, avlTree);
-        }
+            var actual = new int[avl.Count];
+            var expected = new int[] { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15 };
 
-        [Fact]
-        public void AVLTreeContainsReturnsTrueForPresentValuesAfterLeftRotationDeeper()
-        {
-            var avlTree = new AVLTree<int>();
+            avl.CopyTo(actual, 0);
 
-            avlTree.Add(1);
-            avlTree.Add(3);
-            avlTree.Add(4);
-            avlTree.Add(2);
-
-            Assert.Contains(1, avlTree);
-            Assert.Contains(3, avlTree);
-            Assert.Contains(4, avlTree);
-            Assert.Contains(2, avlTree);
-        }
-
-        [Fact]
-        public void AVLTreeContainsReturnTrueForPresentValuesAfterRightRotation()
-        {
-            var avlTree = new AVLTree<int>();
-
-            avlTree.Add(3);
-            avlTree.Add(2);
-            avlTree.Add(1);
-
-            Assert.Contains(1, avlTree);
-            Assert.Contains(2, avlTree);
-            Assert.Contains(3, avlTree);
-        }
-
-        [Fact]
-        public void AVLTreeContainsReturnTrueForPresentValuesAfterRightRotationDeeper()
-        {
-            var avlTree = new AVLTree<int>();
-
-            avlTree.Add(4);
-            avlTree.Add(2);
-            avlTree.Add(1);
-            avlTree.Add(3);
-
-            Assert.Contains(4, avlTree);
-            Assert.Contains(2, avlTree);
-            Assert.Contains(1, avlTree);
-            Assert.Contains(3, avlTree);
-        }
-
-        [Fact]
-        public void AVLTreeContainsReturnsTrueForPresentValuesAfterRightLeftRotation()
-        {
-            var avlTree = new AVLTree<int>();
-
-            avlTree.Add(3);
-            avlTree.Add(1);
-            avlTree.Add(2);
-
-            Assert.Contains(3, avlTree);
-            Assert.Contains(1, avlTree);
-            Assert.Contains(2, avlTree);
-        }
-
-        [Fact]
-        public void AVLTreeContainsReturnsTrueForPresentValuesAfterLeftRightRotation()
-        {
-            var avlTree = new AVLTree<int>();
-
-            avlTree.Add(1);
-            avlTree.Add(3);
-            avlTree.Add(2);
-
-            Assert.Contains(1, avlTree);
-            Assert.Contains(3, avlTree);
-            Assert.Contains(2, avlTree);
-        }
-
-        [Fact]
-        public void AVLTreeContainsReturnsTrueForPresentValuesAfterAllRotations()
-        {
-            var avlTree = new AVLTree<int>();
-
-            avlTree.Add(2);
-            avlTree.Add(1);
-            avlTree.Add(7);
-            avlTree.Add(5);
-            avlTree.Add(4);
-            avlTree.Add(10);
-            avlTree.Add(15);
-            avlTree.Add(23);
-            avlTree.Add(20);
+            Assert.Equal(expected, actual);
         }
     }
 }
