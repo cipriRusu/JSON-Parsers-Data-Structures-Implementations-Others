@@ -14,55 +14,63 @@ namespace DataStructures
 
     public class AVLNode<T> : IEnumerable<T>, IComparable<T> where T : IComparable
     {
-        public AVLNode(T value, AVLNode<T> parent, AVLTree<T> current)
-        {
-            Value = value;
-            Parent = parent;
-            _current = current;
-        }
-
-        private AVLTree<T> _current;
-
-        AVLNode<T> _left;
+        public T Value;
+        private AVLNode<T> _left;
         public AVLNode<T> Left
         {
-            get { return _left; }
+            get
+            {
+                return _left;
+            }
             internal set
             {
                 _left = value;
-                if (_left != null)
+
+                if(_left != null)
                 {
                     _left.Parent = this;
                 }
             }
         }
 
-        AVLNode<T> _right;
+        private AVLNode<T> _right;
         public AVLNode<T> Right
         {
-            get { return _right; }
+            get
+            {
+                return _right;
+            }
             internal set
             {
                 _right = value;
-                if (_right != null)
+
+                if(_right != null)
                 {
                     _right.Parent = this;
                 }
             }
         }
-
         public AVLNode<T> Parent;
-        public T Value;
+        private AVLTree<T> _tree;
+
+        public AVLNode(T value, AVLNode<T> parent, AVLTree<T> current)
+        {
+            Parent = parent;
+            Value = value;
+            _tree = current;
+        }
+
+        public int BalanceFactor => LeftLength - RightLength;
 
         public TreeState State
         {
             get
             {
-                if (MaximumLeft - MaximumRight > 1)
+                if (LeftLength - RightLength > 1)
                 {
                     return TreeState.LeftHeavy;
                 }
-                if (MaximumRight - MaximumLeft > 1)
+                if (RightLength - LeftLength > 1)
                 {
                     return TreeState.RightHeavy;
                 }
@@ -71,15 +79,15 @@ namespace DataStructures
             }
         }
 
-        public int BalanceIndex => MaximumLeft - MaximumRight;
-        public int MaximumLeft => GetMaximumLength(Left);
-        public int MaximumRight => GetMaximumLength(Right);
+        public int LeftLength => GetMaximumLength(Left);
 
-        private int GetMaximumLength(AVLNode<T> aVLNode)
+        public int RightLength => GetMaximumLength(Right);
+
+        private int GetMaximumLength(AVLNode<T> node)
         {
-            if (aVLNode != null)
+            if (node != null)
             {
-                return 1 + Math.Max(GetMaximumLength(aVLNode.Left), GetMaximumLength(aVLNode.Right));
+                return 1 + Math.Max(GetMaximumLength(node.Right), GetMaximumLength(node.Left));
             }
 
             return 0;
@@ -89,7 +97,7 @@ namespace DataStructures
         {
             if (State == TreeState.RightHeavy)
             {
-                if (Right != null && Right.BalanceIndex > 0)
+                if (Right != null && Right.BalanceFactor > 0)
                 {
                     RightLeftRotation();
                 }
@@ -100,7 +108,7 @@ namespace DataStructures
             }
             if (State == TreeState.LeftHeavy)
             {
-                if (Left != null && Left.BalanceIndex < 0)
+                if (Left != null && Left.BalanceFactor < 0)
                 {
                     LeftRightRotation();
                 }
@@ -111,10 +119,12 @@ namespace DataStructures
             }
         }
 
-        private void RightLeftRotation()
+        private void RightRotation()
         {
-            Right.RightRotation();
-            LeftRotation();
+            var newRoot = Left;
+            ReplaceRoot(newRoot);
+            Left = newRoot.Right;
+            newRoot.Right = this;
         }
 
         private void LeftRightRotation()
@@ -123,20 +133,39 @@ namespace DataStructures
             RightRotation();
         }
 
-        private void RightRotation()
-        {
-            var newNode = Left;
-            ReplaceRoot(newNode);
-            Left = newNode.Right;
-            newNode.Right = this;
-        }
-
         private void LeftRotation()
         {
-            var newNode = Right;
-            ReplaceRoot(newNode);
-            Right = newNode.Left;
-            newNode.Left = this;
+            var newRoot = Right;
+            ReplaceRoot(newRoot);
+            Right = newRoot.Left;
+            newRoot.Left = this;
+        }
+
+        private void RightLeftRotation()
+        {
+            Right.RightRotation();
+            LeftRotation();
+        }
+
+        private void ReplaceRoot(AVLNode<T> newRoot)
+        {
+            if (Parent != null)
+            {
+                if (Parent.Right == this)
+                {
+                    Parent.Right = newRoot;
+                }
+                if (Parent.Left == this)
+                {
+                    Parent.Left = newRoot;
+                }
+            }
+            else
+            {
+                _tree.root = newRoot;
+                newRoot.Parent = Parent;
+                Parent = newRoot;
+            }
         }
 
         public int CompareTo([AllowNull] T other)
@@ -144,34 +173,11 @@ namespace DataStructures
             return Value.CompareTo(other);
         }
 
-        private void ReplaceRoot(AVLNode<T> newNode)
-        {
-            if (Parent != null)
-            {
-                if (Parent.Left == this)
-                {
-                    Parent.Left = newNode;
-                }
-                if (Parent.Right == this)
-                {
-                    Parent.Right = newNode;
-                }
-            }
-            else
-            {
-                _current.root = newNode;
-                newNode.Parent = Parent;
-                Parent = newNode;
-            }
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
-            var current = this;
+            if (this == null) yield break;
 
-            if (current == null) { yield break; }
-
-            if (current.Left != null)
+            if (Left != null)
             {
                 foreach (var v in Left)
                 {
@@ -179,9 +185,9 @@ namespace DataStructures
                 }
             }
 
-            yield return current.Value;
+            yield return Value;
 
-            if (current.Right != null)
+            if (Right != null)
             {
                 foreach (var v in Right)
                 {
