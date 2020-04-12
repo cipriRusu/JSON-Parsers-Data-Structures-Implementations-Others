@@ -15,6 +15,17 @@ namespace DataStructures
         }
 
         [Fact]
+        public void AVLTreeCountReturnsTrueForNumberOfElement()
+        {
+            var avl = new AVLTree<int>();
+            avl.Add(2);
+            avl.Add(1);
+            avl.Add(9);
+
+            Assert.Equal(3, avl.Count);
+        }
+
+        [Fact]
         public void AVLTreeAddInitiatesLeftRotation()
         {
             var avl = new AVLTree<int>();
@@ -192,6 +203,43 @@ namespace DataStructures
             avl.CopyTo(actual, 0);
 
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void AVLTreeAddThrowsArgumentExceptionForDuplicateElementAlreadyPresent()
+        {
+            var avl = new AVLTree<int>();
+
+            avl.Add(2);
+
+            Assert.Throws<ArgumentException>(()=> avl.Add(2));
+        }
+
+        [Fact]
+        public void AVLTreeCopyToArrayThrowsArgumentNullExceptionForNullInpuArray()
+        {
+            var avl = new AVLTree<int>();
+
+            avl.Add(2);
+            avl.Add(1);
+
+            Assert.Throws<ArgumentNullException>(() => avl.CopyTo(null, 0));
+        }
+
+        [Fact]
+        public void AvlTreeCopyToArrayThrowsArgumentExceptionForShorterThanCollectionArray()
+        {
+            var avl = new AVLTree<int>();
+
+            avl.Add(1);
+            avl.Add(2);
+            avl.Add(3);
+            avl.Add(4);
+            avl.Add(5);
+
+            var source = new int[3];
+
+            Assert.Throws<ArgumentException>(() => avl.CopyTo(source, 0));
         }
     }
 }

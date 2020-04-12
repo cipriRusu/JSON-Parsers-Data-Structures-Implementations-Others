@@ -20,6 +20,11 @@ namespace DataStructures
 
         public void Add(T item)
         {
+            if (FindNode(item, root, out _) != null)
+            {
+                throw new ArgumentException("Element already present in tree");
+            }
+
             if (root == null)
             {
                 Count++;
@@ -98,6 +103,16 @@ namespace DataStructures
 
         public void CopyTo(T[] array, int arrayIndex)
         {
+            if(array == null)
+            {
+                throw new ArgumentNullException("Input array is null");
+            }
+
+            if(array.Length < Count)
+            {
+                throw new ArgumentException("Input array length is shorter than total tree Count");
+            }
+
             var startindex = arrayIndex;
             var current = root.GetEnumerator();
 
@@ -200,6 +215,7 @@ namespace DataStructures
                 else
                 {
                     int res = current.Parent.CompareTo(current.Value);
+
                     if (res > 0)
                     {
                         current.Parent.Left = leftMost;
