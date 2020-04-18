@@ -164,40 +164,20 @@ namespace Functional_LINQ
     this IEnumerable<TSource> first, IEnumerable<TSource> second,
     IEqualityComparer<TSource> comparer)
         {
-            foreach (var firstITem in first)
-            {
-                foreach (var secondItem in second)
-                {
-                    if (comparer.Equals(firstITem, secondItem))
-                    {
-                        yield return firstITem;
-                    }
-                }
-            }
+            var firstSet = new HashSet<TSource>(first, comparer);
+            var secondSet = new HashSet<TSource>(second, comparer);
+
+            return firstSet.Intersect(secondSet);
         }
 
         public static IEnumerable<TSource> Except<TSource>(
     this IEnumerable<TSource> first, IEnumerable<TSource> second,
     IEqualityComparer<TSource> comparer)
         {
-            foreach (var firstElement in first)
-            {
-                bool isPresent = false;
+            var firstSet = new HashSet<TSource>(first, comparer);
+            var secondSet = new HashSet<TSource>(second, comparer);
 
-                foreach (var secondElement in second)
-                {
-                    if (comparer.Equals(firstElement, secondElement))
-                    {
-                        isPresent = true;
-                        break;
-                    }
-                }
-
-                if (!isPresent)
-                {
-                    yield return firstElement;
-                }
-            }
+            return firstSet.Except(secondSet);
         }
 
         public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>
