@@ -154,23 +154,10 @@ namespace Functional_LINQ
     this IEnumerable<TSource> first, IEnumerable<TSource> second,
     IEqualityComparer<TSource> comparer)
         {
-            var containedSet = new HashSet<TSource>(comparer);
+            var firstSet = new HashSet<TSource>(first, comparer);
+            var secondSet = new HashSet<TSource>(second, comparer);
 
-            foreach (var element in first)
-            {
-                if (containedSet.Add(element))
-                {
-                    yield return element;
-                }
-            }
-
-            foreach (var element in second)
-            {
-                if (containedSet.Add(element))
-                {
-                    yield return element;
-                }
-            }
+            return firstSet.Union(secondSet);
         }
 
         public static IEnumerable<TSource> Intersect<TSource>(
