@@ -147,15 +147,7 @@ namespace Functional_LINQ
         public static IEnumerable<TSource> Distinct<TSource>(
     this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
         {
-            var containedSet = new HashSet<TSource>(comparer);
-
-            foreach (var element in source)
-            {
-                if (containedSet.Add(element))
-                {
-                    yield return element;
-                }
-            }
+            return new HashSet<TSource>(source, comparer);
         }
 
         public static IEnumerable<TSource> Union<TSource>(
