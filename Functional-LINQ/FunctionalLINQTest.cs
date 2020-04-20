@@ -282,5 +282,22 @@ namespace Functional_LINQ
 
             Assert.Equal(expected, actualData);
         }
+
+        [Fact]
+        public void ThenByReturnsValidOutputForValidInput()
+        {
+            var current = new string[] { "bob", "coco", "ana", "gicu", "zalmoxis" };
+
+            var actual = current.OrderBy(x => x.Length, new IntegerComparer());
+
+            var expected = new string[]
+            {
+                "ana",
+                "bob",
+                "coco",
+                "gicu",
+                "zalmoxis"
+            };
+        }
     }
 }
