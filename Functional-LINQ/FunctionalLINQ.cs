@@ -10,7 +10,7 @@ namespace Functional_LINQ
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            if(source == null || predicate == null)
+            if (source == null || predicate == null)
             {
                 throw new ArgumentNullException("Source or Predicate value equals null");
             }
@@ -30,7 +30,7 @@ namespace Functional_LINQ
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            if(source == null || predicate == null)
+            if (source == null || predicate == null)
             {
                 throw new ArgumentNullException("Source or Predicate value was null");
             }
@@ -86,6 +86,11 @@ namespace Functional_LINQ
             this IEnumerable<TSource> source,
             Func<TSource, IEnumerable<TResult>> selector)
         {
+            if (source == null || selector == null)
+            {
+                throw new ArgumentNullException("Source or selector is null");
+            }
+
             foreach (var element in source)
             {
                 foreach (var item in selector(element))
@@ -99,6 +104,11 @@ namespace Functional_LINQ
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
+            if (source == null || predicate == null)
+            {
+                throw new ArgumentNullException("Source or selector is null");
+            }
+
             foreach (var element in source)
             {
                 if (predicate(element))
@@ -112,6 +122,11 @@ namespace Functional_LINQ
     this IEnumerable<TSource> source,
     Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
+            if (source == null || keySelector == null || elementSelector == null)
+            {
+                throw new ArgumentNullException("Source, Key Selector or Element selector values are null");
+            }
+
             var outputDictionary = new Dictionary<TKey, TElement>();
 
             foreach (var value in source)

@@ -122,6 +122,23 @@ namespace Functional_LINQ
             var expected = new int[] { 1, 3, 4, 7, 8, 9 };
             Assert.Equal(expected, FunctionalLINQ.SelectMany(collection, x => x));
         }
+        
+        [Fact]
+        public void SelectManyThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            var current = collection.SelectMany(x => x).GetEnumerator();
+            Assert.Throws<ArgumentNullException>(() => current.MoveNext());
+        }
+
+        [Fact]
+        public void SelectManyThrowsArgumentNullExceptionForNullPredicate()
+        {
+            string[] collection = new string[] { "a", "b", "c" };
+            var current = collection.SelectMany<string, string>(null).GetEnumerator();
+            Assert.Throws<ArgumentNullException>(() => current.MoveNext());
+
+        }
 
         [Fact]
         public void WhereReturnsValidOutputForInputedParameters()
@@ -129,6 +146,22 @@ namespace Functional_LINQ
             var collection = new int[] { 1, 3, 0, 9, 4, 7 };
             var expected = new int[] { 9, 7 };
             Assert.Equal(expected, FunctionalLINQ.Where(collection, x => x > 5));
+        }
+
+        [Fact]
+        public void WhereThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            var current = collection.Where(x => x == "something").GetEnumerator();
+            Assert.Throws<ArgumentNullException>(() => current.MoveNext());
+        }
+
+        [Fact]
+        public void WhereThrowsArgumentNullExceptionForNullPredicate()
+        {
+            string[] collection = new string[] { "a", "b" };
+            var current = collection.Where(null).GetEnumerator();
+            Assert.Throws<ArgumentNullException>(() => current.MoveNext());
         }
 
         [Fact]
@@ -145,6 +178,29 @@ namespace Functional_LINQ
             expected.Add(5, "test");
 
             Assert.Equal(expected, FunctionalLINQ.ToDictionary(collection, x => x, x => "test"));
+        }
+
+        [Fact]
+        public void ToDictionaryThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] firstCollection = null;
+            Assert.Throws<ArgumentNullException>(()=> firstCollection.ToDictionary(x => x, x => x).GetEnumerator());
+        }
+
+        [Fact]
+        public void ToDictionaryThrowsArgumentNullExceptionForNullFirstPredicate()
+        {
+            string[] firstCollection = new string[] { "a", "b", "c" };
+            Assert.Throws<ArgumentNullException>(()=> firstCollection.ToDictionary<string, string, string>(null, x => x).
+            GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void ToDictionaryThrowsArgumentNullExceptionForNullSecondPredicate()
+        {
+            string[] firstCollection = new string[] { "a", "b", "c" };
+            Assert.Throws<ArgumentNullException>(() => firstCollection.ToDictionary<string, string, string>(x => x, null).
+            GetEnumerator().MoveNext());
         }
 
         [Fact]
