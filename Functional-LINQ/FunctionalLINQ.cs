@@ -70,6 +70,12 @@ namespace Functional_LINQ
             this IEnumerable<TSource> source,
             Func<TSource, TResult> selector)
         {
+
+            if (source == null || selector == null)
+            {
+                throw new ArgumentNullException("Source or Selector value equals null");
+            }
+
             foreach (var element in source)
             {
                 yield return selector(element);

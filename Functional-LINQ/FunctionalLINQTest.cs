@@ -81,7 +81,7 @@ namespace Functional_LINQ
         public void FirstThrowsArgumentNullExceptionForNullSource()
         {
             string[] collection = null;
-            Assert.Throws<ArgumentNullException>(() => collection.Any(x => x == "something"));
+            Assert.Throws<ArgumentNullException>(() => collection.First(x => x == "something"));
         }
 
         [Fact]
@@ -97,6 +97,22 @@ namespace Functional_LINQ
             var collection = new int[] { 2, 1, 0, 9, 4 };
             var expected = new int[] { 4, 2, 0, 18, 8 };
             Assert.Equal(expected, FunctionalLINQ.Select(collection, x => x * 2));
+        }
+
+        [Fact]
+        public void SelectThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            var current = collection.Select(x => x == "something").GetEnumerator();
+            Assert.Throws<ArgumentNullException>(() => current.MoveNext());
+        }
+
+        [Fact]
+        public void SelectThrowsArgumentNullExceptionForNullPredicate()
+        {
+            string[] collection = new string[] { "aa" };
+            var current = collection.Select<string, string>(null).GetEnumerator();
+            Assert.Throws<ArgumentNullException>(() => current.MoveNext());
         }
 
         [Fact]
