@@ -78,6 +78,20 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void FirstThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            Assert.Throws<ArgumentNullException>(() => collection.Any(x => x == "something"));
+        }
+
+        [Fact]
+        public void FirstThrowsArgumentNullExcpetionForNullPredicate()
+        {
+            string[] collection = new string[] { "aa", "bb", "cc" };
+            Assert.Throws<ArgumentNullException>(() => collection.First(null));
+        }
+
+        [Fact]
         public void SelectReturnValidOutputForInputedParameters()
         {
             var collection = new int[] { 2, 1, 0, 9, 4 };
