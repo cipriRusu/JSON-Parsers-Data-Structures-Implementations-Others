@@ -260,6 +260,18 @@ namespace Functional_LINQ
             Assert.Equal(expected, actualData);
         }
 
+        [Fact]
+        public void OrderByReturnsValidOuutputForValidInput()
+        {
+            var current = new Dictionary<string, int>();
+            current.Add("Ana", 20);
+            current.Add("Mihai", 10);
+            current.Add("Barbu", 30);
+            current.Add("Zicu", 15);
+
+            var actual = current.OrderBy(x => x.Value, new IntegerComparer());
+        }
+
         private Dictionary<int, List<string>> ExtractData(IEnumerable<Dictionary<int, List<string>>> actual)
         {
             var TotalElements = new Dictionary<int, List<string>>();
@@ -287,6 +299,13 @@ namespace Functional_LINQ
                 return GetHashCode();
             }
         }
-    }
 
+        public class IntegerComparer : IComparer<int>
+        {
+            public int Compare([AllowNull] int x, [AllowNull] int y)
+            {
+                return x.CompareTo(y);
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Functional_LINQ
@@ -188,7 +189,7 @@ namespace Functional_LINQ
         {
             var dictionary = new Dictionary<TKey, List<TElement>>(comparer);
 
-            foreach(var element in source)
+            foreach (var element in source)
             {
                 var key = keySelector(element);
                 var value = elementSelector(element);
@@ -207,6 +208,77 @@ namespace Functional_LINQ
             {
                 yield return resultSelector(element, dictionary[element].ToList());
             }
+        }
+
+        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+            this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            return new OrderedEnumerable<TSource>(source, new ProjectedComparer<TSource, TKey>(keySelector, comparer));
+        }
+    }
+
+    public class OrderedEnumerable<TElement> : IOrderedEnumerable<TElement>
+    {
+        IEnumerable<TElement> source;
+        IComparer<TElement> comparer;
+
+        public OrderedEnumerable(IEnumerable<TElement> source, IComparer<TElement> comparer)
+        {
+            this.source = source;
+            this.comparer = comparer;
+        }
+
+        public IOrderedEnumerable<TElement>
+            CreateOrderedEnumerable<TKey>(Func<TElement, TKey> keySelector,
+            IComparer<TKey> comparer, bool descending)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerator<TElement> GetEnumerator()
+        {
+            var buffer = source.ToList();
+
+            for(int i = 0; i < buffer.Count - 1; i++)
+            {
+                for(int j = 0; j < buffer.Count - i - 1; j++)
+                {
+                    if(comparer.Compare(buffer[j], buffer[j + 1]) > 0)
+                    {
+                        (buffer[j + 1], buffer[j]) = (buffer[j], buffer[j + 1]);
+                    }
+                }
+            }
+
+            foreach(var element in buffer)
+            {
+                yield return element;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    public class ProjectedComparer<TElement, TKey> : IComparer<TElement>
+    {
+        Func<TElement, TKey> keySelector;
+        IComparer<TKey> comparer;
+
+        public ProjectedComparer(Func<TElement, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            this.comparer = comparer;
+            this.keySelector = keySelector;
+        }
+
+        public int Compare([AllowNull] TElement x, [AllowNull] TElement y)
+        {
+            var firstKey = keySelector(x);
+            var secondKey = keySelector(y);
+
+            return comparer.Compare(firstKey, secondKey);
         }
     }
 }
