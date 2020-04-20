@@ -33,5 +33,19 @@ namespace Functional_LINQ
 
             return TotalElements;
         }
+
+        internal static string[] ThenByExtractData(IOrderedEnumerable<string> actual)
+        {
+            var TotalElements = new string[actual.Count()];
+            var index = 0;
+
+            foreach(var element in actual)
+            {
+                TotalElements[index] = element;
+                index++;
+            }
+
+            return TotalElements;
+        }
     }
 }

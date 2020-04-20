@@ -290,6 +290,8 @@ namespace Functional_LINQ
 
             var actual = current.OrderBy(x => x.Length, new IntegerComparer());
 
+            var actualData = DataExtractionHelper.ThenByExtractData(actual);
+
             var expected = new string[]
             {
                 "ana",
@@ -298,6 +300,8 @@ namespace Functional_LINQ
                 "gicu",
                 "zalmoxis"
             };
+
+            Assert.Equal(expected, actualData);
         }
     }
 }
