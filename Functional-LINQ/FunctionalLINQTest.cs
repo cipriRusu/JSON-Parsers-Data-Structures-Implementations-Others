@@ -248,7 +248,7 @@ namespace Functional_LINQ
                 },
                 new EqualityComparer<int>());
 
-            var actualData = ExtractData(actual);
+            var actualData = DataExtractionHelper.GroupByExtractData(actual);
 
             var expected = new Dictionary<int, List<string>>()
             {
@@ -269,21 +269,6 @@ namespace Functional_LINQ
             current.Add("Zicu", 15);
 
             var actual = current.OrderBy(x => x.Value, new IntegerComparer());
-        }
-
-        private Dictionary<int, List<string>> ExtractData(IEnumerable<Dictionary<int, List<string>>> actual)
-        {
-            var TotalElements = new Dictionary<int, List<string>>();
-
-            foreach (var element in actual)
-            {
-                foreach (var listElement in element)
-                {
-                    TotalElements.Add(listElement.Key, listElement.Value);
-                }
-            }
-
-            return TotalElements;
         }
     }
 }
