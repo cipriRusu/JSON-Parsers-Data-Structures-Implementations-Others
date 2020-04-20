@@ -20,7 +20,9 @@ namespace Functional_LINQ
             CreateOrderedEnumerable<TKey>(Func<TElement, TKey> keySelector,
             IComparer<TKey> comparer, bool descending)
         {
-            var secondComparer = new ProjectedComparer<TElement, TKey>(keySelector, comparer);
+            IComparer<TElement> secondComparer = new ProjectedComparer<TElement, TKey>(keySelector, comparer);
+
+            return new OrderedEnumerable<TElement>(source, new CombinedComparer<TElement>(currentComparer, secondComparer));
         }
 
         public IEnumerator<TElement> GetEnumerator()

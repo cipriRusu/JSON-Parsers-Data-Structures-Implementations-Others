@@ -215,9 +215,9 @@ namespace Functional_LINQ
         }
 
         public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
-            this IOrderedEnumerable<TSource> source,Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+            this IOrderedEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
         {
-
+            return source.CreateOrderedEnumerable(keySelector, comparer, true);
         }
     }
 }

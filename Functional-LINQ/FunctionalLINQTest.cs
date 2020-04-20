@@ -288,7 +288,7 @@ namespace Functional_LINQ
         {
             var current = new string[] { "bob", "coco", "ana", "gicu", "zalmoxis" };
 
-            var actual = current.OrderBy(x => x.Length, new IntegerComparer());
+            var actual = current.OrderBy(x => x.Length, new IntegerComparer()).ThenBy(x => x, StringComparer.OrdinalIgnoreCase);
 
             var actualData = DataExtractionHelper.ThenByExtractData(actual);
 
