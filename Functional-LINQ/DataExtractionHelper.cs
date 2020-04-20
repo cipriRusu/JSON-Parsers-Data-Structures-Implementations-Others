@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Functional_LINQ
@@ -16,6 +17,18 @@ namespace Functional_LINQ
                 {
                     TotalElements.Add(listElement.Key, listElement.Value);
                 }
+            }
+
+            return TotalElements;
+        }
+
+        public static Dictionary<string, int> OrderByExtractData(IOrderedEnumerable<KeyValuePair<string, int>> actual)
+        {
+            var TotalElements = new Dictionary<string, int>();
+
+            foreach(var element in actual)
+            {
+                TotalElements.Add(element.Key, element.Value);
             }
 
             return TotalElements;

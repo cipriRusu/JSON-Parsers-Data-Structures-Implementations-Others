@@ -269,6 +269,18 @@ namespace Functional_LINQ
             current.Add("Zicu", 15);
 
             var actual = current.OrderBy(x => x.Value, new IntegerComparer());
+
+            var actualData = DataExtractionHelper.OrderByExtractData(actual);
+
+            var expected = new Dictionary<string, int>()
+            {
+                ["Mihai"] = 10,
+                ["Zicu"] = 15,
+                ["Ana"] = 20,
+                ["Barbu"] = 30,
+            };
+
+            Assert.Equal(expected, actualData);
         }
     }
 }
