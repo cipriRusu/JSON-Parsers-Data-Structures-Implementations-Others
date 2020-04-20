@@ -30,6 +30,11 @@ namespace Functional_LINQ
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
+            if(source == null)
+            {
+                throw new ArgumentNullException("Source value was null");
+            }
+
             foreach (var element in source)
             {
                 if (predicate(element))

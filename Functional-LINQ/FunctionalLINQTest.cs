@@ -50,6 +50,13 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void AnyMethordThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            Assert.Throws<ArgumentNullException>(() => collection.Any(x => x == "something"));
+        }
+
+        [Fact]
         public void FirstReturnsTrueForFirstElementThatSatisfiesCondition()
         {
             var collection = new int[] { 2, 1, 0, 5, 3, 8 };
