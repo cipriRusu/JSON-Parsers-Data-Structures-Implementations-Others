@@ -8,19 +8,19 @@ namespace Functional_LINQ
     public class OrderedEnumerable<TElement> : IOrderedEnumerable<TElement>
     {
         IEnumerable<TElement> source;
-        IComparer<TElement> comparer;
+        IComparer<TElement> currentComparer;
 
         public OrderedEnumerable(IEnumerable<TElement> source, IComparer<TElement> comparer)
         {
             this.source = source;
-            this.comparer = comparer;
+            this.currentComparer = comparer;
         }
 
         public IOrderedEnumerable<TElement>
             CreateOrderedEnumerable<TKey>(Func<TElement, TKey> keySelector,
             IComparer<TKey> comparer, bool descending)
         {
-            throw new NotImplementedException();
+            var secondComparer = new ProjectedComparer<TElement, TKey>(keySelector, comparer);
         }
 
         public IEnumerator<TElement> GetEnumerator()
@@ -31,7 +31,7 @@ namespace Functional_LINQ
             {
                 for(int j = 0; j < buffer.Count - i - 1; j++)
                 {
-                    if(comparer.Compare(buffer[j], buffer[j + 1]) > 0)
+                    if(currentComparer.Compare(buffer[j], buffer[j + 1]) > 0)
                     {
                         (buffer[j + 1], buffer[j]) = (buffer[j], buffer[j + 1]);
                     }

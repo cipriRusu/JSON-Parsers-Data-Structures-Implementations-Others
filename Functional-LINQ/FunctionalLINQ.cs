@@ -213,5 +213,11 @@ namespace Functional_LINQ
         {
             return new OrderedEnumerable<TSource>(source, new ProjectedComparer<TSource, TKey>(keySelector, comparer));
         }
+
+        public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
+            this IOrderedEnumerable<TSource> source,Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+        {
+
+        }
     }
 }
