@@ -275,14 +275,61 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void ZipThrowsArgumentNullExceptionForFirstNullCollection()
+        {
+            string[] firstCollection = null;
+            var secondCollection = new string[] { "first", "second", "third" };
+
+            Assert.Throws<ArgumentNullException>(()=>
+                firstCollection.Zip(secondCollection, 
+                (firstCollection, secondCollection) => 
+                firstCollection + secondCollection).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void ZipThrowsArgumentNullExceptionForSecondNullCollection()
+        {
+            string[] firstCollection = new string[] { "first", "second", "third" };
+            string[] secondCollection = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+                firstCollection.Zip(secondCollection,
+                (firstCollection, secondCollection) =>
+                firstCollection + secondCollection).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
         public void AggregateReturnsValidOutputForValidInput()
         {
             var collection = new int[] { 1, 2, 3, 4, 5 };
-
             int expected = 15;
 
             Assert.Equal(expected,
             FunctionalLINQ.Aggregate(collection, 0, (x, y) => x + y));
+        }
+
+        [Fact]
+        public void AggregateThrowsArgumentNullExceptionForNullSouce()
+        {
+            string[] collection = null;
+            Assert.Throws<ArgumentNullException>(() => 
+            collection.Aggregate("", (x, y) => String.Concat(x, y)));
+        }
+
+        [Fact]
+        public void AggregateThrowsArgumentNullExceptionForNulSeed()
+        {
+            string[] collection = new string[] { "a", "b" };
+            Assert.Throws<ArgumentNullException>(() =>
+            collection.Aggregate<string, string>(null, (x, y) => String.Concat(x, y)));
+        }
+
+        [Fact]
+        public void AggregateThrowsArgumentNullExceptionForNullAggregateFunction()
+        {
+            string[] collection = new string[] { "a", "b" };
+            Assert.Throws<ArgumentNullException>(() =>
+            collection.Aggregate("", null));
         }
 
         [Fact]

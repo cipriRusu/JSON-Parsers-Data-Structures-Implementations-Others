@@ -141,6 +141,11 @@ namespace Functional_LINQ
     this IEnumerable<TFirst> first, IEnumerable<TSecond> second,
     Func<TFirst, TSecond, TResult> resultSelector)
         {
+            if (first == null || second == null)
+            {
+                throw new ArgumentNullException("First or second collection was null");
+            }
+
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
 
@@ -154,6 +159,11 @@ namespace Functional_LINQ
     this IEnumerable<TSource> source, TAccumulate seed,
     Func<TAccumulate, TSource, TAccumulate> func)
         {
+            if (source == null || seed == null || func == null)
+            {
+                throw new ArgumentNullException("Source, seed or Aggregate Function was null");
+            }
+
             foreach (var element in source)
             {
                 seed = func(seed, element);
