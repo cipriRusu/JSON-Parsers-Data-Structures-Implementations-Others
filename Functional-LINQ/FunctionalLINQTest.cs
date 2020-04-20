@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace Functional_LINQ
 {
-    public class FunctionalLINQTest
+    public partial class FunctionalLINQTest
     {
         [Fact]
         public void AllMethodReturnsTrueForAllElementsValidForPredicate()
@@ -285,27 +284,6 @@ namespace Functional_LINQ
             }
 
             return TotalElements;
-        }
-
-        public class EqualityComparer<T> : IEqualityComparer<T>
-        {
-            public bool Equals([AllowNull] T x, [AllowNull] T y)
-            {
-                return x.Equals(y);
-            }
-
-            public int GetHashCode([DisallowNull] T obj)
-            {
-                return GetHashCode();
-            }
-        }
-
-        public class IntegerComparer : IComparer<int>
-        {
-            public int Compare([AllowNull] int x, [AllowNull] int y)
-            {
-                return x.CompareTo(y);
-            }
         }
     }
 }
