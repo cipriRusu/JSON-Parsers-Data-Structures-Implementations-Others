@@ -22,6 +22,20 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void AddMethodThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            Assert.Throws<ArgumentNullException>(() => collection.All(x => x.Contains("something")));
+        }
+
+        [Fact]
+        public void AddMethodThrowsArgumentNullExceptionForNullPredicate()
+        {
+            string[] collection = { "aa", "bb" };
+            Assert.Throws<ArgumentNullException>(() => collection.All(null));
+        }
+
+        [Fact]
         public void AnyMethodReturnTrueForSingleElementValidForPredicate()
         {
             var collection = new int[] { 2, 1, 9, 4, 7 };
