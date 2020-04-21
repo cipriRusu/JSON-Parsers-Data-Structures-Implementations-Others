@@ -462,6 +462,26 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void IntersectThrowsArgumentNullExceptionForNullFirstValue()
+        {
+            string[] firstCollection = null;
+            string[] secCollection = new string[] { "a", "b" };
+
+            Assert.Throws<ArgumentNullException>(()=> 
+                firstCollection.Intersect(secCollection, new EqualityComparer<string>()));
+        }
+
+        [Fact]
+        public void IntersectThrowsArgumentNullExceptionForNullSecondValues()
+        {
+            string[] firstCollection = new string[] { "a", "b" };
+            string[] secCollection = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+                firstCollection.Intersect(secCollection, new EqualityComparer<string>()));
+        }
+
+        [Fact]
         public void ExceptReturnsValidOutputForValidInput()
         {
             var firstCollection = new int[] { 1, 2, 0, 4 };
