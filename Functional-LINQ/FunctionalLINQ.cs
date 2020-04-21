@@ -256,6 +256,12 @@ namespace Functional_LINQ
         Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
         IEqualityComparer<TKey> comparer)
         {
+
+            if(source == null || keySelector == null || elementSelector == null || resultSelector == null || comparer == null)
+            {
+                throw new ArgumentNullException("Source or keySelector have null values");
+            }
+
             var dictionary = new Dictionary<TKey, List<TElement>>(comparer);
 
             foreach (var element in source)

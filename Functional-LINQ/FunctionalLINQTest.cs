@@ -542,6 +542,53 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void GroupByThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] input = null;
+
+            Assert.Throws<ArgumentNullException>(() => input.GroupBy(x => x, y => y, (x, y) => string.Concat(x, y),
+                new EqualityComparer<string>()).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void GroupByThrowsArgumentNullExceptionForNullKeySelector()
+        {
+            string[] input = new string[] { "a", "b" };
+
+            Assert.Throws<ArgumentNullException>(() => input.GroupBy(null, y => y, (x, y) => string.Concat(x, y),
+                new EqualityComparer<string>()).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void GroupByThrowsArgumentNullExceptionForNullElementSelector()
+        {
+            string[] input = new string[] { "a", "b" };
+
+            Assert.Throws<ArgumentNullException>(() => input.GroupBy<string, string, string, string>
+            (x => x, null, (x, y) => string.Concat(x, y),
+                new EqualityComparer<string>()).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void GroupByThrowsArgumentNullExceptionForNullResultSelector()
+        {
+            string[] input = new string[] { "a", "b" };
+
+            Assert.Throws<ArgumentNullException>(() => input.GroupBy<string, string, string, string>
+            (x => x, y => y, null,
+                new EqualityComparer<string>()).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void GroupByThrowsArgumentNullExceptionForNullComparer()
+        {
+            string[] input = new string[] { "a", "b" };
+
+            Assert.Throws<ArgumentNullException>(() => input.GroupBy
+            (x => x, y => y, (x, y) => string.Concat(x, y), null).GetEnumerator().MoveNext());
+        }
+
+        [Fact]
         public void OrderByReturnsValidOuutputForValidInput()
         {
             var current = new Dictionary<string, int>();
