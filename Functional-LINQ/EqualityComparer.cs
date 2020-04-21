@@ -17,5 +17,18 @@ namespace Functional_LINQ
                 return GetHashCode();
             }
         }
+
+        public class TestClassEqualityComparer<TestClass> : IEqualityComparer<TestClass>
+        {
+            public bool Equals([AllowNull] TestClass x, [AllowNull] TestClass y)
+            {
+                return x.Equals(y);
+            }
+
+            public int GetHashCode([DisallowNull] TestClass obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
     }
 }

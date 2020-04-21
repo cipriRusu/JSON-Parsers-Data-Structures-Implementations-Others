@@ -122,7 +122,7 @@ namespace Functional_LINQ
             var expected = new int[] { 1, 3, 4, 7, 8, 9 };
             Assert.Equal(expected, FunctionalLINQ.SelectMany(collection, x => x));
         }
-        
+
         [Fact]
         public void SelectManyThrowsArgumentNullExceptionForNullSource()
         {
@@ -184,14 +184,14 @@ namespace Functional_LINQ
         public void ToDictionaryThrowsArgumentNullExceptionForNullSource()
         {
             string[] firstCollection = null;
-            Assert.Throws<ArgumentNullException>(()=> firstCollection.ToDictionary(x => x, x => x).GetEnumerator());
+            Assert.Throws<ArgumentNullException>(() => firstCollection.ToDictionary(x => x, x => x).GetEnumerator());
         }
 
         [Fact]
         public void ToDictionaryThrowsArgumentNullExceptionForNullFirstPredicate()
         {
             string[] firstCollection = new string[] { "a", "b", "c" };
-            Assert.Throws<ArgumentNullException>(()=> firstCollection.ToDictionary<string, string, string>(null, x => x).
+            Assert.Throws<ArgumentNullException>(() => firstCollection.ToDictionary<string, string, string>(null, x => x).
             GetEnumerator().MoveNext());
         }
 
@@ -280,9 +280,9 @@ namespace Functional_LINQ
             string[] firstCollection = null;
             var secondCollection = new string[] { "first", "second", "third" };
 
-            Assert.Throws<ArgumentNullException>(()=>
-                firstCollection.Zip(secondCollection, 
-                (firstCollection, secondCollection) => 
+            Assert.Throws<ArgumentNullException>(() =>
+                firstCollection.Zip(secondCollection,
+                (firstCollection, secondCollection) =>
                 firstCollection + secondCollection).GetEnumerator().MoveNext());
         }
 
@@ -312,7 +312,7 @@ namespace Functional_LINQ
         public void AggregateThrowsArgumentNullExceptionForNullSouce()
         {
             string[] collection = null;
-            Assert.Throws<ArgumentNullException>(() => 
+            Assert.Throws<ArgumentNullException>(() =>
             collection.Aggregate("", (x, y) => String.Concat(x, y)));
         }
 
@@ -350,7 +350,7 @@ namespace Functional_LINQ
             string[] first = null;
             var sec = new string[] { "2", "3", "4" };
 
-            Assert.Throws<ArgumentNullException>(()=> 
+            Assert.Throws<ArgumentNullException>(() =>
             first.Join(sec, first => first, sec => sec, (first, sec) => first).
             GetEnumerator().MoveNext());
         }
@@ -373,7 +373,7 @@ namespace Functional_LINQ
             string[] sec = new string[] { "1", "2", "3" };
 
             Assert.Throws<ArgumentNullException>(() =>
-            first.Join(sec, null,  sec => sec, (first, sec) => first).
+            first.Join(sec, null, sec => sec, (first, sec) => first).
             GetEnumerator().MoveNext());
         }
 
@@ -414,7 +414,7 @@ namespace Functional_LINQ
         public void DistinctThrowsArgumentNullExceptionForNullSource()
         {
             string[] collection = null;
-            Assert.Throws<ArgumentNullException>(()=> collection.Distinct(StringComparer.OrdinalIgnoreCase));
+            Assert.Throws<ArgumentNullException>(() => collection.Distinct(StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
@@ -467,7 +467,7 @@ namespace Functional_LINQ
             string[] firstCollection = null;
             string[] secCollection = new string[] { "a", "b" };
 
-            Assert.Throws<ArgumentNullException>(()=> 
+            Assert.Throws<ArgumentNullException>(() =>
                 firstCollection.Intersect(secCollection, new EqualityComparer<string>()));
         }
 
@@ -615,7 +615,7 @@ namespace Functional_LINQ
         [Fact]
         public void OrderByThrowsArgumentNullForNullKeySelector()
         {
-            string[] current = new string[]{"A", "b"};
+            string[] current = new string[] { "A", "b" };
 
             Assert.Throws<ArgumentNullException>(() =>
             current.OrderBy(null, StringComparer.OrdinalIgnoreCase));
@@ -626,7 +626,8 @@ namespace Functional_LINQ
         {
             var current = new string[] { "bob", "coco", "ana", "gicu", "zalmoxis" };
 
-            var actual = current.OrderBy(x => x.Length, new IntegerComparer()).ThenBy(x => x, StringComparer.OrdinalIgnoreCase);
+            var actual = current.OrderBy(x => x.Length, new IntegerComparer()).
+                ThenBy(x => x, StringComparer.OrdinalIgnoreCase);
 
             var actualData = DataExtractionHelper.ThenByExtractData(actual);
 
@@ -640,6 +641,48 @@ namespace Functional_LINQ
             };
 
             Assert.Equal(expected, actualData);
+        }
+
+        [Fact]
+        public void ThenByReturnsValidOutputForValidInputChainedThenBy()
+        {
+            var current = new TestObject[]
+            {
+                new TestObject{FirstProperty = 1, SecondProperty = "aaa", ThirdProperty = 1},
+                new TestObject{FirstProperty = 2, SecondProperty = "ccc", ThirdProperty = 1},
+                new TestObject{FirstProperty = 2, SecondProperty = "aaa", ThirdProperty = 2},
+                new TestObject{FirstProperty = 1, SecondProperty = "bbb", ThirdProperty = 2},
+                new TestObject{FirstProperty = 1, SecondProperty = "ccc", ThirdProperty = 1},
+                new TestObject{FirstProperty = 1, SecondProperty = "ccc", ThirdProperty = 2},
+                new TestObject{FirstProperty = 2, SecondProperty = "ccc", ThirdProperty = 2},
+                new TestObject{FirstProperty = 2, SecondProperty = "bbb", ThirdProperty = 1},
+                new TestObject{FirstProperty = 2, SecondProperty = "bbb", ThirdProperty = 2},
+                new TestObject{FirstProperty = 2, SecondProperty = "aaa", ThirdProperty = 1},
+                new TestObject{FirstProperty = 1, SecondProperty = "bbb", ThirdProperty = 1},
+            };
+
+            var actual = current.OrderBy(x => x.FirstProperty, new IntegerComparer())
+                .ThenBy(x => x.SecondProperty, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(x => x.ThirdProperty, new IntegerComparer());
+
+            var actualData = DataExtractionHelper.ChainedThenByExtractData(actual);
+
+            var expected = new TestObject[]
+            {
+                new TestObject{FirstProperty = 1, SecondProperty = "aaa", ThirdProperty = 1},
+                new TestObject{FirstProperty = 1, SecondProperty = "bbb", ThirdProperty = 1},
+                new TestObject{FirstProperty = 1, SecondProperty = "bbb", ThirdProperty = 2},
+                new TestObject{FirstProperty = 1, SecondProperty = "ccc", ThirdProperty = 1},
+                new TestObject{FirstProperty = 1, SecondProperty = "ccc", ThirdProperty = 2},
+                new TestObject{FirstProperty = 2, SecondProperty = "aaa", ThirdProperty = 1},
+                new TestObject{FirstProperty = 2, SecondProperty = "aaa", ThirdProperty = 2},
+                new TestObject{FirstProperty = 2, SecondProperty = "bbb", ThirdProperty = 1},
+                new TestObject{FirstProperty = 2, SecondProperty = "bbb", ThirdProperty = 2},
+                new TestObject{FirstProperty = 2, SecondProperty = "ccc", ThirdProperty = 1},
+                new TestObject{FirstProperty = 2, SecondProperty = "ccc", ThirdProperty = 2}
+            };
+
+            Assert.Equal(expected, actualData, new TestObjectComparer());
         }
 
         [Fact]
