@@ -177,6 +177,11 @@ namespace Functional_LINQ
     Func<TOuter, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector,
     Func<TOuter, TInner, TResult> resultSelector)
         {
+            if(outer == null || inner == null || outerKeySelector == null || innerKeySelector == null || resultSelector == null)
+            {
+                throw new ArgumentNullException("OuterCollection, InnerCollection, InnerKeySelector or ResultSelector was null");
+            }
+
             foreach (var element in outer)
             {
                 foreach (var inside in inner)
@@ -192,6 +197,11 @@ namespace Functional_LINQ
         public static IEnumerable<TSource> Distinct<TSource>(
     this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
         {
+            if(source == null)
+            {
+                throw new ArgumentNullException("Source value is nulll");
+            }
+
             return new HashSet<TSource>(source, comparer);
         }
 
@@ -199,6 +209,11 @@ namespace Functional_LINQ
     this IEnumerable<TSource> first, IEnumerable<TSource> second,
     IEqualityComparer<TSource> comparer)
         {
+            if(first == null || second == null)
+            {
+                throw new ArgumentNullException("First or second values is null");
+            }
+
             var firstSet = new HashSet<TSource>(first, comparer);
             var secondSet = new HashSet<TSource>(second, comparer);
 

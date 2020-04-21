@@ -345,6 +345,61 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void JoinThrowsArgumentNullExceptionForNullOuterSource()
+        {
+            string[] first = null;
+            var sec = new string[] { "2", "3", "4" };
+
+            Assert.Throws<ArgumentNullException>(()=> 
+            first.Join(sec, first => first, sec => sec, (first, sec) => first).
+            GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void JoinThrowsArgumentNullExceptionForNullInnerSource()
+        {
+            string[] first = new string[] { "2", "3", "4" };
+            string[] sec = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            first.Join(sec, first => first, sec => sec, (first, sec) => first).
+            GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void JoinThrowsArgumentNullExceptionForNullOuterKeySelector()
+        {
+            string[] first = new string[] { "2", "3", "4" };
+            string[] sec = new string[] { "1", "2", "3" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            first.Join(sec, null,  sec => sec, (first, sec) => first).
+            GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void JoinThrowsArgumentNullExceptionForNullInnerKeySelector()
+        {
+            string[] first = new string[] { "2", "3", "4" };
+            string[] sec = new string[] { "1", "2", "3" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            first.Join(sec, first => first, null, (first, sec) => first).
+            GetEnumerator().MoveNext());
+        }
+
+        [Fact]
+        public void JoinThrowsArgumentNullExceptionForNullResultSelector()
+        {
+            string[] first = new string[] { "2", "3", "4" };
+            string[] sec = new string[] { "1", "2", "3" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            first.Join<string, string, string, string>(sec, first => first, sec => sec, null).
+            GetEnumerator().MoveNext());
+        }
+
+        [Fact]
         public void DistinctReturnsValidOuputForValidInput()
         {
             var collection = new int[] { 1, 2, 1, 7, 9, 1, 3 };
@@ -353,6 +408,13 @@ namespace Functional_LINQ
             var result = collection.Distinct(new EqualityComparer<int>());
 
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void DistinctThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] collection = null;
+            Assert.Throws<ArgumentNullException>(()=> collection.Distinct(StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
@@ -368,13 +430,32 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void UnionThrowsArgumentNullExceptionForNullFirstValue()
+        {
+            string[] firstCollection = null;
+            string[] secondCollection = new string[] { "a", "b" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            firstCollection.Union(secondCollection, new EqualityComparer<string>()));
+        }
+
+        [Fact]
+        public void UnionThrowsArgumentNullExceptionForNullSecondValue()
+        {
+            string[] firstCollection = new string[] { "a", "b" }; ;
+            string[] secondCollection = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            firstCollection.Union(secondCollection, new EqualityComparer<string>()));
+        }
+
+        [Fact]
         public void IntersectReturnsValidOutputForValidInput()
         {
             var firstCollection = new int[] { 1, 2, 0, 4 };
             var secCollection = new int[] { 3, 2, 0, 9 };
 
             IEnumerable expected = new int[] { 2, 0 };
-
             IEnumerable result = firstCollection.Intersect(secCollection, new EqualityComparer<int>());
 
             Assert.Equal(expected, result);
