@@ -580,15 +580,6 @@ namespace Functional_LINQ
         }
 
         [Fact]
-        public void GroupByThrowsArgumentNullExceptionForNullComparer()
-        {
-            string[] input = new string[] { "a", "b" };
-
-            Assert.Throws<ArgumentNullException>(() => input.GroupBy
-            (x => x, y => y, (x, y) => string.Concat(x, y), null).GetEnumerator().MoveNext());
-        }
-
-        [Fact]
         public void OrderByReturnsValidOuutputForValidInput()
         {
             var current = new Dictionary<string, int>();
@@ -610,6 +601,24 @@ namespace Functional_LINQ
             };
 
             Assert.Equal(expected, actualData);
+        }
+
+        [Fact]
+        public void OrderByThrowsArgumentNullForNullSourceValue()
+        {
+            string[] current = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            current.OrderBy(x => x, StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Fact]
+        public void OrderByThrowsArgumentNullForNullKeySelector()
+        {
+            string[] current = new string[]{"A", "b"};
+
+            Assert.Throws<ArgumentNullException>(() =>
+            current.OrderBy(null, StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]

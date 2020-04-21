@@ -288,6 +288,11 @@ namespace Functional_LINQ
         public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
             this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
         {
+            if(source == null || keySelector == null)
+            {
+                throw new ArgumentNullException("Source or keySelector value is null");
+            }
+
             return new OrderedEnumerable<TSource>(source, new ProjectedComparer<TSource, TKey>(keySelector, comparer));
         }
 
