@@ -641,5 +641,25 @@ namespace Functional_LINQ
 
             Assert.Equal(expected, actualData);
         }
+
+        [Fact]
+        public void ThenByThrowsArgumentNullExceptionForNullSource()
+        {
+            string[] current = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            current.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).
+            ThenBy(x => x, StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Fact]
+        public void ThenByThrowsArgumentNullExceptionForNullKeySelector()
+        {
+            string[] current = new string[] { "A", "b" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            current.OrderBy(null, StringComparer.OrdinalIgnoreCase).
+            ThenBy(null, StringComparer.OrdinalIgnoreCase));
+        }
     }
 }
