@@ -211,7 +211,7 @@ namespace Functional_LINQ
         {
             if(first == null || second == null)
             {
-                throw new ArgumentNullException("First or second values is null");
+                throw new ArgumentNullException("First or second values are null");
             }
 
             var firstSet = new HashSet<TSource>(first, comparer);
@@ -226,7 +226,7 @@ namespace Functional_LINQ
         {
             if (first == null || second == null)
             {
-                throw new ArgumentNullException("First or second values is null");
+                throw new ArgumentNullException("First or second values are null");
             }
 
             var firstSet = new HashSet<TSource>(first, comparer);
@@ -239,6 +239,11 @@ namespace Functional_LINQ
     this IEnumerable<TSource> first, IEnumerable<TSource> second,
     IEqualityComparer<TSource> comparer)
         {
+            if(first == null || second == null)
+            {
+                throw new ArgumentNullException("First or second values are null");
+            }
+
             var firstSet = new HashSet<TSource>(first, comparer);
             var secondSet = new HashSet<TSource>(second, comparer);
 

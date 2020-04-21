@@ -494,6 +494,26 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void ExceptThrowsArgumentNullExceptionForNullFirstCollection()
+        {
+            string[] firstCollection = null;
+            string[] secCollection = new string[] { "3", "2", "0", "9" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            firstCollection.Except(secCollection, new EqualityComparer<string>()));
+        }
+
+        [Fact]
+        public void ExceptThrowsArgumentNullExceptionForNullSecondCollection()
+        {
+            string[] firstCollection = new string[] { "3", "2", "0", "9" };
+            string[] secCollection = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            firstCollection.Except(secCollection, new EqualityComparer<string>()));
+        }
+
+        [Fact]
         public void GroupByReturnsValidOutputForValidInput()
         {
             var current = new Dictionary<string, int>();
