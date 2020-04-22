@@ -688,7 +688,7 @@ namespace Functional_LINQ
         [Fact]
         public void ThenByReturnsValidOutputForValidInputThreeChainedThenBy()
         {
-            var input = new string[] { "Second", "medium", "second", "Abc", "Lastone", "abc" };
+            var input = new string[] { "medium", "second", "Second", "Abc", "Lastone", "abc" };
 
             var actual = input.OrderBy(x => x.Length, new IntegerComparer()).
                 ThenBy(i => i, StringComparer.OrdinalIgnoreCase).
