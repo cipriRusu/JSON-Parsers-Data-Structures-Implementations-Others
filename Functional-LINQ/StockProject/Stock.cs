@@ -19,7 +19,21 @@ namespace Functional_LINQ.StockProject
             }
             else
             {
-                current.UpdateCounter(productCount);
+                current.AddItems(productCount);
+            }
+        }
+
+        public void Remove(string productName, int productCount)
+        {
+            var current = containedProducts.Find(x => x.ProductName == productName);
+
+            if (current == null)
+            {
+                throw new ArgumentException("Product does not exist in stock");
+            }
+            else
+            {
+                current.RemoveItems(productCount);
             }
         }
 

@@ -39,7 +39,8 @@ namespace Functional_LINQ.StockProject
         public void CreatesProductClassUpdatesCounterForNewUpdatedValue()
         {
             var product = new Product("Bere", 3);
-            product.UpdateCounter(9);
+
+            product.AddItems(9);
 
             Assert.Equal(12, product.ProductCount);
         }
@@ -63,7 +64,7 @@ namespace Functional_LINQ.StockProject
         }
 
         [Fact]
-        public void StockUpdatesCounterForSameProduct()
+        public void StockUpdatesCounterForSameProductAdd()
         {
             var currentStock = new Stock();
 
@@ -89,10 +90,31 @@ namespace Functional_LINQ.StockProject
         }
 
         [Fact]
+        public void StockUpdatesCounterForSameProductRemove()
+        {
+            var currentStock = new Stock();
+            currentStock.Add("Banane", 2);
+            currentStock.Add("Portocale", 8);
+
+            currentStock.Remove("Portocale", 6);
+
+            Assert.Equal(2, currentStock.GetCounter("Portocale"));
+        }
+
+        [Fact]
+        public void StockThrowsArgumentExceptionIfProductRemovalExceedsNumberOfProducts()
+        {
+            var currentStock = new Stock();
+            currentStock.Add("Banane", 2);
+            currentStock.Add("Portocale", 8);
+
+            Assert.Throws<ArgumentException>(() => currentStock.Remove("Portocale", 10));
+        }
+
+        [Fact]
         public void StockThrowsArgumentNullExceptionForAbsentProduct()
         {
             var currentStock = new Stock();
-
             currentStock.Add("Chips", 7);
 
             Assert.Throws<ArgumentException>(() => currentStock.GetCounter("Bere"));
