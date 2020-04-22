@@ -10,8 +10,7 @@ namespace Functional_LINQ.StockProject
         [Fact]
         public void CreatesProductClassAndPopulatesName()
         {
-            var product = new Product();
-            product.SetNameAndCount("Bere", 3);
+            var product = new Product("Bere", 3);
 
             Assert.Equal("Bere", product.ProductName);
         }
@@ -19,8 +18,7 @@ namespace Functional_LINQ.StockProject
         [Fact]
         public void CreatesProductclassAndPopulatesQuantity()
         {
-            var product = new Product();
-            product.SetNameAndCount("Bere", 4);
+            var product = new Product("Bere", 4);
 
             Assert.Equal(4, product.ProductCount);
         }
@@ -28,28 +26,76 @@ namespace Functional_LINQ.StockProject
         [Fact]
         public void CreatesProductClassThrowsArgumentExceptionForNullName()
         {
-            var product = new Product();
-
-            Assert.Throws<ArgumentNullException>(() => product.SetNameAndCount(null, 4));
+            Assert.Throws<ArgumentNullException>(() => new Product(null, 4));
         }
 
         [Fact]
         public void CreatesProductclassThrowsArgumentExceptionForNegativeQuantity()
         {
-            var product = new Product();
-
-            Assert.Throws<ArgumentException>(() => product.SetNameAndCount("Mici", -3));
+            Assert.Throws<ArgumentException>(() => new Product("Mici", -3));
         }
 
         [Fact]
         public void CreatesProductClassUpdatesCounterForNewUpdatedValue()
         {
-            var product = new Product();
-
-            product.SetNameAndCount("Bere", 3);
+            var product = new Product("Bere", 3);
             product.UpdateCounter(9);
 
             Assert.Equal(12, product.ProductCount);
+        }
+
+        [Fact]
+        public void StockCreatesEmptyStockClass()
+        {
+            var currentStock = new Stock();
+
+            Assert.Empty(currentStock);
+        }
+
+        [Fact]
+        public void StockPopulatesWithSingleProduct()
+        {
+            var currentStock = new Stock();
+
+            currentStock.Add("Bere", 4);
+
+            Assert.Single(currentStock);
+        }
+
+        [Fact]
+        public void StockUpdatesCounterForSameProduct()
+        {
+            var currentStock = new Stock();
+
+            currentStock.Add("Bere", 9);
+            currentStock.Add("Bere", 1);
+
+            Assert.Equal(10, currentStock.GetCounter("Bere"));
+        }
+
+        [Fact]
+        public void StockUpdatesDifferentCountersForDifferentProductsAddition()
+        {
+            var currentStock = new Stock();
+
+            currentStock.Add("Bere", 21);
+            currentStock.Add("Mici", 4);
+
+            currentStock.Add("Mici", 6);
+            currentStock.Add("Bere", 10);
+
+            Assert.Equal(31, currentStock.GetCounter("Bere"));
+            Assert.Equal(10, currentStock.GetCounter("Mici"));
+        }
+
+        [Fact]
+        public void StockThrowsArgumentNullExceptionForAbsentProduct()
+        {
+            var currentStock = new Stock();
+
+            currentStock.Add("Chips", 7);
+
+            Assert.Throws<ArgumentException>(() => currentStock.GetCounter("Bere"));
         }
     }
 }

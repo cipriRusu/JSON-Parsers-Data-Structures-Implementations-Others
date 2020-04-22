@@ -6,10 +6,7 @@ namespace Functional_LINQ.StockProject
 {
     public class Product
     {
-        public string ProductName { get; private set; }
-        public int ProductCount { get; private set; }
-
-        public void SetNameAndCount(string productName, int productCount)
+        public Product(string productName, int productCount)
         {
             NameAndCountExceptions(productName, productCount);
 
@@ -17,7 +14,13 @@ namespace Functional_LINQ.StockProject
             ProductCount = productCount;
         }
 
-        public void UpdateCounter(int newValue) => ProductCount += newValue;
+        public string ProductName { get; private set; }
+        public int ProductCount { get; private set; }
+
+        public void UpdateCounter(int newValue)
+        {
+            ProductCount += newValue;
+        }
 
         private static void NameAndCountExceptions
             (string productName, int productCount)
