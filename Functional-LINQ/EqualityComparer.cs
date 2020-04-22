@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Functional_LINQ
 {
-    public partial class FunctionalLINQTest
+    public partial class LINQImplementationTest
     {
         public class EqualityComparer<T> : IEqualityComparer<T>
         {

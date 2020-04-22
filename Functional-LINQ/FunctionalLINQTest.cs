@@ -5,20 +5,20 @@ using Xunit;
 
 namespace Functional_LINQ
 {
-    public partial class FunctionalLINQTest
+    public partial class LINQImplementationTest
     {
         [Fact]
         public void AllMethodReturnsTrueForAllElementsValidForPredicate()
         {
             var collection = new int[] { 1, 3, 4, 9, 7, 2 };
-            Assert.True(FunctionalLINQ.All(collection, x => x < 10));
+            Assert.True(LINQImplementation.All(collection, x => x < 10));
         }
 
         [Fact]
         public void AllMethodReturnsFalseForSingleElementNotValidInPredicate()
         {
             var collection = new int[] { 1, 3, 4, 9, 7, 12 };
-            Assert.False(FunctionalLINQ.All(collection, x => x < 10));
+            Assert.False(LINQImplementation.All(collection, x => x < 10));
         }
 
         [Fact]
@@ -39,14 +39,14 @@ namespace Functional_LINQ
         public void AnyMethodReturnTrueForSingleElementValidForPredicate()
         {
             var collection = new int[] { 2, 1, 9, 4, 7 };
-            Assert.True(FunctionalLINQ.Any(collection, x => x == 9));
+            Assert.True(LINQImplementation.Any(collection, x => x == 9));
         }
 
         [Fact]
         public void AnyMethodReturnFalseForNoElementValidForPredicate()
         {
             var collection = new int[] { 2, 1, 0, 9, 4 };
-            Assert.False(FunctionalLINQ.Any(collection, x => x == 12));
+            Assert.False(LINQImplementation.Any(collection, x => x == 12));
         }
 
         [Fact]
@@ -67,14 +67,14 @@ namespace Functional_LINQ
         public void FirstReturnsTrueForFirstElementThatSatisfiesCondition()
         {
             var collection = new int[] { 2, 1, 0, 5, 3, 8 };
-            Assert.Equal(5, FunctionalLINQ.First(collection, x => x == 5));
+            Assert.Equal(5, LINQImplementation.First(collection, x => x == 5));
         }
 
         [Fact]
         public void FirstThrowsInvalidOperationExceptionForAbsentValue()
         {
             var collection = new int[] { 2, 1, 0, 4, 9 };
-            Assert.Throws<InvalidOperationException>(() => FunctionalLINQ.First(collection, x => x == 3));
+            Assert.Throws<InvalidOperationException>(() => LINQImplementation.First(collection, x => x == 3));
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Functional_LINQ
         {
             var collection = new int[] { 2, 1, 0, 9, 4 };
             var expected = new int[] { 4, 2, 0, 18, 8 };
-            Assert.Equal(expected, FunctionalLINQ.Select(collection, x => x * 2));
+            Assert.Equal(expected, LINQImplementation.Select(collection, x => x * 2));
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Functional_LINQ
         {
             var collection = new int[][] { new int[] { 1, 3 }, new int[] { 4 }, new int[] { 7, 8, 9 } };
             var expected = new int[] { 1, 3, 4, 7, 8, 9 };
-            Assert.Equal(expected, FunctionalLINQ.SelectMany(collection, x => x));
+            Assert.Equal(expected, LINQImplementation.SelectMany(collection, x => x));
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace Functional_LINQ
         {
             var collection = new int[] { 1, 3, 0, 9, 4, 7 };
             var expected = new int[] { 9, 7 };
-            Assert.Equal(expected, FunctionalLINQ.Where(collection, x => x > 5));
+            Assert.Equal(expected, LINQImplementation.Where(collection, x => x > 5));
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace Functional_LINQ
             expected.Add(4, "test");
             expected.Add(5, "test");
 
-            Assert.Equal(expected, FunctionalLINQ.ToDictionary(collection, x => x, x => "test"));
+            Assert.Equal(expected, LINQImplementation.ToDictionary(collection, x => x, x => "test"));
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace Functional_LINQ
                 "4 - four"
             };
 
-            Assert.Equal(expected, FunctionalLINQ.Zip(firstCollection, secondCollection,
+            Assert.Equal(expected, LINQImplementation.Zip(firstCollection, secondCollection,
             (firstCollection, secondCollection) => firstCollection + " - " + secondCollection));
         }
 
@@ -234,7 +234,7 @@ namespace Functional_LINQ
                 (4, "four")
             };
 
-            Assert.Equal(expected, FunctionalLINQ.Zip(firstCollection, secondCollection,
+            Assert.Equal(expected, LINQImplementation.Zip(firstCollection, secondCollection,
             (firstCollection, secondCollection) => (firstCollection, secondCollection)));
         }
 
@@ -252,7 +252,7 @@ namespace Functional_LINQ
                 "3 - third"
             };
 
-            Assert.Equal(expected, FunctionalLINQ.Zip(firstCollection, secondCollection,
+            Assert.Equal(expected, LINQImplementation.Zip(firstCollection, secondCollection,
             (firstCollection, secondCollection) => firstCollection + " - " + secondCollection));
         }
 
@@ -270,7 +270,7 @@ namespace Functional_LINQ
                 "3 - third"
             };
 
-            Assert.Equal(expected, FunctionalLINQ.Zip(firstCollection, secondCollection,
+            Assert.Equal(expected, LINQImplementation.Zip(firstCollection, secondCollection,
             (firstCollection, secondCollection) => firstCollection + " - " + secondCollection));
         }
 
@@ -305,7 +305,7 @@ namespace Functional_LINQ
             int expected = 15;
 
             Assert.Equal(expected,
-            FunctionalLINQ.Aggregate(collection, 0, (x, y) => x + y));
+            LINQImplementation.Aggregate(collection, 0, (x, y) => x + y));
         }
 
         [Fact]
@@ -341,7 +341,7 @@ namespace Functional_LINQ
             var expected = new int[] { 2, 3 };
 
             Assert.Equal(expected,
-            FunctionalLINQ.Join(first, sec, first => first, sec => sec, (first, sec) => first));
+            LINQImplementation.Join(first, sec, first => first, sec => sec, (first, sec) => first));
         }
 
         [Fact]

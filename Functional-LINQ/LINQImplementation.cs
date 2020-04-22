@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Functional_LINQ
 {
-    public static class FunctionalLINQ
+    public static class LINQImplementation
     {
         public static bool All<TSource>(
             this IEnumerable<TSource> source,
