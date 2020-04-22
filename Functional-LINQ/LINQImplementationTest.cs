@@ -686,6 +686,20 @@ namespace Functional_LINQ
         }
 
         [Fact]
+        public void ThenByReturnsValidOutputForValidInputThreeChainedThenBy()
+        {
+            var input = new string[] { "Second", "medium", "second", "Abc", "Lastone", "abc" };
+
+            var actual = input.OrderBy(x => x.Length, new IntegerComparer()).
+                ThenBy(i => i, StringComparer.OrdinalIgnoreCase).
+                ThenBy(i => i, StringComparer.Ordinal);
+
+            var expected = new string[] {"Abc", "abc", "medium", "Second", "second", "Lastone" };
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ThenByThrowsArgumentNullExceptionForNullSource()
         {
             string[] current = null;

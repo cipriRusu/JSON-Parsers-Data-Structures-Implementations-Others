@@ -7,23 +7,27 @@ namespace Functional_LINQ
 {
     class CombinedComparer<T> : IComparer<T>
     {
-        IComparer<T> firstComparer;
-        IComparer<T> secondComparer;
+        readonly List<IComparer<T>> comparers = new List<IComparer<T>>();
 
         public CombinedComparer(IComparer<T> firstComparer, IComparer<T> secondComparer)
         {
-            this.firstComparer = firstComparer;
-            this.secondComparer = secondComparer;
+            comparers.Add(firstComparer);
+            comparers.Add(secondComparer);
         }
 
         public int Compare([AllowNull] T x, [AllowNull] T y)
         {
-            var firstResult = firstComparer.Compare(x, y);
-            if(firstResult != 0)
+            foreach(var comparer in comparers)
             {
-                return firstResult;
+                var result = comparer.Compare(x, y);
+
+                if(result != 0)
+                {
+                    return result;
+                }
             }
-            return secondComparer.Compare(x, y);
+
+            return 0;
         }
     }
 }
