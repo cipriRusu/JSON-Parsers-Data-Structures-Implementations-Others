@@ -119,5 +119,26 @@ namespace Functional_LINQ.StockProject
 
             Assert.Throws<ArgumentException>(() => currentStock.GetCounter("Bere"));
         }
+
+        [Fact]
+        public void StockActionInvokedForLessThanTenElementsOfProduct()
+        {
+            var currentStock = new Stock();
+            Product testProduct = null;
+            int testCounter = 0;
+
+            void GetData(Product product, int counter)
+            {
+                testProduct = product;
+                testCounter = counter;
+            }
+            
+            currentStock.Add("Chips", 10);
+            currentStock.Remove("Chips", 2);
+            currentStock.GetCallback(GetData);
+
+            Assert.Equal("Chips", testProduct.ProductName);
+            Assert.Equal(8, testCounter);
+        }
     }
 }

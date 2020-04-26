@@ -9,6 +9,11 @@ namespace Functional_LINQ.StockProject
     {
         private List<Product> containedProducts = new List<Product>();
 
+        public void GetCallback(Action<Product, int> getData)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Add(string productName, int productCount)
         {
             var current = containedProducts.Find(x => x.ProductName == productName);

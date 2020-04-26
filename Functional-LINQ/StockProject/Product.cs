@@ -19,7 +19,7 @@ namespace Functional_LINQ.StockProject
 
         public void AddItems(int newValue)
         {
-            ProductCount += newValue;            
+            ProductCount += newValue;
         }
 
         public void RemoveItems(int productCount)
@@ -27,9 +27,10 @@ namespace Functional_LINQ.StockProject
             var result = ProductCount - productCount;
 
             if (result >= 0) { ProductCount = result; }
-            else { 
+            else
+            {
                 throw new ArgumentException
-                    ("Removal count exceeds number of existent products in stock"); 
+                    ("Removal count exceeds number of existent products in stock");
             }
         }
 
