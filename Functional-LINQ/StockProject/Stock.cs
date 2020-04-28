@@ -7,12 +7,9 @@ namespace Functional_LINQ.StockProject
 {
     public class Stock : IEnumerable
     {
-        private List<Product> containedProducts = new List<Product>();
+        private Action<Product> callback;
 
-        public void GetCallback(Action<Product, int> getData)
-        {
-            throw new NotImplementedException();
-        }
+        private List<Product> containedProducts = new List<Product>();
 
         public void Add(string productName, int productCount)
         {
@@ -28,6 +25,11 @@ namespace Functional_LINQ.StockProject
             }
         }
 
+        public void AddCallback(Action<Product> callback)
+        {
+            this.callback = callback;
+        }
+
         public void Remove(string productName, int productCount)
         {
             var current = containedProducts.Find(x => x.ProductName == productName);
@@ -39,6 +41,14 @@ namespace Functional_LINQ.StockProject
             else
             {
                 current.RemoveItems(productCount);
+
+                if(callback != null)
+                {
+                    if (current.ProductCount > 5 && current.ProductCount < 10)
+                    {
+                        callback(current);
+                    }
+                }
             }
         }
 

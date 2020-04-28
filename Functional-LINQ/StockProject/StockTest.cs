@@ -121,24 +121,38 @@ namespace Functional_LINQ.StockProject
         }
 
         [Fact]
+        public void StockActionNotInvokedAndReturnsNullForNoCallback()
+        {
+            var currentStock = new Stock();
+            Product testProduct = null;
+
+            void GetData(Product product)
+            {
+                testProduct = product;
+            }
+
+            currentStock.AddCallback(GetData);
+
+            Assert.Null(testProduct);
+        }
+
+        [Fact]
         public void StockActionInvokedForLessThanTenElementsOfProduct()
         {
             var currentStock = new Stock();
             Product testProduct = null;
-            int testCounter = 0;
 
-            void GetData(Product product, int counter)
+            void GetData(Product product)
             {
                 testProduct = product;
-                testCounter = counter;
             }
-            
+
+            currentStock.AddCallback(GetData);
             currentStock.Add("Chips", 10);
             currentStock.Remove("Chips", 2);
-            currentStock.GetCallback(GetData);
 
+            
             Assert.Equal("Chips", testProduct.ProductName);
-            Assert.Equal(8, testCounter);
         }
     }
 }
