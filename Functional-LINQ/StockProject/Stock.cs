@@ -7,7 +7,7 @@ namespace Functional_LINQ.StockProject
 {
     public class Stock : IEnumerable
     {
-        private Action<Product> callback;
+        private Action<Product, int> callback;
 
         private List<Product> containedProducts = new List<Product>();
 
@@ -25,7 +25,7 @@ namespace Functional_LINQ.StockProject
             }
         }
 
-        public void AddCallback(Action<Product> callback)
+        public void AddCallback(Action<Product, int> callback)
         {
             this.callback = callback;
         }
@@ -41,21 +41,25 @@ namespace Functional_LINQ.StockProject
             else
             {
                 current.RemoveItems(productCount);
+                SetCallback(current);
+            }
+        }
 
-                if(callback != null)
+        private void SetCallback(Product current)
+        {
+            if (callback != null)
+            {
+                if (current.ProductCount > 5 && current.ProductCount < 10)
                 {
-                    if (current.ProductCount > 5 && current.ProductCount < 10)
-                    {
-                        callback(current);
-                    }
-                    else if(current.ProductCount > 2 && current.ProductCount < 5)
-                    {
-                        callback(current);
-                    }
-                    else if(current.ProductCount < 2)
-                    {
-                        callback(current);
-                    }
+                    callback(current, current.ProductCount);
+                }
+                else if (current.ProductCount > 2 && current.ProductCount < 5)
+                {
+                    callback(current, current.ProductCount);
+                }
+                else if (current.ProductCount < 2)
+                {
+                    callback(current, current.ProductCount);
                 }
             }
         }

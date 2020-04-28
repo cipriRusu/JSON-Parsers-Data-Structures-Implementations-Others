@@ -125,10 +125,12 @@ namespace Functional_LINQ.StockProject
         {
             var currentStock = new Stock();
             Product testProduct = null;
+            var testCounter = 0;
 
-            void GetData(Product product)
+            void GetData(Product product, int counter)
             {
                 testProduct = product;
+                testCounter = counter;
             }
 
             currentStock.AddCallback(GetData);
@@ -141,10 +143,12 @@ namespace Functional_LINQ.StockProject
         {
             var currentStock = new Stock();
             Product testProduct = null;
+            var testCounter = 0;
 
-            void GetData(Product product)
+            void GetData(Product product, int counter)
             {
                 testProduct = product;
+                testCounter = counter;
             }
 
             currentStock.AddCallback(GetData);
@@ -153,6 +157,7 @@ namespace Functional_LINQ.StockProject
 
             
             Assert.Equal("Chips", testProduct.ProductName);
+            Assert.Equal(8, testProduct.ProductCount);
         }
 
         [Fact]
@@ -160,10 +165,12 @@ namespace Functional_LINQ.StockProject
         {
             var currentStock = new Stock();
             Product testProduct = null;
+            var testCounter = 0;
 
-            void GetData(Product product)
+            void GetData(Product product, int counter)
             {
                 testProduct = product;
+                testCounter = counter;
             }
 
             currentStock.AddCallback(GetData);
@@ -179,10 +186,12 @@ namespace Functional_LINQ.StockProject
         {
             var currentStock = new Stock();
             Product testProduct = null;
+            var testCounter = 0;
 
-            void GetData(Product product)
+            void GetData(Product product, int counter)
             {
                 testProduct = product;
+                testCounter = counter;
             }
 
             currentStock.AddCallback(GetData);
@@ -191,6 +200,28 @@ namespace Functional_LINQ.StockProject
 
 
             Assert.Equal("Chips", testProduct.ProductName);
+        }
+        
+        [Fact]
+        public void StockActionInvokedOnlyOnceForConsecutivePurchases()
+        {
+            var currentStock = new Stock();
+            Product testProduct = null;
+            var testCounter = 0;
+
+            void GetData(Product product, int counter)
+            {
+                testProduct = product;
+                testCounter = counter;
+            }
+
+            currentStock.AddCallback(GetData);
+            currentStock.Add("Beer", 10);
+            currentStock.Remove("Beer", 1);
+            currentStock.Remove("Beer", 1);
+
+            Assert.Equal("Beer", testProduct.ProductName);
+            Assert.Equal(9, testCounter);
         }
     }
 }
