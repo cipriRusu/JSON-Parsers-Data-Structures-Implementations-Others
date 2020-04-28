@@ -173,5 +173,24 @@ namespace Functional_LINQ.StockProject
 
             Assert.Equal("Chips", testProduct.ProductName);
         }
+
+        [Fact]
+        public void StockActionInvokedForLessThanTwoProductsOfProduct()
+        {
+            var currentStock = new Stock();
+            Product testProduct = null;
+
+            void GetData(Product product)
+            {
+                testProduct = product;
+            }
+
+            currentStock.AddCallback(GetData);
+            currentStock.Add("Chips", 2);
+            currentStock.Remove("Chips", 1);
+
+
+            Assert.Equal("Chips", testProduct.ProductName);
+        }
     }
 }

@@ -48,6 +48,14 @@ namespace Functional_LINQ.StockProject
                     {
                         callback(current);
                     }
+                    else if(current.ProductCount > 2 && current.ProductCount < 5)
+                    {
+                        callback(current);
+                    }
+                    else if(current.ProductCount < 2)
+                    {
+                        callback(current);
+                    }
                 }
             }
         }
