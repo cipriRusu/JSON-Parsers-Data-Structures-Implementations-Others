@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Functional_LINQ.StockProject
 {
     public class Stock : IEnumerable
     {
         private Action<Product, int> callback;
-
         private List<Product> containedProducts = new List<Product>();
 
         public void Add(string productName, int productCount)
@@ -40,27 +38,26 @@ namespace Functional_LINQ.StockProject
             }
             else
             {
-                current.RemoveItems(productCount);
-                SetCallback(current);
-            }
-        }
+                var oldCounter = current.ProductCount;
+                var newCounter = current.ProductCount - productCount;
 
-        private void SetCallback(Product current)
-        {
-            if (callback != null)
-            {
-                if (current.ProductCount > 5 && current.ProductCount < 10)
+                if(callback != null)
                 {
-                    callback(current, current.ProductCount);
+                    if (newCounter < 10 && oldCounter >= 10)
+                    {
+                        callback(current, newCounter);
+                    }
+                    else if (newCounter < 5 && oldCounter >= 5)
+                    {
+                        callback(current, newCounter);
+                    }
+                    else if (newCounter < 2 && oldCounter >= 2)
+                    {
+                        callback(current, newCounter);
+                    }
                 }
-                else if (current.ProductCount > 2 && current.ProductCount < 5)
-                {
-                    callback(current, current.ProductCount);
-                }
-                else if (current.ProductCount < 2)
-                {
-                    callback(current, current.ProductCount);
-                }
+
+                current.RemoveItems(productCount);
             }
         }
 
