@@ -6,6 +6,10 @@ namespace Functional_LINQ.StockProject
 {
     public class Stock : IEnumerable
     {
+        const int firstThreshold = 10;
+        const int secondThreshold = 5;
+        const int thirdThreshold = 2;
+
         private Action<Product, int> callback;
         private List<Product> containedProducts = new List<Product>();
 
@@ -23,7 +27,8 @@ namespace Functional_LINQ.StockProject
             }
         }
 
-        public void AddCallback(Action<Product, int> callback) => this.callback = callback;
+        public void AddCallback(Action<Product, int> callback)
+            => this.callback = callback;
 
         public void Remove(string productName, int productCount)
         {
@@ -48,15 +53,9 @@ namespace Functional_LINQ.StockProject
         {
             if (callback != null)
             {
-                if (newCounter < 10 && oldCounter >= 10)
-                {
-                    callback(current, newCounter);
-                }
-                else if (newCounter < 5 && oldCounter >= 5)
-                {
-                    callback(current, newCounter);
-                }
-                else if (newCounter < 2 && oldCounter >= 2)
+                if ((newCounter < firstThreshold && oldCounter >= firstThreshold) ||
+                    (newCounter < secondThreshold && oldCounter >= secondThreshold) ||
+                    (newCounter < thirdThreshold && oldCounter >= thirdThreshold))
                 {
                     callback(current, newCounter);
                 }

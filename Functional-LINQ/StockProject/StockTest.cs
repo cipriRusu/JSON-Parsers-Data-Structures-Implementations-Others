@@ -223,5 +223,29 @@ namespace Functional_LINQ.StockProject
             Assert.Equal("Beer", testProduct.ProductName);
             Assert.Equal(9, testCounter);
         }
+
+        [Fact]
+        public void StockActionUpdatesIfProductCountIsIncreased()
+        {
+            var currentStock = new Stock();
+            Product testProduct = null;
+            var testCounter = 0;
+
+            void GetData(Product product, int counter)
+            {
+                testProduct = product;
+                testCounter = counter;
+            }
+
+            currentStock.AddCallback(GetData);
+            currentStock.Add("Beer", 10);
+            currentStock.Remove("Beer", 2);
+            currentStock.Remove("Beer", 4);
+            currentStock.Add("Beer", 15);
+            currentStock.Remove("Beer", 10);
+
+            Assert.Equal("Beer", testProduct.ProductName);
+            Assert.Equal(9, testCounter);
+        }
     }
 }
