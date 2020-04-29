@@ -6,12 +6,10 @@ namespace Functional_LINQ.StockProject
 {
     public class Stock : IEnumerable
     {
-        const int firstThreshold = 10;
-        const int secondThreshold = 5;
-        const int thirdThreshold = 2;
+        private int[] Thresholds = new[] { 10, 5, 2 };
 
         private Action<Product, int> callback;
-        private List<Product> containedProducts = new List<Product>();
+        private readonly List<Product> containedProducts = new List<Product>();
 
         public void Add(string productName, int productCount)
         {
@@ -53,11 +51,12 @@ namespace Functional_LINQ.StockProject
         {
             if (callback != null)
             {
-                if ((newCounter < firstThreshold && oldCounter >= firstThreshold) ||
-                    (newCounter < secondThreshold && oldCounter >= secondThreshold) ||
-                    (newCounter < thirdThreshold && oldCounter >= thirdThreshold))
+                foreach (var element in Thresholds)
                 {
-                    callback(current, newCounter);
+                    if (newCounter < element && oldCounter >= element)
+                    {
+                        callback(current, newCounter);
+                    }
                 }
             }
         }
