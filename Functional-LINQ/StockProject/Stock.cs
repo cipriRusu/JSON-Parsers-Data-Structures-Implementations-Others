@@ -6,7 +6,7 @@ namespace Functional_LINQ.StockProject
 {
     public class Stock : IEnumerable
     {
-        private int[] Thresholds = new[] { 10, 5, 2 };
+        private readonly int[] Thresholds = new[] { 10, 5, 2 };
 
         private Action<Product, int> callback;
         private readonly List<Product> containedProducts = new List<Product>();
