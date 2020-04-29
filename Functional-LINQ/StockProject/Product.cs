@@ -16,10 +16,7 @@ namespace Functional_LINQ.StockProject
 
         public string ProductName { get; private set; }
         public int ProductCount { get; private set; }
-        public void AddItems(int newValue)
-        {
-            ProductCount += newValue;
-        }
+        public void AddItems(int newValue) => ProductCount += newValue;
 
         public void RemoveItems(int productCount)
         {

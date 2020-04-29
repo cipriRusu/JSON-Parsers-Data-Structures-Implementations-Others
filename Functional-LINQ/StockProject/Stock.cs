@@ -23,10 +23,7 @@ namespace Functional_LINQ.StockProject
             }
         }
 
-        public void AddCallback(Action<Product, int> callback)
-        {
-            this.callback = callback;
-        }
+        public void AddCallback(Action<Product, int> callback) => this.callback = callback;
 
         public void Remove(string productName, int productCount)
         {
@@ -41,23 +38,28 @@ namespace Functional_LINQ.StockProject
                 var oldCounter = current.ProductCount;
                 var newCounter = current.ProductCount - productCount;
 
-                if(callback != null)
-                {
-                    if (newCounter < 10 && oldCounter >= 10)
-                    {
-                        callback(current, newCounter);
-                    }
-                    else if (newCounter < 5 && oldCounter >= 5)
-                    {
-                        callback(current, newCounter);
-                    }
-                    else if (newCounter < 2 && oldCounter >= 2)
-                    {
-                        callback(current, newCounter);
-                    }
-                }
+                SetCallback(current, oldCounter, newCounter);
 
                 current.RemoveItems(productCount);
+            }
+        }
+
+        private void SetCallback(Product current, int oldCounter, int newCounter)
+        {
+            if (callback != null)
+            {
+                if (newCounter < 10 && oldCounter >= 10)
+                {
+                    callback(current, newCounter);
+                }
+                else if (newCounter < 5 && oldCounter >= 5)
+                {
+                    callback(current, newCounter);
+                }
+                else if (newCounter < 2 && oldCounter >= 2)
+                {
+                    callback(current, newCounter);
+                }
             }
         }
 
