@@ -26,8 +26,13 @@ namespace Functional_LINQ.CountVowelsAndConsonants
 
         private void CountMethod()
         {
-            var selectOnlyLetters = _inputString.Where(x => Char.IsLetter(x));
-            VowelCount = selectOnlyLetters.Where(x => _totalVowels.Contains(x)).ToList().Count();
+            var selectOnlyLetters = _inputString.ToLower()
+                .Where(x => Char.IsLetter(x));
+
+            VowelCount = selectOnlyLetters.
+                Where(x => _totalVowels.Contains(x)).
+                ToList().Count();
+
             ConsonantCount = selectOnlyLetters.Count() - VowelCount;
         }
     }
