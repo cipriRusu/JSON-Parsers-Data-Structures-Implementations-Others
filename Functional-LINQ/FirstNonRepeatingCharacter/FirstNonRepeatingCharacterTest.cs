@@ -34,5 +34,26 @@ namespace Functional_LINQ.FirstNonRepeatingCharacter
             var FNRC = new FirstNonRepeatingCharacter("halelujah");
             Assert.Equal('e', FNRC.FirstNonRepChar);
         }
+
+        [Fact]
+        public void FNCRReturnsCharForValidLongerInputSecond()
+        {
+            var FNRC = new FirstNonRepeatingCharacter("FirstSecFirst");
+            Assert.Equal('S', FNRC.FirstNonRepChar);
+        }
+
+        [Fact]
+        public void FNCRReturnsCharForValidLongerInputThird()
+        {
+            var FNRC = new FirstNonRepeatingCharacter("FirstLast");
+            Assert.Equal('F', FNRC.FirstNonRepChar);
+        }
+
+        [Fact]
+        public void FNCRReturnsCharForValidInputAsNumber()
+        {
+            var FNRC = new FirstNonRepeatingCharacter("1348231");
+            Assert.Equal('4', FNRC.FirstNonRepChar);
+        }
     }
 }
