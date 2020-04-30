@@ -58,6 +58,24 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         }
 
         [Fact]
+        public void CounterReturnsZeroValuesForStringWithOnlyNumbers()
+        {
+            var counter = new CountVowelsAndConsonants("12394382983749823432");
+
+            Assert.Equal(0, counter.VowelCount);
+            Assert.Equal(0, counter.ConsonantCount);
+        }
+
+        [Fact]
+        public void CounterReturnsZeroValuesForSymbolsOnly()
+        {
+            var counter = new CountVowelsAndConsonants("$&&%&$#&&#&#*@*@@@$");
+
+            Assert.Equal(0, counter.VowelCount);
+            Assert.Equal(0, counter.ConsonantCount);
+        }
+
+        [Fact]
         public void CounterReturnsFullLengthForLongStringWithRandomCharacters()
         {
             var counter = new CountVowelsAndConsonants("...?  a..x&&aMNnnnMmnmo");
