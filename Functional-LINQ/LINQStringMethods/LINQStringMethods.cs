@@ -4,14 +4,15 @@ using System.Text;
 
 namespace Functional_LINQ.CountVowelsAndConsonants
 {
-    internal class CountVowelsAndConsonants
+    internal class LINQStringMethods
     {
         private string _totalVowels = "aeiou";
         private string _inputString;
         public int VowelCount { get; internal set; }
         public int ConsonantCount { get; internal set; }
+        public char FirstNonRepetitiveCharacter { get; internal set; }
 
-        public CountVowelsAndConsonants(string inputString)
+        public void ConsonantAndVowelCount(string inputString)
         {
             if (inputString != null)
             {
@@ -21,6 +22,19 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             else
             {
                 throw new ArgumentNullException("Input value was invalid");
+            }
+        }
+
+        public void FindFirstNonRepeatingCharacter(string input)
+        {
+            if (input != null)
+            {
+                this._inputString = input;
+                FindFirstNonRepeatingCharacter();
+            }
+            else
+            {
+                throw new ArgumentNullException("Input value was null");
             }
         }
 
@@ -34,6 +48,16 @@ namespace Functional_LINQ.CountVowelsAndConsonants
                 ToList().Count();
 
             ConsonantCount = selectOnlyLetters.Count() - VowelCount;
+        }
+
+        private void FindFirstNonRepeatingCharacter()
+        {
+            var buffer = _inputString.GroupBy(x => x).
+                ToDictionary(x => x, x => x.Count())
+                .SkipWhile(x => x.Value != 1).
+                ToDictionary(x => x.Key, y => y.Value);
+
+            FirstNonRepetitiveCharacter = buffer.Keys.First().Key;
         }
     }
 }
