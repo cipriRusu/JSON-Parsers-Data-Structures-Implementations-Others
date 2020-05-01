@@ -59,6 +59,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             if(inputString != null)
             {
                 _inputString = inputString;
+                MaximumAparitionCharacter = (from p in _inputString group p by p).First().Key;
             }
             else
             {

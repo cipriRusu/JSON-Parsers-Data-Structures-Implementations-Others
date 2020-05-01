@@ -200,5 +200,21 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             MaxApparition.MaxApparitionChar("aba");
             Assert.Equal('a', MaxApparition.MaximumAparitionCharacter);
         }
+
+        [Fact]
+        public void MaxApparitionCharReturnsValidCharacterForMultipleCharsTwoChars()
+        {
+            var MaxApparition = new LINQStringMethods();
+            MaxApparition.MaxApparitionChar("abab");
+            Assert.Equal('a', MaxApparition.MaximumAparitionCharacter);
+        }
+
+        [Fact]
+        public void MaxApparitionCharsReturnsValidCharacterForLargeString()
+        {
+            var MaxApparition = new LINQStringMethods();
+            MaxApparition.MaxApparitionChar("trinitrotoluen");
+            Assert.Equal('t', MaxApparition.MaximumAparitionCharacter);
+        }
     }
 }
