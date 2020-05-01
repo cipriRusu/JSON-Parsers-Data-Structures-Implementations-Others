@@ -13,6 +13,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         public int ConsonantCount { get; internal set; }
         public char FirstNonRepetitiveCharacter { get; internal set; }
         public int ConvertedStringToInteger { get; internal set; }
+        public char MaximumAparitionCharacter { get; internal set; }
 
         public void ConsonantAndVowelCount(string inputString)
         {
@@ -46,6 +47,18 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             {
                 _inputString = inputString;
                 ConvertedStringToInteger = inputString.Aggregate(0, (x, y) => x * 10 + y - '0');
+            }
+            else
+            {
+                throw new ArgumentNullException("Input value was null");
+            }
+        }
+
+        public void MaxApparitionChar(string inputString)
+        {
+            if(inputString != null)
+            {
+                _inputString = inputString;
             }
             else
             {

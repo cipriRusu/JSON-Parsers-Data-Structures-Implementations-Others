@@ -177,5 +177,28 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             StringToInteger.ConvertToInteger("13443110");
             Assert.Equal(13443110, StringToInteger.ConvertedStringToInteger);
         }
+
+        [Fact]
+        public void MaxApparitionCharThrowsArgumentNullExceptionForNullInput()
+        {
+            var MaxApparition = new LINQStringMethods();
+            Assert.Throws<ArgumentNullException>(() => MaxApparition.MaxApparitionChar(null));
+        }
+
+        [Fact]
+        public void MaxApparitionCharReturnsOnlyCharacterIfStringIsSingleChar()
+        {
+            var MaxApparition = new LINQStringMethods();
+            MaxApparition.MaxApparitionChar("a");
+            Assert.Equal('a', MaxApparition.MaximumAparitionCharacter);
+        }
+
+        [Fact]
+        public void MaxApparitionCharReturnsValidCharacterForMultipleChars()
+        {
+            var MaxApparition = new LINQStringMethods();
+            MaxApparition.MaxApparitionChar("aba");
+            Assert.Equal('a', MaxApparition.MaximumAparitionCharacter);
+        }
     }
 }
