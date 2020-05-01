@@ -44,18 +44,13 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         {
             if (inputString != null)
             {
-                this._inputString = inputString;
-                IntegerConvertor(_inputString);
+                _inputString = inputString;
+                ConvertedStringToInteger = inputString.Aggregate(0, (x, y) => x * 10 + y - '0');
             }
             else
             {
                 throw new ArgumentNullException("Input value was null");
             }
-        }
-
-        private void IntegerConvertor(string inputString)
-        {
-            ConvertedStringToInteger = inputString.Aggregate(0, (x, y) => x * 10 + y - '0');
         }
 
         private void CountMethod()
