@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
 {
     internal class LINQStringMethods
     {
-        private string _totalVowels = "aeiou";
+        private readonly string _totalVowels = "aeiou";
         private string _inputString;
         public int VowelCount { get; internal set; }
         public int ConsonantCount { get; internal set; }
@@ -41,15 +42,20 @@ namespace Functional_LINQ.CountVowelsAndConsonants
 
         public void ConvertToInteger(string inputString)
         {
-            if(inputString != null)
+            if (inputString != null)
             {
                 this._inputString = inputString;
-                ConvertedStringToInteger = 0x213;
+                IntegerConvertor(_inputString);
             }
             else
             {
                 throw new ArgumentNullException("Input value was null");
             }
+        }
+
+        private void IntegerConvertor(string inputString)
+        {
+            ConvertedStringToInteger = inputString.Aggregate(0, (x, y) => x * 10 + y - '0');
         }
 
         private void CountMethod()
@@ -69,11 +75,6 @@ namespace Functional_LINQ.CountVowelsAndConsonants
                 .SkipWhile(x => x.Value != 1).First().Key.Key;
 
             FirstNonRepetitiveCharacter = buffer;
-        }
-
-        private bool IsFigure(char c)
-        {
-            return 0 <= c && c <= 10; 
         }
     }
 }

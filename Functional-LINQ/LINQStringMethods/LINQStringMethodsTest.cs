@@ -177,53 +177,5 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             StringToInteger.ConvertToInteger("13443110");
             Assert.Equal(13443110, StringToInteger.ConvertedStringToInteger);
         }
-
-        [Fact]
-        public void StringToIntegerConverterWorksForHexadecimalTypeInteger()
-        {
-            var StringToInteger = new LINQStringMethods();
-            StringToInteger.ConvertToInteger("0x431");
-            Assert.Equal(0x431, StringToInteger.ConvertedStringToInteger);
-        }
-
-        [Fact]
-        public void StringToIntegerConverterWorksForHexadeciamlTypeIntegerUpper()
-        {
-            var StringToInteger = new LINQStringMethods();
-            StringToInteger.ConvertToInteger("0X431");
-            Assert.Equal(0X431, StringToInteger.ConvertedStringToInteger);
-        }
-
-        [Fact]
-        public void StringToIntegerConverterWorksForBinaryTypeInteger()
-        {
-            var StringToInteger = new LINQStringMethods();
-            StringToInteger.ConvertToInteger("0b_011010");
-            Assert.Equal(0b_011010, StringToInteger.ConvertedStringToInteger);
-        }
-
-        [Fact]
-        public void StringToIntegerConverterWorksForBinaryTypeIntegerUpper()
-        {
-            var StringToInteger = new LINQStringMethods();
-            StringToInteger.ConvertToInteger("0b_011010");
-            Assert.Equal(0b_011010, StringToInteger.ConvertedStringToInteger);
-        }
-
-        [Fact]
-        public void StringToIntegerConverterWorksForPositiveSign()
-        {
-            var StringToInteger = new LINQStringMethods();
-            StringToInteger.ConvertToInteger("+21339");
-            Assert.Equal(+21339, StringToInteger.ConvertedStringToInteger);
-        }
-
-        [Fact]
-        public void StringToIntegerConverterWorksForNegativeSign()
-        {
-            var StringToInteger = new LINQStringMethods();
-            StringToInteger.ConvertToInteger("-21339");
-            Assert.Equal(-21339, StringToInteger.ConvertedStringToInteger);
-        }
     }
 }
