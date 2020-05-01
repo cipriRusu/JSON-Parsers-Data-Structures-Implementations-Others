@@ -146,5 +146,84 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             FirstChar.FindFirstNonRepeatingCharacter("1348231");
             Assert.Equal('4', FirstChar.FirstNonRepetitiveCharacter);
         }
+
+        [Fact]
+        public void StringToIntegerConverterThrowsArgumentNullExceptionForNullInput()
+        {
+            var StringToInteger = new LINQStringMethods();
+            Assert.Throws<ArgumentNullException>(() => StringToInteger.ConvertToInteger(null));
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForSingleFigureNumber()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("3");
+            Assert.Equal(3, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForTwoFiguresNumber()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("13");
+            Assert.Equal(13, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForMultipeFiguresNumber()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("13443110");
+            Assert.Equal(13443110, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForHexadecimalTypeInteger()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("0x431");
+            Assert.Equal(0x431, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForHexadeciamlTypeIntegerUpper()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("0X431");
+            Assert.Equal(0X431, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForBinaryTypeInteger()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("0b_011010");
+            Assert.Equal(0b_011010, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForBinaryTypeIntegerUpper()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("0b_011010");
+            Assert.Equal(0b_011010, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForPositiveSign()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("+21339");
+            Assert.Equal(+21339, StringToInteger.ConvertedStringToInteger);
+        }
+
+        [Fact]
+        public void StringToIntegerConverterWorksForNegativeSign()
+        {
+            var StringToInteger = new LINQStringMethods();
+            StringToInteger.ConvertToInteger("-21339");
+            Assert.Equal(-21339, StringToInteger.ConvertedStringToInteger);
+        }
     }
 }

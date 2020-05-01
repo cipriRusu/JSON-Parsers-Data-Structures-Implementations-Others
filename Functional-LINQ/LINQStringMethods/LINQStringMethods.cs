@@ -11,6 +11,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         public int VowelCount { get; internal set; }
         public int ConsonantCount { get; internal set; }
         public char FirstNonRepetitiveCharacter { get; internal set; }
+        public int ConvertedStringToInteger { get; internal set; }
 
         public void ConsonantAndVowelCount(string inputString)
         {
@@ -25,12 +26,25 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             }
         }
 
-        public void FindFirstNonRepeatingCharacter(string input)
+        public void FindFirstNonRepeatingCharacter(string inputString)
         {
-            if (input != null)
+            if (inputString != null)
             {
-                this._inputString = input;
+                this._inputString = inputString;
                 FindFirstNonRepeatingCharacter();
+            }
+            else
+            {
+                throw new ArgumentNullException("Input value was null");
+            }
+        }
+
+        public void ConvertToInteger(string inputString)
+        {
+            if(inputString != null)
+            {
+                this._inputString = inputString;
+                ConvertedStringToInteger = 0x213;
             }
             else
             {
@@ -43,8 +57,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             var selectOnlyLetters = _inputString.ToLower()
                 .Where(x => Char.IsLetter(x));
 
-            VowelCount = selectOnlyLetters.
-                Where(x => _totalVowels.Contains(x)).
+            VowelCount = selectOnlyLetters.Where(x => _totalVowels.Contains(x)).
                 ToList().Count();
 
             ConsonantCount = selectOnlyLetters.Count() - VowelCount;
@@ -52,12 +65,15 @@ namespace Functional_LINQ.CountVowelsAndConsonants
 
         private void FindFirstNonRepeatingCharacter()
         {
-            var buffer = _inputString.GroupBy(x => x).
-                ToDictionary(x => x, x => x.Count())
-                .SkipWhile(x => x.Value != 1).
-                ToDictionary(x => x.Key, y => y.Value);
+            var buffer = _inputString.GroupBy(x => x).ToDictionary(x => x, x => x.Count())
+                .SkipWhile(x => x.Value != 1).First().Key.Key;
 
-            FirstNonRepetitiveCharacter = buffer.Keys.First().Key;
+            FirstNonRepetitiveCharacter = buffer;
+        }
+
+        private bool IsFigure(char c)
+        {
+            return 0 <= c && c <= 10; 
         }
     }
 }
