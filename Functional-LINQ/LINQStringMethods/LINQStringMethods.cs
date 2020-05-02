@@ -14,6 +14,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         public char FirstNonRepetitiveCharacter { get; internal set; }
         public int ConvertedStringToInteger { get; internal set; }
         public char MaximumAparitionCharacter { get; internal set; }
+        public string Palindromes { get; internal set; }
 
         public void ConsonantAndVowelCount(string inputString)
         {
@@ -56,14 +57,48 @@ namespace Functional_LINQ.CountVowelsAndConsonants
 
         public void MaxApparitionChar(string inputString)
         {
-            if(inputString != null)
+            if (inputString != null)
             {
                 _inputString = inputString;
-                MaximumAparitionCharacter = (from p in _inputString group p by p).First().Key;
+                MaximumAparitionCharacter =
+                    (from p in _inputString group p by p).First().Key;
             }
             else
             {
                 throw new ArgumentNullException("Input value was null");
+            }
+        }
+        public void GetPalindromes(string inputString)
+        {
+            if (inputString != null)
+            {
+                _inputString = inputString;
+                var sequenceLength = 1;
+                var output = "";
+
+                while (sequenceLength <= _inputString.Length)
+                {
+                    for (int i = 0; i < _inputString.Length; i++)
+                    {
+                        if (i + sequenceLength > _inputString.Length) { break; }
+
+                        var seq = _inputString.AsSpan(i, sequenceLength).ToString();
+
+                        if (seq == new String(seq.Reverse().ToArray()))
+                        {
+                            output = output + " " + seq;
+                        }
+                    }
+
+                    sequenceLength++;
+                }
+
+                Palindromes = output;
+
+            }
+            else
+            {
+                throw new ArgumentNullException("Input value is null");
             }
         }
 

@@ -216,5 +216,40 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             MaxApparition.MaxApparitionChar("trinitrotoluen");
             Assert.Equal('t', MaxApparition.MaximumAparitionCharacter);
         }
+
+        [Fact]
+        public void PalindromesThrowsArgumentNullExceptionForNullInput()
+        {
+            var PalindromesGenerator = new LINQStringMethods();
+            Assert.Throws<ArgumentNullException>(() => 
+            PalindromesGenerator.GetPalindromes(null));
+        }
+
+        [Fact]
+        public void PalindromesReturnsValidOutputForPalindromeInput()
+        {
+            var PalindromesGenerator = new LINQStringMethods();
+            var res = " a e r i s i r e a isi risir erisire aerisirea";
+            PalindromesGenerator.GetPalindromes("aerisirea");
+            Assert.Equal(res, PalindromesGenerator.Palindromes);
+        }
+
+        [Fact]
+        public void PalindromesReturnsValidOutputForNoPresentPalindrome()
+        {
+            var PalindromesGenerator = new LINQStringMethods();
+            var res = " a b c";
+            PalindromesGenerator.GetPalindromes("abc");
+            Assert.Equal(res, PalindromesGenerator.Palindromes);
+        }
+
+        [Fact]
+        public void PalindromesReturnsValidOutput()
+        {
+            var PalindromesGenerator = new LINQStringMethods();
+            var res = " a a b a a c aa aa aba aabaa";
+            PalindromesGenerator.GetPalindromes("aabaac");
+            Assert.Equal(res, PalindromesGenerator.Palindromes);
+        }
     }
 }
