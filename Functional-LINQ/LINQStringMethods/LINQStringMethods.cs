@@ -73,28 +73,9 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             if (inputString != null)
             {
                 _inputString = inputString;
-                var sequenceLength = 1;
-                var output = "";
-
-                while (sequenceLength <= _inputString.Length)
-                {
-                    for (int i = 0; i < _inputString.Length; i++)
-                    {
-                        if (i + sequenceLength > _inputString.Length) { break; }
-
-                        var seq = _inputString.AsSpan(i, sequenceLength).ToString();
-
-                        if (seq == new String(seq.Reverse().ToArray()))
-                        {
-                            output = output + " " + seq;
-                        }
-                    }
-
-                    sequenceLength++;
-                }
-
-                Palindromes = output;
-
+                var res = _inputString.Select((FirstCharacter, FirstIndex) => 
+                _inputString.Substring(FirstIndex).Select((SecondCharacter, SecondIndex) => 
+                _inputString.Substring(FirstIndex, SecondIndex + 1)));
             }
             else
             {
