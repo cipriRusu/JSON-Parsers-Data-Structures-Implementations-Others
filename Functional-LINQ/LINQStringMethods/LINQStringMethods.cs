@@ -73,14 +73,22 @@ namespace Functional_LINQ.CountVowelsAndConsonants
             if (inputString != null)
             {
                 _inputString = inputString;
-                var res = _inputString.Select((FirstCharacter, FirstIndex) => 
-                _inputString.Substring(FirstIndex).Select((SecondCharacter, SecondIndex) => 
+                var completeQuery = _inputString.Select((FirstCharacter, FirstIndex) =>
+                _inputString.Substring(FirstIndex).Select((SecondCharacter, SecondIndex) =>
                 _inputString.Substring(FirstIndex, SecondIndex + 1)));
+
+                var palindromesOnly = completeQuery.SelectMany(x => x).Where(x => IsPalindrome(x));
+                Palindromes = string.Join(",", palindromesOnly);
             }
             else
             {
                 throw new ArgumentNullException("Input value is null");
             }
+        }
+
+        private bool IsPalindrome(string input)
+        {
+            return input.ToString() == new string(input.Reverse().ToArray());
         }
 
         private void CountMethod()

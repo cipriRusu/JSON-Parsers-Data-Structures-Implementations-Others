@@ -229,7 +229,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         public void PalindromesReturnsValidOutputForPalindromeInput()
         {
             var PalindromesGenerator = new LINQStringMethods();
-            var res = " a e r i s i r e a isi risir erisire aerisirea";
+            var res = "a,aerisirea,e,erisire,r,risir,i,isi,s,i,r,e,a";
             PalindromesGenerator.GetPalindromes("aerisirea");
             Assert.Equal(res, PalindromesGenerator.Palindromes);
         }
@@ -238,7 +238,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         public void PalindromesReturnsValidOutputForNoPresentPalindrome()
         {
             var PalindromesGenerator = new LINQStringMethods();
-            var res = " a b c";
+            var res = "a,b,c";
             PalindromesGenerator.GetPalindromes("abc");
             Assert.Equal(res, PalindromesGenerator.Palindromes);
         }
@@ -247,7 +247,7 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         public void PalindromesReturnsValidOutput()
         {
             var PalindromesGenerator = new LINQStringMethods();
-            var res = " a a b a a c aa aa aba aabaa";
+            var res = "a,aa,aabaa,a,aba,b,a,aa,a,c";
             PalindromesGenerator.GetPalindromes("aabaac");
             Assert.Equal(res, PalindromesGenerator.Palindromes);
         }
