@@ -59,9 +59,9 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         {
             if (inputString != null)
             {
-                _inputString = inputString;
                 MaximumAparitionCharacter =
-                    (from p in _inputString group p by p).First().Key;
+                    inputString.SelectMany((x, y) => inputString.Select(x => x))
+                    .GroupBy(x => x).First().Key;
             }
             else
             {
@@ -72,10 +72,9 @@ namespace Functional_LINQ.CountVowelsAndConsonants
         {
             if (inputString != null)
             {
-                _inputString = inputString;
-                var completeQuery = _inputString.Select((FirstCharacter, FirstIndex) =>
-                _inputString.Substring(FirstIndex).Select((SecondCharacter, SecondIndex) =>
-                _inputString.Substring(FirstIndex, SecondIndex + 1)));
+                var completeQuery = inputString.Select((FirstCharacter, FirstIndex) =>
+                inputString.Substring(FirstIndex).Select((SecondCharacter, SecondIndex) =>
+                inputString.Substring(FirstIndex, SecondIndex + 1)));
 
                 var palindromesOnly = completeQuery.SelectMany(x => x).Where(x => IsPalindrome(x));
                 Palindromes = string.Join(",", palindromesOnly);
