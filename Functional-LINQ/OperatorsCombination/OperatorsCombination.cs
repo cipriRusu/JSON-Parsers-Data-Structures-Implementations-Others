@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Transactions;
 
 namespace Functional_LINQ.OperatorsCombination
 {
@@ -31,8 +26,8 @@ namespace Functional_LINQ.OperatorsCombination
 
         private static IEnumerable<string[]> GenerateExpressions(int tailValue, IEnumerable<string> CombinedOperators)
         {
-            return CombinedOperators.Select((stringValue) =>
-                        stringValue.Zip(Enumerable.Range(1, tailValue), (x, y) => x.ToString() + y)).Select(x => x.ToArray());
+            return CombinedOperators.Select((stringValue) => 
+            stringValue.Zip(Enumerable.Range(1, tailValue), (x, y) => x.ToString() + y)).Select(x => x.ToArray());
         }
 
         private static IEnumerable<string> OperatorPermutations(int tailValue)
