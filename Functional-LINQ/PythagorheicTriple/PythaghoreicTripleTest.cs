@@ -4,7 +4,7 @@ using System.Text;
 using Xunit;
 using System.Linq;
 
-namespace Functional_LINQ.PythaghoreicTriple
+namespace Functional_LINQ.PythagorheicTriple
 {
     public class PythaghoreicTripleTest
     {
@@ -15,7 +15,7 @@ namespace Functional_LINQ.PythaghoreicTriple
             int second = 2;
             int third = 3;
 
-            var triplet = new PythagoreicTriple();
+            var triplet = new PythagorheicTriple();
 
             triplet.GeneratePythaghoreicTriple(first, second, third);
 
@@ -29,7 +29,7 @@ namespace Functional_LINQ.PythaghoreicTriple
             int second = 4;
             int third = 6;
 
-            var triplet = new PythagoreicTriple();
+            var triplet = new PythagorheicTriple();
 
             triplet.GeneratePythaghoreicTriple(first, second, third);
 
