@@ -31,7 +31,7 @@ namespace Functional_LINQ.PythagorheicTriple
 
             triplet.GeneratePythaghoreicTriple(first, second, third);
 
-            Assert.Empty(triplet.PythagoreicTriples);
+            Assert.Empty(triplet.PytagorheicTriples);
         }
 
         [Fact]
@@ -47,13 +47,11 @@ namespace Functional_LINQ.PythagorheicTriple
             {
                 new int[]{3, 4, 5},
                 new int[]{4, 3, 5},
-                new int[]{5, 3, 4},
-                new int[]{3, 5, 4}
             };
 
             triplet.GeneratePythaghoreicTriple(first, second, third);
 
-            Assert.Equal(expected, triplet.PythagoreicTriples);
+            Assert.Equal(expected, triplet.PytagorheicTriples);
         }
 
         [Fact]
@@ -68,14 +66,32 @@ namespace Functional_LINQ.PythagorheicTriple
             IEnumerable<int[]> expected = new List<int[]>
             {
                 new int[]{12, 35, 37},
-                new int[]{4, 3, 5},
-                new int[]{5, 3, 4},
-                new int[]{3, 5, 4}
+                new int[]{35, 12, 37}
             };
 
             triplet.GeneratePythaghoreicTriple(first, second, third);
 
-            Assert.Equal(expected, triplet.PythagoreicTriples);
+            Assert.Equal(expected, triplet.PytagorheicTriples);
+        }
+
+        [Fact]
+        public void PythagorheicTripleReturnsMultipleValuesForValidInputVeryLargeValues()
+        {
+            int first = 225;
+            int second = 272;
+            int third = 353;
+
+            var triplet = new PythagorheicTriple();
+
+            IEnumerable<int[]> expected = new List<int[]>
+            {
+                new int[]{ 225, 272, 353},
+                new int[]{ 272, 225, 353 }
+            };
+
+            triplet.GeneratePythaghoreicTriple(first, second, third);
+
+            Assert.Equal(expected, triplet.PytagorheicTriples);
         }
     }
 }

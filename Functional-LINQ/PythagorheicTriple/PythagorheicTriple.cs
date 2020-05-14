@@ -7,8 +7,8 @@ namespace Functional_LINQ.PythagorheicTriple
 {
     internal class PythagorheicTriple
     {
-        public PythagorheicTriple() => PythagoreicTriples = Enumerable.Empty<int[]>();
-        public IEnumerable<int[]> PythagoreicTriples { get; set; }
+        public PythagorheicTriple() => PytagorheicTriples = Enumerable.Empty<int[]>();
+        public IEnumerable<int[]> PytagorheicTriples { get; set; }
 
         public void GeneratePythaghoreicTriple(int first, int second, int third)
         {
@@ -20,9 +20,12 @@ namespace Functional_LINQ.PythagorheicTriple
                 input.Select(x => Enumerable.Repeat(x, 1).Union(input)).Select(x =>
                 new { f = x.ToArray(), s = x.Take(1).Union(x.Skip(1).Reverse()).ToArray() });
 
-            PythagoreicTriples = 
-                AllCombinations.Select(x => x.f).Concat(AllCombinations.Select(x => x.s))
-                .Where(x => (x[0] ^ 2).Equals(x[1] ^ (2 + x[2]) ^ 2));
+            PytagorheicTriples = AllCombinations
+                .Select(x => x.f)
+                .Concat(AllCombinations.Select(x => x.s))
+                .Where(x => (
+                Math.Pow(x[0], 2) + 
+                Math.Pow(x[1], 2)).Equals(Math.Pow(x[2], 2)));
         }
 
         private static void ArgumentExceptions(int first, int second, int third)
