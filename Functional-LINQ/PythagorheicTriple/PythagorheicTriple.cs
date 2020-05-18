@@ -1,38 +1,63 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestPlatform.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Functional_LINQ.PythagorheicTriple
 {
     internal class PythagorheicTriple
     {
-        public PythagorheicTriple() => PytagorheicTriples = Enumerable.Empty<int[]>();
-        public IEnumerable<int[]> PytagorheicTriples { get; set; }
+        public PythagorheicTriple() => PytagorheicTriples = new Dictionary<int, IEnumerable<int>[]>();
 
-        public void GeneratePythaghoreicTriple(int first, int second, int third)
+        public Dictionary<int, IEnumerable<int>[]> PytagorheicTriples { get; set; }
+
+        public void ComputeTriples(int[] input)
         {
-            ArgumentExceptions(first, second, third);
+            InputArrayExceptions(input);
 
-            var input = new int[] { first, second, third };
-
-            var AllCombinations =
-                input.Select(x => Enumerable.Repeat(x, 1).Union(input)).Select(x =>
-                new { f = x.ToArray(), s = x.Take(1).Union(x.Skip(1).Reverse()).ToArray() });
-
-            PytagorheicTriples = AllCombinations
-                .Select(x => x.f)
-                .Concat(AllCombinations.Select(x => x.s))
-                .Where(x => (
-                Math.Pow(x[0], 2) + 
-                Math.Pow(x[1], 2)).Equals(Math.Pow(x[2], 2)));
+            PytagorheicTriples = input.Select(x => new
+            {
+                result = x,
+                permutations =
+                GetAllPermutations(input
+                .Except(Enumerable.Repeat(x, 1)), 2)
+                .Where(y => IsPythaghorean(x, y)).ToArray()
+            })
+            .Where(x => x.permutations.Count() > 0)
+            .ToLookup(x => x.result, x => x.permutations)
+            .ToDictionary(x => x.Key, x => x.First());
         }
 
-        private static void ArgumentExceptions(int first, int second, int third)
+        private static bool IsPythaghorean(int x, IEnumerable<int> y)
         {
-            if (first <= 0 || second <= 0 || third <= 0)
+            EnumerableExceptions(y);
+            return Math.Pow(x, 2) == Math.Pow(y.First(), 2) + Math.Pow(y.Last(), 2);
+        }
+
+        private static IEnumerable<IEnumerable<T>> GetAllPermutations<T>(IEnumerable<T> list, int length)
+        {
+            if (length == 1)
             {
-                throw new ArgumentException("Input value(s) cannot be null");
+                return list.Select(t => new T[] { t });
+            }
+
+            return GetAllPermutations(list, length - 1).SelectMany(t => list.Where(e => !t.Contains(e)),
+                (t1, t2) => t1.Concat(new T[] { t2 }));
+        }
+
+        private static void EnumerableExceptions(IEnumerable<int> input)
+        {
+            foreach (var v in input.Where(number => number < 0).Select(number => new { }))
+            {
+                throw new ArgumentException("Pythaghorean triplet must contain only positive integers");
+            }
+        }
+
+        private static void InputArrayExceptions(int[] input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("Input value is null");
             }
         }
     }

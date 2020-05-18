@@ -1,97 +1,97 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
-using System.Linq;
-using System.Net.Http.Headers;
 
 namespace Functional_LINQ.PythagorheicTriple
 {
     public class PythaghoreicTripleTest
     {
         [Fact]
-        public void PythagorheicTripleThrowsArgumentExceptionForZeroValue()
+        public void PythagorheicTripleThrowsArgumentExceptionForNullInput()
         {
-            int first = 0;
-            int second = 1;
-            int third = 4;
+            var triple = new PythagorheicTriple();
 
-            Assert.Throws<ArgumentException>(() =>
-            new PythagorheicTriple().GeneratePythaghoreicTriple(first, second, third));
+            Assert.Throws<ArgumentNullException>(() => triple.ComputeTriples(null));
         }
 
         [Fact]
-        public void PythaghoreicTripleReturnsEmptyForInvalidTriplet()
+        public void PythagorheicTripleThrowsArgumentExceptionForSingleNegativeValue()
         {
-            int first = 1;
-            int second = 2;
-            int third = 3;
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 1, -2, 3 };
 
-            var triplet = new PythagorheicTriple();
-
-            triplet.GeneratePythaghoreicTriple(first, second, third);
-
-            Assert.Empty(triplet.PytagorheicTriples);
+            Assert.Throws<ArgumentException>(() => triple.ComputeTriples(input));
         }
 
         [Fact]
-        public void PythagorheicTripleReturnsMultipleValuesForValidInput()
+        public void OutputReturnsNothingForNoPresentPythaghoreanValues()
         {
-            int first = 3;
-            int second = 4;
-            int third = 5;
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 1, 2, 3 };
 
-            var triplet = new PythagorheicTriple();
+            triple.ComputeTriples(input);
 
-            IEnumerable<int[]> expected = new List<int[]>
-            {
-                new int[]{3, 4, 5},
-                new int[]{4, 3, 5},
-            };
-
-            triplet.GeneratePythaghoreicTriple(first, second, third);
-
-            Assert.Equal(expected, triplet.PytagorheicTriples);
+            Assert.Empty(triple.PytagorheicTriples);
         }
 
         [Fact]
-        public void PythagorheicTripleReturnsMultipleValuesForValidInputLargerValues()
+        public void OutputReturnsValidValuesForOnlySingleSmallPythaghoreanValue()
         {
-            int first = 12;
-            int second = 35;
-            int third = 37;
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 3, 4, 5 };
+            var expected = new Dictionary<int, IEnumerable<int>[]>();
+            triple.ComputeTriples(input);
+            expected.Add(5, new IEnumerable<int>[] { new[] { 3, 4 }, new[] { 4, 3 } });
 
-            var triplet = new PythagorheicTriple();
-
-            IEnumerable<int[]> expected = new List<int[]>
-            {
-                new int[]{12, 35, 37},
-                new int[]{35, 12, 37}
-            };
-
-            triplet.GeneratePythaghoreicTriple(first, second, third);
-
-            Assert.Equal(expected, triplet.PytagorheicTriples);
+            Assert.Equal(expected, triple.PytagorheicTriples);
         }
 
         [Fact]
-        public void PythagorheicTripleReturnsMultipleValuesForValidInputVeryLargeValues()
+        public void OutputReturnsValidValuesForMultiplesValuesSingleSmallPythaghoreanValue()
         {
-            int first = 225;
-            int second = 272;
-            int third = 353;
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 1, 2, 3, 4, 5, 6 };
+            var expected = new Dictionary<int, IEnumerable<int>[]>();
+            triple.ComputeTriples(input);
+            expected.Add(5, new IEnumerable<int>[] { new[] { 3, 4 }, new[] { 4, 3 } });
 
-            var triplet = new PythagorheicTriple();
+            Assert.Equal(expected, triple.PytagorheicTriples);
+        }
 
-            IEnumerable<int[]> expected = new List<int[]>
-            {
-                new int[]{ 225, 272, 353},
-                new int[]{ 272, 225, 353 }
-            };
+        [Fact]
+        public void OutputReturnsValidValuesForOnlyMultiplePythaghoreanValues()
+        {
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 3, 4, 5, 5, 12, 13 };
+            var expected = new Dictionary<int, IEnumerable<int>[]>();
+            triple.ComputeTriples(input);
+            expected.Add(5, new IEnumerable<int>[] { new[] { 3, 4 }, new[] { 4, 3 } });
+            expected.Add(13, new IEnumerable<int>[] { new[] { 5, 12 }, new[] { 12, 5 } });
 
-            triplet.GeneratePythaghoreicTriple(first, second, third);
+            Assert.Equal(expected, triple.PytagorheicTriples);
+        }
 
-            Assert.Equal(expected, triplet.PytagorheicTriples);
+        [Fact]
+        public void OutputReturnsValidValuesForMultipleValuesAndMultiplePythaghoreanValues()
+        {
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+            var expected = new Dictionary<int, IEnumerable<int>[]>();
+            triple.ComputeTriples(input);
+            expected.Add(5, new IEnumerable<int>[] { new[] { 3, 4 }, new[] { 4, 3 } });
+            expected.Add(13, new IEnumerable<int>[] { new[] { 5, 12 }, new[] { 12, 5 } });
+        }
+
+        [Fact]
+        public void OutputReturnsValidValuesForLargeUnsortedInputAndLargeValues()
+        {
+            var triple = new PythagorheicTriple();
+            var input = new int[] { 19, 119, 20, 21, 22, 23, 24, 27, 169, 25, 28, 120, 29, 40, 45, 50, 51, 26, 53 };
+            var expected = new Dictionary<int, IEnumerable<int>[]>();
+            triple.ComputeTriples(input);
+            expected.Add(29, new IEnumerable<int>[] { new[] { 20, 21 }, new[] { 21, 20 } });
+            expected.Add(53, new IEnumerable<int>[] { new[] { 28, 45 }, new[] { 45, 28 } });
+            expected.Add(169, new IEnumerable<int>[] { new[] { 119, 120 }, new[] { 120, 119 } });
         }
     }
 }
