@@ -13,26 +13,30 @@ namespace Functional_LINQ.PythagorheicTriple
 
         public void ComputeTriples(int[] input)
         {
-            var sortedInput = input.OrderByDescending(x => x).ToHashSet();
+            var sortedInput = input
+                .Where(x => x > 0)
+                .Distinct()
+                .OrderByDescending(x => x);
 
-            PytagorheicTriples =
-                sortedInput
-                .Select(x => new
-                {
-                    r = x,
-                    s = sortedInput.Where(a => a < x)
-                .Select(y => new
-                {
-                    t = y,
-                    q = sortedInput.SkipWhile(x => x >= y)
-                    .Where(a => Math.Pow(y, 2) + Math.Pow(a, 2) == Math.Pow(x, 2))
-                }).Where(x => x.q.Count() > 0)
-                }).Where(x => x.s.Count() > 0)
-            .ToDictionary(x => x.r, x => new int[]
+            PytagorheicTriples = sortedInput
+            .Select(x => new
             {
-                x.s.First().t,
-                x.s.First().q.First()
-            });
+                Result = x,
+                Expressions = sortedInput
+                .Where(current => current < x)
+                .Select(nestedCurrent => sortedInput
+                .SkipWhile(x => x > nestedCurrent)
+                    .Select(z => new int[] { nestedCurrent, z })
+                    .Skip(1)
+                    .Where(expression => IsPythaghorean(x, expression)))
+                .Where(x => x.Count() > 0)
+            }).Where(x => x.Expressions.Count() > 0)
+            .ToDictionary(x => x.Result, x => x.Expressions.Single().Single());
         }
+
+        private static bool IsPythaghorean(int result, int[] expression) =>
+            Math.Pow(result, 2) == 
+            Math.Pow(expression.First(), 2) + 
+            Math.Pow(expression.Last(), 2);
     }
 }
