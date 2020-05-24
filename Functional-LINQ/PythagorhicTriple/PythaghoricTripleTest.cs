@@ -19,7 +19,7 @@ namespace Functional_LINQ.PythagorheicTriple
         {
             var triples = new PythagorhicTriple();
 
-            var output = new (int a, int b, int c)[] {};
+            var output = new (int a, int b, int c)[] { };
 
             Assert.Equal(output, triples.GetTriple(new int[] { 1, 2, 3 }));
         }
@@ -29,9 +29,69 @@ namespace Functional_LINQ.PythagorheicTriple
         {
             var triples = new PythagorhicTriple();
 
-            var output = new (int a, int b, int c)[] { };
+            var output = new (int a, int b, int c)[] { (5, 4, 3) };
 
-            Assert.Equal(output, triples.GetTriple(new int[] { 3, 4, 5 }));
+            Assert.Equal(output, triples.GetTriple(new int[] { 5, 4, 3 }));
+        }
+
+        [Fact]
+        public void PythagorhicTriplesReturnsOutputForPythagoricTripleFromMultipleValues()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (5, 4, 3) };
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 1, 2, 3, 4, 5, 6 }));
+        }
+
+        [Fact]
+        public void PythagorhicTriplesReturnsOutputForMultiplePythagoricTriplesOnly()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (17, 15, 8), (5, 4, 3) };
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 3, 4, 5, 8, 15, 17 }));
+        }
+
+        [Fact]
+        public void PyhagorhicTriplesReturnsOutputForMultipleTriplesAndOtherValues()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (17, 15, 8), (15, 12, 9), (5, 4, 3) };
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 15, 17 }));
+        }
+
+        [Fact]
+        public void PythagorhicTriplesReturnsOutputForLargeTriples()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (73, 55, 48) };
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 48, 55, 73 }));
+        }
+
+        [Fact]
+        public void PythagorhicTriplesReturnsOutputForMultiplesTriplesAndUnsortedValues()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (73, 55, 48) , (5, 4, 3)};
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 48, 1, 55, 3, 73, 9, 5, 2, 9, 1, 0, 4 }));
+        }
+
+        [Fact]
+        public void PythagorhicTriplesReturnsOutputForMultiplesTriplesWithSingleDoubleAndUnsortedValues()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (73, 55, 48), (5, 4, 3), (5, 4, 3) };
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 48, 1, 55, 3, 73, 9, 5, 5, 2, 9, 1, 0, 4 }));
         }
     }
 }
