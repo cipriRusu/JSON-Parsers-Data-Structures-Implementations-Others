@@ -9,6 +9,8 @@ namespace Functional_LINQ.PythagorheicTriple
     {
         internal IEnumerable<(int a, int b, int c)> GetTriple(int[] input)
         {
+            InputArrayExceptions(input);
+
             var sortedInput = input.Where(x => x > 0).OrderByDescending(y => y);
 
             var triples = sortedInput
@@ -27,6 +29,14 @@ namespace Functional_LINQ.PythagorheicTriple
                 x => Math.Pow(x.a, 2) ==
                      Math.Pow(x.n, 2) + 
                      Math.Pow(x.j, 2));
+        }
+
+        private static void InputArrayExceptions(int[] input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("Input value is null");
+            }
         }
     }
 }
