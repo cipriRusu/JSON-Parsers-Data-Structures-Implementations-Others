@@ -79,7 +79,7 @@ namespace Functional_LINQ.PythagorheicTriple
         {
             var triples = new PythagorhicTriple();
 
-            var output = new (int a, int b, int c)[] { (73, 55, 48) , (5, 4, 3)};
+            var output = new (int a, int b, int c)[] { (73, 55, 48), (5, 4, 3) };
 
             Assert.Equal(output, triples.GetTriple(new int[] { 48, 1, 55, 3, 73, 9, 5, 2, 9, 1, 0, 4 }));
         }
@@ -92,6 +92,16 @@ namespace Functional_LINQ.PythagorheicTriple
             var output = new (int a, int b, int c)[] { (73, 55, 48), (5, 4, 3), (5, 4, 3) };
 
             Assert.Equal(output, triples.GetTriple(new int[] { 48, 1, 55, 3, 73, 9, 5, 5, 2, 9, 1, 0, 4 }));
+        }
+
+        [Fact]
+        public void PythagorhicTriplesReturnsOutputForMultiplesTriplesMultipleDoublesLargeAndSmallValues()
+        {
+            var triples = new PythagorhicTriple();
+
+            var output = new (int a, int b, int c)[] { (65, 63, 16), (61, 60, 11), (61, 60, 11), (5, 4, 3), (5, 4, 3) };
+
+            Assert.Equal(output, triples.GetTriple(new int[] { 11, 60, 60, 3, 4, 5, 16, 1, 2, 63, 5, 65, 61 }));
         }
     }
 }
