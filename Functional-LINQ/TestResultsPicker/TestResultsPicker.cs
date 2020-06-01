@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Functional_LINQ.TestResultsPicker
 {
@@ -7,11 +8,12 @@ namespace Functional_LINQ.TestResultsPicker
     {
         internal IEnumerable<TestResults> MaximumScorePicker(List<TestResults> inputResults)
         {
-            return inputResults
-                .GroupBy(result => result.FamilyId)
-                    .Select(resultGrouping => resultGrouping.OrderByDescending(subEelement => subEelement.Score))
-                        .Select(orderedElement => orderedElement.TakeWhile(subElement => subElement.Score == orderedElement.First().Score))
-                .SelectMany(e => e);
+            //return inputResults.GroupBy(x => x.FamilyId).Select(y => y.OrderByDescending(z => z.Score).First());
+
+            return inputResults.GroupBy(x => x.FamilyId).Select(y =>
+            {
+                return y.Aggregate(y.First(), (a, b) => b.Score > y.First().Score ? b : a);
+            });
         }
     }
 }
