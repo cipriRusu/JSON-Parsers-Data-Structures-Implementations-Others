@@ -13,12 +13,13 @@ namespace Functional_LINQ.WordsFreq
         {
             var stringSplitPoints = new char[] { ' ', '.', ',', ':', '!', '?', '\n' };
 
-            return input
+            var res = input
                 .ToLower()
                 .Split(stringSplitPoints, StringSplitOptions.RemoveEmptyEntries)
-                .ToLookup(x => x)
-                .OrderByDescending(x => x.Count())
+                .GroupBy(x => x)
                 .ToDictionary(x => x.Key, y => y.Count());
+
+            return res;
         }
     }
 }
