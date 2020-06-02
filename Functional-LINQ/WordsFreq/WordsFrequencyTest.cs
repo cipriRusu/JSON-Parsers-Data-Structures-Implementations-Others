@@ -102,7 +102,7 @@ namespace Functional_LINQ.WordsFreq
         {
             var freq = new WordsFrequency();
 
-            var input = "A first demo text as text as input. This is Another Text \n" +
+            var input = "A first demo text as text as input. This is Another Text\n" +
                 "And another line in input   ,,. Third input contains this line as input!!";
 
             var expected = new Dictionary<string, int>()
