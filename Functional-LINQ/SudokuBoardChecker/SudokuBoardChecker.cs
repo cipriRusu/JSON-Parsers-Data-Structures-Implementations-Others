@@ -1,8 +1,5 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using Xunit.Sdk;
-using System;
-using System.Runtime.CompilerServices;
 
 namespace Functional_LINQ.SudokuBoardChecker
 {
@@ -12,18 +9,18 @@ namespace Functional_LINQ.SudokuBoardChecker
         {
             return
                 CheckFullBoard(inputMatrix) &&
-                CheckSubBoards(inputMatrix); 
+                CheckSubBoards(inputMatrix);
         }
 
         private bool CheckSubBoards(int[,] inputMatrix)
         {
             var startIndexes = new int[] { 0, 3, 6 };
 
-            var indexes = startIndexes.Select(x => startIndexes.Select(y => (x, y)));
+            var indexes = startIndexes
+                .SelectMany(element => startIndexes, (firstIndex, secondIndex) => (firstIndex, secondIndex));
 
             return indexes
-                .SelectMany(x => x)
-                .Select(x => MatrixGenerator(inputMatrix, inputMatrix.GetLength(0) / 3, (x.x, x.y))
+                .Select(x => MatrixGenerator(inputMatrix, inputMatrix.GetLength(0) / 3, (x.firstIndex, x.secondIndex))
                     .SelectMany(y => y)
                     .ContainsAllDigits())
                 .All(x => x == true);
