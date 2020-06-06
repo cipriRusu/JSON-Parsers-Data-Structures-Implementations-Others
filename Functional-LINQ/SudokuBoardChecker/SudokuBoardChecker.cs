@@ -5,12 +5,9 @@ namespace Functional_LINQ.SudokuBoardChecker
 {
     public class SudokuBoardChecker
     {
-        public bool SudokuValidator(int[,] inputMatrix)
-        {
-            return
-                CheckFullBoard(inputMatrix) &&
+        public bool SudokuValidator(int[,] inputMatrix) => 
+            CheckFullBoard(inputMatrix) &&
                 CheckSubBoards(inputMatrix);
-        }
 
         private bool CheckSubBoards(int[,] inputMatrix)
         {
@@ -26,13 +23,10 @@ namespace Functional_LINQ.SudokuBoardChecker
                 .All(x => x == true);
         }
 
-        private bool CheckFullBoard(int[,] inputMatrix)
-        {
-            return
-                MatrixGenerator(inputMatrix, inputMatrix.GetLength(0), (0, 0))
-                    .Union(MatrixGenerator(inputMatrix, inputMatrix.GetLength(0), (0, 0), false))
-                .All(x => x.ContainsAllDigits());
-        }
+        private bool CheckFullBoard(int[,] inputMatrix) =>
+            MatrixGenerator(inputMatrix, inputMatrix.GetLength(0), (0, 0))
+              .Union(MatrixGenerator(inputMatrix, inputMatrix.GetLength(0), (0, 0), false))
+           .All(x => x.ContainsAllDigits());
 
         private IEnumerable<IEnumerable<int>> MatrixGenerator(
             int[,] inputMatrix, int length, (int, int) startIndex, bool isRow = true)
