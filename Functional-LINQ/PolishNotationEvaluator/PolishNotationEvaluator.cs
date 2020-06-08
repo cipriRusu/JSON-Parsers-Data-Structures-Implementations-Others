@@ -2,68 +2,78 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Functional_LINQ.PolishNotationEvaluator
 {
     public class PolishNotationEvaluator
     {
-        internal string PolishNotationExpressionEvaluator(string expression)
+        public int PolishNotationExpressionEvaluator(string expression)
         {
             var results = expression.Split(' ');
 
-            var res = results.Aggregate(new Stack<string>(), (x, y) =>
+            var final = results.Aggregate(Enumerable.Empty<int>(), (x, y) =>
             {
-                if (int.TryParse(y, out int res)) { x.Push(y); };
+                x = int.TryParse(y, out int res) ? x.Append(res) : PerformOperation(x, y);
 
-                switch (y)
-                {
-                    case "+":
-                        {
-                            var secondTerm = x.Pop();
-                            var firstTerm = x.Pop();
-                            var operation = Convert.ToInt32(firstTerm) + Convert.ToInt32(secondTerm);
-                            x.Push(operation.ToString());
-                            break;
-                        }
-                    case "-":
-                        {
-                            var secondTerm = x.Pop();
-                            var firstTerm = x.Pop();
-                            var operation = Convert.ToInt32(firstTerm) - Convert.ToInt32(secondTerm);
-                            x.Push(operation.ToString());
-                            break;
-                        }
-                    case "/":
-                        {
-                            var secondTerm = x.Pop();
-                            var firstTerm = x.Pop();
-                            var operation = Convert.ToInt32(firstTerm) / Convert.ToInt32(secondTerm);
-                            x.Push(operation.ToString());
-                            break;
-                        }
-                    case "*":
-                        {
-                            var secondTerm = x.Pop();
-                            var firstTerm = x.Pop();
-                            var operation = Convert.ToInt32(firstTerm) * Convert.ToInt32(secondTerm);
-                            x.Push(operation.ToString());
-                            break;
-                        }
-                    case "^":
-                        {
-                            var secondTerm = x.Pop();
-                            var firstTerm = x.Pop();
-                            var operation = Math.Pow(Convert.ToInt32(firstTerm), Convert.ToInt32(secondTerm));
-                            x.Push(operation.ToString());
-                            break;
-                        }
-                }
-
-                return x;
+                return x;   
             });
 
-            return res.Single();
+            return final.Single();
+        }
+
+        private IEnumerable<int> PerformOperation(IEnumerable<int> x, string y)
+        {
+            var secondElement = x.TakeLast(1);
+            x = x.SkipLast(1);
+            var firstElement = x.TakeLast(1);
+            x = x.SkipLast(1);
+
+            x = x.Append(Operation(y, firstElement, secondElement));
+
+            return x;
+        }
+
+        private int Operation(string y, IEnumerable<int> firstElement, IEnumerable<int> secondElement)
+        {
+            switch (y)
+            {
+                case "+":
+                    {
+                        return
+                            Convert.ToInt32(firstElement.Single()) +
+                            Convert.ToInt32(secondElement.Single());
+                    }
+                case "-":
+                    {
+                        return
+                            Convert.ToInt32(firstElement.Single()) -
+                            Convert.ToInt32(secondElement.Single());
+                    }
+                case "/":
+                    {
+                        return
+                            Convert.ToInt32(firstElement.Single()) /
+                            Convert.ToInt32(secondElement.Single());
+                    }
+                case "*":
+                    {
+                        return
+                            Convert.ToInt32(firstElement.Single()) *
+                            Convert.ToInt32(secondElement.Single());
+                    }
+                case "^":
+                    {
+                        return(int)
+                           Math.Pow(
+                               Convert.ToInt32(firstElement.Single()),
+                               Convert.ToInt32(secondElement.Single()));
+                    }
+
+            }
+
+            throw new ArgumentException();
         }
     }
 }

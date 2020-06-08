@@ -12,7 +12,7 @@ namespace Functional_LINQ.PolishNotationEvaluator
         {
             var evaluator = new PolishNotationEvaluator();
 
-            Assert.Equal("7", evaluator.PolishNotationExpressionEvaluator("3 4 +"));
+            Assert.Equal(7, evaluator.PolishNotationExpressionEvaluator("3 4 +"));
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace Functional_LINQ.PolishNotationEvaluator
         {
             var evaluator = new PolishNotationEvaluator();
 
-            Assert.Equal("17", evaluator.PolishNotationExpressionEvaluator("13 4 +"));
+            Assert.Equal(17, evaluator.PolishNotationExpressionEvaluator("13 4 +"));
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Functional_LINQ.PolishNotationEvaluator
         {
             var evaluator = new PolishNotationEvaluator();
 
-            Assert.Equal("12", evaluator.PolishNotationExpressionEvaluator("13 3 4 - +"));
+            Assert.Equal(12, evaluator.PolishNotationExpressionEvaluator("13 3 4 - +"));
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Functional_LINQ.PolishNotationEvaluator
         {
             var evaluator = new PolishNotationEvaluator();
 
-            Assert.Equal("39", evaluator.PolishNotationExpressionEvaluator("6 9 + 4 2 * 4 2 ^ + +"));
+            Assert.Equal(39, evaluator.PolishNotationExpressionEvaluator("6 9 + 4 2 * 4 2 ^ + +"));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Functional_LINQ.PolishNotationEvaluator
         {
             var evaluator = new PolishNotationEvaluator();
 
-            Assert.Equal("59", evaluator.PolishNotationExpressionEvaluator("5 3 2 3 ^ 5 - 7 -3 * + * -"));
+            Assert.Equal(59, evaluator.PolishNotationExpressionEvaluator("5 3 2 3 ^ 5 - 7 -3 * + * -"));
         }
     }
 }
