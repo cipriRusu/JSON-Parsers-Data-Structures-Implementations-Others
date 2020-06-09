@@ -38,7 +38,6 @@ namespace Functional_LINQ.PolishNotationEvaluator
 
             Assert.Equal(39, evaluator.PolishNotationExpressionEvaluator("6 9 + 4 2 * 4 2 ^ + +"));
         }
-
         [Fact]
         public void PolishNotationEvaluatorEvaluatesComplexNestedExpressionMultipleOperators()
         {
