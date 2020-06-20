@@ -10,6 +10,15 @@ namespace ChessMoves
             base(currentPosition, playerColour)
         { base.PieceType = PieceType.Queen; }
 
+        public Queen(string chessBoardIndex, Player playerColour) : 
+            base(chessBoardIndex, playerColour)
+        {
+            base.PieceType = PieceType.Queen;
+            base.CurrentPosition = base.customIndex.GetMatrixIndex(chessBoardIndex);
+            base.PlayerColour = playerColour;
+
+        }
+
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {
             var horizontalAndVertical = new Rock(base.CurrentPosition, Player.White).GetLegalMoves();

@@ -10,6 +10,14 @@ namespace ChessMoves
             base(currentPosition, playerColour)
         { base.PieceType = PieceType.Knight; }
 
+        public Knight(string chessBoardIndex, Player playerColour) : 
+            base(chessBoardIndex, playerColour)
+        {
+            base.PieceType = PieceType.Knight;
+            base.CurrentPosition = base.customIndex.GetMatrixIndex(chessBoardIndex);
+            base.PlayerColour = playerColour;
+        }
+
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {
             var legalMoves = new List<IEnumerable<(int, int)>>();

@@ -9,8 +9,8 @@ namespace ChessMoves
 {
     internal class Pawn : Piece
     {
-        public Pawn((int, int) currentPosition, Player playerColour) :
-            base(currentPosition, playerColour)
+        public Pawn((int, int) inputIndex, Player playerColour) : 
+            base(inputIndex, playerColour)
         { base.PieceType = PieceType.Pawn; }
 
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()

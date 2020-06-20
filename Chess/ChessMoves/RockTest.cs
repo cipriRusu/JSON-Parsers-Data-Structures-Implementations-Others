@@ -124,5 +124,11 @@ namespace ChessMoves
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void test1()
+        {
+            var t1 = new Rock("a8", Player.Black);
+        }
     }
 }

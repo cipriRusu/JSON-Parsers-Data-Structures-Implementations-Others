@@ -7,9 +7,16 @@ namespace ChessMoves
 {
     internal class Bishop : Piece
     {
-        public Bishop((int, int) currentPosition, Player playerColour) :
-            base(currentPosition, playerColour)
+        public Bishop(string matrixPosition, Player playerColour) :
+            base(matrixPosition, playerColour)
         { PieceType = PieceType.Bishop; }
+
+        public Bishop((int, int) pieceIndex, Player playerColour) : 
+            base(pieceIndex, playerColour)
+        {
+            base.CurrentPosition = pieceIndex;
+            base.PlayerColour = playerColour;
+        }
 
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {

@@ -39,5 +39,11 @@ namespace ChessMoves
             Assert.Equal(PieceType.Bishop, movePiece.PieceType);
             Assert.Equal(Player.White, movePiece.PlayerColor);
         }
+
+        [Fact]
+        public void UserMoveInputForBishopCaptureReturnsMove()
+        {
+            var movePiece = new UserMove("Bxe5");
+        }
     }
 }

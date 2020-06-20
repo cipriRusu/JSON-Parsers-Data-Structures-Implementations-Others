@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace ChessMoves
 {
-    public class ConvertUserMoves
+    public class AllMoves
     {
-        internal List<UserMove> ConvertMoves(string[] input)
+        private string[] userInput;
+        public AllMoves(string[] userInput) => this.userInput = userInput;
+        public List<UserMove> Moves => ConvertMoves(userInput);
+        private List<UserMove> ConvertMoves(string[] input)
         {
             var output = new List<UserMove>();
 

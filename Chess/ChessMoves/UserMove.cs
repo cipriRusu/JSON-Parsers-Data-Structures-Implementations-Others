@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,12 @@ namespace ChessMoves
                     GetPieceType(input);
                     MoveIndex = customIndex.GetMatrixIndex(input.Substring(1));
                     break;
+                case 4:
+                    MoveIndex = customIndex.GetMatrixIndex(input.Substring(2));
+                    GetPieceType(input);
+                        break;
+                default:
+                    throw new ArgumentException("User move format not correct");
             }
         }
 

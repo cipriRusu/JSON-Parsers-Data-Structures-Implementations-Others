@@ -10,6 +10,13 @@ namespace ChessMoves
         public Rock((int, int) currentPosition, Player playerColour) : base(currentPosition, playerColour)
         { base.PieceType = PieceType.Rock; }
 
+        public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour)
+        {
+            PieceType = PieceType.Rock;
+            CurrentPosition = customIndex.GetMatrixIndex(chessBoardIndex);
+            PlayerColour = playerColour;
+        }
+
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {
             var firstColumn = new List<(int, int)>();

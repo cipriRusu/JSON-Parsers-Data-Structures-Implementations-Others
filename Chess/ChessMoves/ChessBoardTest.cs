@@ -8,6 +8,11 @@ namespace ChessMoves
 {
     public class ChessBoardTest
     {   
-
+        [Fact]
+        public void Test1()
+        {
+            var test = new ChessBoard();
+            test.ComputeTable();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ChessMoves
@@ -10,6 +11,14 @@ namespace ChessMoves
         public King((int, int) currentPosition, Player playerColour) :
             base(currentPosition, playerColour)
         { base.PieceType = PieceType.King; }
+
+        public King(string chessBoardIndex, Player playerColour) : 
+            base(chessBoardIndex, playerColour)
+        {
+            base.PieceType = PieceType.King;
+            base.CurrentPosition = base.customIndex.GetMatrixIndex(chessBoardIndex);
+            base.PlayerColour = playerColour;
+        }
 
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {

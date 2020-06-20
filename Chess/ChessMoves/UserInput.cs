@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class UserInputMoves
+    public class UserInput
     {
-        public string[] GetUserMoves()
+        public string[] GetUserInput()
         {
             return new StreamReader(@"C:\Users\sysuser\Desktop\Reps\Chess\ChessMoves\Moves.txt")
                 .ReadToEnd().Split("\r\n");

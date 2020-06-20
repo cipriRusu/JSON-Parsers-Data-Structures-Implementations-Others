@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace ChessMoves
 {
@@ -17,13 +18,11 @@ namespace ChessMoves
 
         public void ComputeTable()
         {
-            var moves = new UserInputMoves().GetUserMoves();
-            var computeMoves = new ConvertUserMoves().ConvertMoves(moves);
+            var allMoves = new AllMoves(new UserInput().GetUserInput()).Moves;
 
-            foreach (var move in computeMoves)
+            foreach(var move in allMoves)
             {
                 Move(move);
-                playerTurn = move.PlayerColor;
             }
 
             DisplayBoard();
@@ -74,42 +73,26 @@ namespace ChessMoves
 
         private void InitializeBlack()
         {
-            var rock = new CustomIndex().GetMatrixIndex("a8");
-            board[rock.Item1, rock.Item2] = new Rock((rock.Item1, rock.Item2), Player.Black) { };
-            var knight = new CustomIndex().GetMatrixIndex("b8");
-            board[knight.Item1, knight.Item2] = new Knight((knight.Item1, knight.Item2), Player.Black) { };
-            var bishop = new CustomIndex().GetMatrixIndex("c8");
-            board[bishop.Item1, bishop.Item2] = new Bishop((bishop.Item1, bishop.Item2), Player.Black) { };
-            var king = new CustomIndex().GetMatrixIndex("d8");
-            board[king.Item1, king.Item2] = new King((king.Item1, king.Item2), Player.Black) { };
-            var queen = new CustomIndex().GetMatrixIndex("e8");
-            board[queen.Item1, queen.Item2] = new Queen((queen.Item1, queen.Item2), Player.Black) { };
-            var secondBishop = new CustomIndex().GetMatrixIndex("f8");
-            board[secondBishop.Item1, secondBishop.Item2] = new Bishop((secondBishop.Item1, secondBishop.Item2), Player.Black) { };
-            var secondKnight = new CustomIndex().GetMatrixIndex("g8");
-            board[secondKnight.Item1, secondKnight.Item2] = new Knight((secondKnight.Item1, secondKnight.Item2), Player.Black) { };
-            var secondRock = new CustomIndex().GetMatrixIndex("h8");
-            board[secondRock.Item1, secondRock.Item2] = new Rock((secondRock.Item1, secondRock.Item2), Player.Black) { };
+            board[0, 0] = new Rock("a8", Player.Black);
+            board[0, 1] = new Knight("b8", Player.Black);
+            board[0, 2] = new Bishop("c8", Player.Black);
+            board[0, 3] = new King("d8", Player.Black);
+            board[0, 4] = new Queen("e8", Player.Black);
+            board[0, 5] = new Bishop("f8", Player.Black);
+            board[0, 6] = new Knight("g8", Player.Black);
+            board[0, 7] = new Rock("h8", Player.Black);
         }
 
         private void InitializeWhite()
         {
-            var rock = new CustomIndex().GetMatrixIndex("a1");
-            board[rock.Item1, rock.Item2] = new Rock((rock.Item1, rock.Item2), Player.White) { };
-            var knight = new CustomIndex().GetMatrixIndex("b1");
-            board[knight.Item1, knight.Item2] = new Knight((knight.Item1, knight.Item2), Player.White) { };
-            var bishop = new CustomIndex().GetMatrixIndex("c1");
-            board[bishop.Item1, bishop.Item2] = new Bishop((bishop.Item1, bishop.Item2), Player.White) { };
-            var king = new CustomIndex().GetMatrixIndex("d1");
-            board[king.Item1, king.Item2] = new King((king.Item1, king.Item2), Player.White) { };
-            var queen = new CustomIndex().GetMatrixIndex("e1");
-            board[queen.Item1, queen.Item2] = new Queen((queen.Item1, queen.Item2), Player.White) { };
-            var secondBishop = new CustomIndex().GetMatrixIndex("f1");
-            board[secondBishop.Item1, secondBishop.Item2] = new Bishop((secondBishop.Item1, secondBishop.Item2), Player.White) { };
-            var secondKnight = new CustomIndex().GetMatrixIndex("g1");
-            board[secondKnight.Item1, secondKnight.Item2] = new Knight((secondKnight.Item1, secondKnight.Item2), Player.White) { };
-            var secondRock = new CustomIndex().GetMatrixIndex("h1");
-            board[secondRock.Item1, secondRock.Item2] = new Rock((secondRock.Item1, secondRock.Item2), Player.White) { };
+            board[7, 0] = new Rock("a1", Player.White);
+            board[7, 1] = new Knight("b1", Player.White);
+            board[7, 2] = new Bishop("c1", Player.White);
+            board[7, 3] = new King("d1", Player.White);
+            board[7, 4] = new Queen("e1", Player.White);
+            board[7, 5] = new Bishop("f1", Player.White);
+            board[7, 6] = new Knight("g1", Player.White);
+            board[7, 7] = new Rock("h1", Player.White);
         }
 
         private void DisplayBoard()
