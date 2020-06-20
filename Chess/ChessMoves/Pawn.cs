@@ -13,6 +13,14 @@ namespace ChessMoves
             base(inputIndex, playerColour)
         { base.PieceType = PieceType.Pawn; }
 
+        public Pawn(string chessBoardIndex, Player playerColour) : 
+            base(chessBoardIndex, playerColour)
+        {
+            base.PieceType = PieceType.Pawn;
+            base.CurrentPosition = base.customIndex.GetMatrixIndex(chessBoardIndex);
+            base.PlayerColour = playerColour;
+        }
+
         public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {
             const int BLACKSTARTPOSITION = 1;

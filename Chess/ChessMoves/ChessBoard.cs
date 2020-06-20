@@ -9,7 +9,6 @@ namespace ChessMoves
     {
         private const int CHESSBOARD_SIZE = 8;
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
-        private Player playerTurn;
 
         public ChessBoard()
         {
@@ -18,57 +17,13 @@ namespace ChessMoves
 
         public void ComputeTable()
         {
-            var allMoves = new AllMoves(new UserInput().GetUserInput()).Moves;
-
-            foreach(var move in allMoves)
-            {
-                Move(move);
-            }
-
             DisplayBoard();
         }
-
-        private void Move(UserMove userMove)
-        {
-            for (int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
-            {
-                for (int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
-                {
-                    if (board[i, j] != null &&
-                       board[i, j].PlayerColour == userMove.PlayerColor &&
-                       board[i, j].PieceType == userMove.PieceType &&
-                       IdentifyValidPath(userMove, i, j).Count() > 0)
-                    {
-                        var path = IdentifyValidPath(userMove, i, j).SelectMany(x => x);
-
-                        if(path.Skip(1).All(x => board[x.Item1, x.Item2] == null))
-                        {
-                            board[i, j].UpdatePosition(path.Last());
-                            board[path.Last().Item1, path.Last().Item2] = board[i, j];
-                            board[i, j] = null;
-                        }
-                    }
-                }
-            }
-        }
-
-        private IEnumerable<IEnumerable<(int, int)>> IdentifyValidPath(UserMove userMove, int i, int j) => 
-            board[i, j].GetLegalMoves().Where(x => x.Last() == userMove.MoveIndex);
 
         private void InitializeBoard()
         {
             InitializeWhite();
             InitializeBlack();
-            InitializePawns();
-        }
-
-        private void InitializePawns()
-        {
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                board[1, i] = new Pawn((1, i), Player.Black) { };
-                board[6, i] = new Pawn((6, i), Player.White) { };
-            }
         }
 
         private void InitializeBlack()
@@ -81,6 +36,15 @@ namespace ChessMoves
             board[0, 5] = new Bishop("f8", Player.Black);
             board[0, 6] = new Knight("g8", Player.Black);
             board[0, 7] = new Rock("h8", Player.Black);
+
+            board[1, 0] = new Pawn("a7", Player.Black);
+            board[1, 1] = new Pawn("b7", Player.Black);
+            board[1, 2] = new Pawn("c7", Player.Black);
+            board[1, 3] = new Pawn("d7", Player.Black);
+            board[1, 4] = new Pawn("e7", Player.Black);
+            board[1, 5] = new Pawn("f7", Player.Black);
+            board[1, 6] = new Pawn("g7", Player.Black);
+            board[1, 7] = new Pawn("g7", Player.Black);
         }
 
         private void InitializeWhite()
@@ -93,6 +57,15 @@ namespace ChessMoves
             board[7, 5] = new Bishop("f1", Player.White);
             board[7, 6] = new Knight("g1", Player.White);
             board[7, 7] = new Rock("h1", Player.White);
+
+            board[6, 0] = new Pawn("a2", Player.White);
+            board[6, 1] = new Pawn("b2", Player.White);
+            board[6, 2] = new Pawn("c2", Player.White);
+            board[6, 3] = new Pawn("d2", Player.White);
+            board[6, 4] = new Pawn("e2", Player.White);
+            board[6, 5] = new Pawn("f2", Player.White);
+            board[6, 6] = new Pawn("g2", Player.White);
+            board[6, 7] = new Pawn("h2", Player.White);
         }
 
         private void DisplayBoard()
@@ -182,8 +155,7 @@ namespace ChessMoves
 
                 Console.Write('\n');
             }
-            Console.WriteLine();
-            Console.Write($"Player to move: {playerTurn}");
+
             Console.ReadLine();
         }
     }

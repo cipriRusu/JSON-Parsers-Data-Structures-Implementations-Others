@@ -12,7 +12,7 @@ namespace ChessMoves
         public PieceType PieceType;
         public Player PlayerColor;
         public (int, int) MoveIndex;
-        private readonly CustomIndex customIndex = new CustomIndex();
+        private readonly Index customIndex = new Index();
 
         public UserMove(string input)
         {

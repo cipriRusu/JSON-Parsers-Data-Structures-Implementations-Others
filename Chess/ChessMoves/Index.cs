@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ChessMoves
 {
-    internal class CustomIndex
+    internal class Index
     {
         //Used for conversion of chessboard index to standard matrix index
 

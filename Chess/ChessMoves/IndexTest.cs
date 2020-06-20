@@ -3,26 +3,26 @@ using Xunit;
 
 namespace ChessMoves
 {
-    public class CustomIndexTest
+    public class IndexTest
     {
         [Fact]
         public void GetMatrixIndexReturnsAppropriateValueForValidPawnIndexInCorner()
         {
-            var cIndex = new CustomIndex();
+            var cIndex = new Index();
             Assert.Equal((0, 0), cIndex.GetMatrixIndex("a8"));
         }
 
         [Fact]
         public void GetMatrixIndexReturnsAppropriateValuesForValidPawnIndexInBoard()
         {
-            var cIndex = new CustomIndex();
+            var cIndex = new Index();
             Assert.Equal((4, 4), cIndex.GetMatrixIndex("e4"));
         }
 
         [Fact]
         public void GetMatrixIndexThrowsArgumentExceptionForInvalidIndex()
         {
-            var cIndex = new CustomIndex();
+            var cIndex = new Index();
             Assert.Throws<ArgumentException>(() => cIndex.GetMatrixIndex("z9"));
         }
     }
