@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ChessMoves
 {
@@ -17,9 +19,46 @@ namespace ChessMoves
         public UserMove(string input)
         {
             GetPieceType(input);
+
+            if (input.Contains('=') && PieceType == PieceType.Pawn)
+            {
+                PawnPromotion(input);
+            }
+            else
+            {
+                GetSource(string.Concat(input.TakeLast(2)));
+
+                GetOrigin(input.Except(string.Concat(input.TakeLast(2))));
+            }
         }
 
-        private bool IsRank(char c) => "1234567".Contains(c);
+        private void PawnPromotion(string input)
+        {
+            var source = string.Concat(input.Take(2));
+            GetSource(source);
+            GetPieceType(string.Concat(input.Last()));
+            UserMoveType = UserMoveType.Promote;
+        }
+
+        private void GetSource(string source)
+        {
+            if (source.All(x => IsRank(x) || IsFile(x)))
+            {
+                MoveIndex = customIndex.GetMatrixIndex(source);
+            }
+        }
+        private void GetOrigin(IEnumerable<char> origin)
+        {
+            foreach (var element in origin)
+            {
+                if (element == 'x') { UserMoveType = UserMoveType.Capture; }
+
+                if (IsRank(element)) { SourceRank = element; }
+
+                if (IsFile(element)) { SourceFile = element; }
+            }
+        }
+        private bool IsRank(char c) => "12345678".Contains(c);
         private bool IsFile(char c) => "abcdefgh".Contains(c);
         private void GetPieceType(string input)
         {

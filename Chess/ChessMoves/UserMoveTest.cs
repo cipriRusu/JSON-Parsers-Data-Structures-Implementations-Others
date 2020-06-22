@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ChessMoves
@@ -79,7 +77,7 @@ namespace ChessMoves
         [Fact]
         public void UserMoveInputForPawnPromotion()
         {
-            var movePiece = new UserMove("e7=Q");
+            var movePiece = new UserMove("e8=Q");
             Assert.Equal(PieceType.Queen, movePiece.PieceType);
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((0, 4), movePiece.MoveIndex);
@@ -100,6 +98,8 @@ namespace ChessMoves
         public void UserMoveInputForPieceWithAmbiguousDoubleCapture()
         {
             var movePiece = new UserMove("Qh4xe1");
+            Assert.Equal('4', movePiece.SourceRank);
+            Assert.Equal('h', movePiece.SourceFile);
             Assert.Equal(PieceType.Queen, movePiece.PieceType);
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((7, 4), movePiece.MoveIndex);
