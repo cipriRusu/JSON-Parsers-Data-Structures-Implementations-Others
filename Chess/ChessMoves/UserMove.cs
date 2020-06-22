@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace ChessMoves
 {
@@ -11,30 +7,20 @@ namespace ChessMoves
     {
         public PieceType PieceType;
         public Player PlayerColor;
+        public UserMoveType UserMoveType;
         public (int, int) MoveIndex;
+        public char SourceFile { get; private set; }
+        public char SourceRank { get; private set; }
+
         private readonly Index customIndex = new Index();
 
         public UserMove(string input)
         {
-            switch (input.Length)
-            {
-                case 2:
-                    PieceType = PieceType.Pawn;
-                    MoveIndex = customIndex.GetMatrixIndex(input);
-                    break;
-                case 3:
-                    GetPieceType(input);
-                    MoveIndex = customIndex.GetMatrixIndex(input.Substring(1));
-                    break;
-                case 4:
-                    MoveIndex = customIndex.GetMatrixIndex(input.Substring(2));
-                    GetPieceType(input);
-                        break;
-                default:
-                    throw new ArgumentException("User move format not correct");
-            }
+            GetPieceType(input);
         }
 
+        private bool IsRank(char c) => "1234567".Contains(c);
+        private bool IsFile(char c) => "abcdefgh".Contains(c);
         private void GetPieceType(string input)
         {
             switch (input.First())
@@ -55,6 +41,7 @@ namespace ChessMoves
                     PieceType = PieceType.Knight;
                     break;
                 default:
+                    PieceType = PieceType.Pawn;
                     break;
             }
         }
