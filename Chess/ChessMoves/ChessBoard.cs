@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -8,17 +9,55 @@ namespace ChessMoves
     public class ChessBoard
     {
         private const int CHESSBOARD_SIZE = 8;
-        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        public readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
         public ChessBoard()
         {
             InitializeBoard();
         }
 
-        public void ComputeTable()
+        public void PerformMoves(List<UserMove> moves)
         {
+            foreach(var move in moves)
+            {
+                if (move.UserMoveType == UserMoveType.Move)
+                {
+                    Move(move);
+                }
+            }
+
             DisplayBoard();
         }
+
+        private void Move(UserMove move)
+        {
+            for(int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
+            {
+                for(int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
+                {
+                    if (board[i, j] != null &&
+                        move.PlayerColor == board[i, j].PlayerColour &&
+                        move.PieceType == board[i, j].PieceType &&
+                        PathToTarget(move, i, j).Count() > 0 && IsPathClear(move, i, j))
+                    {
+                        PerformMove(move, i, j);
+                    }
+                }
+            }
+        }
+
+        private void PerformMove(UserMove move, int i, int j)
+        {
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[i, j];
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition((move.MoveIndex.Item1, move.MoveIndex.Item2));
+            board[i, j] = null;
+        }
+
+        private bool IsPathClear(UserMove move, int i, int j) => 
+            PathToTarget(move, i, j).SelectMany(x => x).Skip(1).All(x => board[x.Item1, x.Item2] == null);
+
+        private IEnumerable<IEnumerable<(int, int)>> PathToTarget(UserMove move, int i, int j) =>
+            board[i, j].GetLegalMoves().Where(x => x.Last() == move.MoveIndex);
 
         private void InitializeBoard()
         {
@@ -81,61 +120,61 @@ namespace ChessMoves
                             case Rock _:
                                 if (board[i, j].PlayerColour == Player.White)
                                 {
-                                    Console.Write(" RkW ");
+                                    Debug.Write(" RkW ");
                                 }
                                 else
                                 {
-                                    Console.Write(" RkB ");
+                                    Debug.Write(" RkB ");
                                 }
                                 break;
                             case Knight _:
                                 if (board[i, j].PlayerColour == Player.White)
                                 {
-                                    Console.Write(" KnW ");
+                                    Debug.Write(" KnW ");
                                 }
                                 else
                                 {
-                                    Console.Write(" KnB ");
+                                    Debug.Write(" KnB ");
                                 }
                                 break;
                             case Bishop _:
                                 if (board[i, j].PlayerColour == Player.White)
                                 {
-                                    Console.Write(" BiW ");
+                                    Debug.Write(" BiW ");
                                 }
                                 else
                                 {
-                                    Console.Write(" BiB ");
+                                    Debug.Write(" BiB ");
                                 }
                                 break;
                             case King _:
                                 if(board[i, j].PlayerColour == Player.White)
                                 {
-                                    Console.Write(" KgW ");
+                                    Debug.Write(" KgW ");
                                 }
                                 else
                                 {
-                                    Console.Write(" KgB ");
+                                    Debug.Write(" KgB ");
                                 }
                                 break;
                             case Queen _:
                                 if (board[i, j].PlayerColour == Player.White)
                                 {
-                                    Console.Write(" QuW ");
+                                    Debug.Write(" QuW ");
                                 }
                                 else
                                 {
-                                    Console.Write(" QuB ");
+                                    Debug.Write(" QuB ");
                                 }
                                 break;
                             case Pawn _:
                                 if (board[i, j].PlayerColour == Player.White)
                                 {
-                                    Console.Write(" PwW ");
+                                    Debug.Write(" PwW ");
                                 }
                                 else
                                 {
-                                    Console.Write(" PwB ");
+                                    Debug.Write(" PwB ");
                                 }
                                 break;
                         }
@@ -144,19 +183,17 @@ namespace ChessMoves
                     {
                         if (i % 2 != 0 && j % 2 != 0 || (i % 2 == 0 && j % 2 == 0))
                         {
-                            Console.Write(" [ ] ");
+                            Debug.Write(" [ ] ");
                         }
                         else
                         {
-                            Console.Write(" | | ");
+                            Debug.Write(" | | ");
                         }
                     }
                 }
 
-                Console.Write('\n');
+                Debug.Write('\n');
             }
-
-            Console.ReadLine();
         }
     }
 }

@@ -13,10 +13,17 @@ namespace ChessMoves
         public char Rank { get; private set; }
         public PieceType PieceType { get; internal set; }
         public virtual IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => null;
-        public void UpdatePosition((int, int) newPosition) => CurrentPosition = newPosition;
         public bool CheckIndexes(int x, int y) => (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
 
         internal Index customIndex = new Index();
+
+        public void UpdatePosition((int, int) newPosition)
+        {
+            var rankAndFile = new RankAndFile(newPosition);
+            CurrentPosition = newPosition;
+            File = rankAndFile.File;
+            Rank = rankAndFile.Rank;
+        }
 
         public Piece(string chessBoardIndex, Player playerColour)
         {

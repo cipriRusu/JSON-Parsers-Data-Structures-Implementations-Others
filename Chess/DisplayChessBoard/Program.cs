@@ -1,5 +1,6 @@
 ﻿using ChessMoves;
 using System;
+using System.Collections.Generic;
 
 namespace DisplayChessBoard
 {
@@ -7,7 +8,7 @@ namespace DisplayChessBoard
     {
         public static void Main()
         {
-            new ChessBoard().ComputeTable();
+
         }
     }
 }
