@@ -15,10 +15,10 @@ namespace ChessMoves
         {
             if (CheckIndexes(input.Item1, input.Item2))
             {
-                Rank = Enumerable.Range('a', CHESSBOARDSIZE)
+                File = Enumerable.Range('a', CHESSBOARDSIZE)
                 .Select(x => Convert.ToChar(x)).Where((x, y) => y == input.Item2).Single();
 
-                File = Enumerable.Range(1, CHESSBOARDSIZE)
+                Rank = Enumerable.Range(1, CHESSBOARDSIZE)
                     .Select(x => Convert.ToChar(x + '0')).Where((x, y) => y == CHESSBOARDSIZE - 1 - input.Item1).Single();
             }
             else

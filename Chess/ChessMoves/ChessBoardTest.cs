@@ -94,5 +94,33 @@ namespace ChessMoves
                     PieceType = PieceType.Pawn,
                 }, new PieceComparer());
         }
+
+        [Fact]
+        public void ComputeTableReturnsValidBoardForMultipleValidAmbigousMovesAndSinglePawnCapture()
+        {
+            var testBoard = new ChessBoard();
+
+            var moves = new List<UserMove>();
+            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
+            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
+            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
+
+            testBoard.PerformMoves(moves);
+
+            Assert.Equal(testBoard.board[4, 4],
+                new Pawn("e4", Player.Black)
+                {
+                    CurrentPosition = (4, 4),
+                    PieceType = PieceType.Pawn
+                }, new PieceComparer());
+
+            Assert.Equal(testBoard.board[5, 2],
+                new Knight("c3", Player.White)
+                {
+                    CurrentPosition = (5, 2),
+                    PieceType = PieceType.Knight
+                }, new PieceComparer());
+        }
     }
 }

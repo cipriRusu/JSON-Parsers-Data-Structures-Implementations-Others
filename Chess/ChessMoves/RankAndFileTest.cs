@@ -12,8 +12,8 @@ namespace ChessMoves
          {
             var rankAndFile = new RankAndFile((1, 0));
 
-            Assert.Equal('a', rankAndFile.Rank);
-            Assert.Equal('7', rankAndFile.File);
+            Assert.Equal('7', rankAndFile.Rank);
+            Assert.Equal('a', rankAndFile.File);
         }
 
         [Fact]
@@ -21,8 +21,8 @@ namespace ChessMoves
         {
             var rankAndFile = new RankAndFile((7, 7));
 
-            Assert.Equal('h', rankAndFile.Rank);
-            Assert.Equal('1', rankAndFile.File);
+            Assert.Equal('1', rankAndFile.Rank);
+            Assert.Equal('h', rankAndFile.File);
         }
 
         [Fact]
@@ -30,8 +30,8 @@ namespace ChessMoves
         {
             var rankAndFile = new RankAndFile((0, 0));
 
-            Assert.Equal('a', rankAndFile.Rank);
-            Assert.Equal('8', rankAndFile.File);
+            Assert.Equal('8', rankAndFile.Rank);
+            Assert.Equal('a', rankAndFile.File);
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace ChessMoves
         {
             var rankAndFile = new RankAndFile((0, 7));
 
-            Assert.Equal('h', rankAndFile.Rank);
-            Assert.Equal('8', rankAndFile.File);
+            Assert.Equal('8', rankAndFile.Rank);
+            Assert.Equal('h', rankAndFile.File);
         }
 
         [Fact]
@@ -48,8 +48,8 @@ namespace ChessMoves
         {
             var rankAndFile = new RankAndFile((4, 2));
 
-            Assert.Equal('c', rankAndFile.Rank);
-            Assert.Equal('4', rankAndFile.File);
+            Assert.Equal('4', rankAndFile.Rank);
+            Assert.Equal('c', rankAndFile.File);
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace ChessMoves
         {
             var rankAndFile = new RankAndFile((3, 6));
 
-            Assert.Equal('g', rankAndFile.Rank);
-            Assert.Equal('5', rankAndFile.File);
+            Assert.Equal('5', rankAndFile.Rank);
+            Assert.Equal('g', rankAndFile.File);
         }
 
         [Fact]

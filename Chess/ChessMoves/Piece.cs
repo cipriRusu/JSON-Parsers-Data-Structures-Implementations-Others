@@ -29,8 +29,8 @@ namespace ChessMoves
         {
             CurrentPosition = customIndex.GetMatrixIndex(chessBoardIndex);
             PlayerColour = playerColour;
-            Rank = chessBoardIndex.First();
-            File = chessBoardIndex.Last();
+            File = chessBoardIndex.First();
+            Rank = chessBoardIndex.Last();
         }
 
         public Piece((int, int) pieceIndex, Player playerColour)

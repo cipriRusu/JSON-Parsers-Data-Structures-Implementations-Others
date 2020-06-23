@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace ChessMoves
 {
@@ -18,7 +19,7 @@ namespace ChessMoves
 
         public void PerformMoves(List<UserMove> moves)
         {
-            foreach(var move in moves)
+            foreach (var move in moves)
             {
                 if (move.UserMoveType == UserMoveType.Move)
                 {
@@ -31,9 +32,9 @@ namespace ChessMoves
 
         private void Move(UserMove move)
         {
-            for(int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
+            for (int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
             {
-                for(int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
+                for (int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
                 {
                     if (board[i, j] != null &&
                         move.PlayerColor == board[i, j].PlayerColour &&
@@ -53,7 +54,7 @@ namespace ChessMoves
             board[i, j] = null;
         }
 
-        private bool IsPathClear(UserMove move, int i, int j) => 
+        private bool IsPathClear(UserMove move, int i, int j) =>
             PathToTarget(move, i, j).SelectMany(x => x).Skip(1).All(x => board[x.Item1, x.Item2] == null);
 
         private IEnumerable<IEnumerable<(int, int)>> PathToTarget(UserMove move, int i, int j) =>
@@ -148,7 +149,7 @@ namespace ChessMoves
                                 }
                                 break;
                             case King _:
-                                if(board[i, j].PlayerColour == Player.White)
+                                if (board[i, j].PlayerColour == Player.White)
                                 {
                                     Debug.Write(" KgW ");
                                 }
