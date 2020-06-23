@@ -24,12 +24,37 @@ namespace ChessMoves
             {
                 PawnPromotion(input);
             }
-            else
+            else if (input.EndsWith('+'))
             {
-                GetSource(string.Concat(input.TakeLast(2)));
-
-                GetOrigin(input.Except(string.Concat(input.TakeLast(2))));
+                input = Check(input);
             }
+            else if (input.EndsWith('#'))
+            {
+                input = CheckMate(input);
+            }
+
+            GetSource(string.Concat(input.TakeLast(2)));
+            GetOrigin(input[0..^2]);
+        }
+
+        private string CheckMate(string input)
+        {
+            input = input[0..^1];
+            UserMoveType = UserMoveType.CheckMate;
+            return input;
+        }
+
+        private string Check(string input)
+        {
+            input = input[0..^1];
+            UserMoveType = UserMoveType.Check;
+            return input;
+        }
+
+        private void GetCheck(string input)
+        {
+            GetSource(string.Concat(input[0..^1].TakeLast(2)));
+            UserMoveType = UserMoveType.Check;
         }
 
         private void PawnPromotion(string input)

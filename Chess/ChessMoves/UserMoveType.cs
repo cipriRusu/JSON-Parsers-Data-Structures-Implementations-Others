@@ -5,6 +5,7 @@
         Move,
         Capture,
         Check,
-        Promote
+        Promote,
+        CheckMate
     }
 }
