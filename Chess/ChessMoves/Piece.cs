@@ -51,8 +51,7 @@ namespace ChessMoves
                 if (moves.Count() > 0)
                 {
                     var legalMoves = moves.SelectMany(x => x);
-                    board[legalMoves.Last().Item1, legalMoves.Last().Item2]
-                        = board[CurrentPosition.Item1, CurrentPosition.Item2];
+                    board[legalMoves.Last().Item1, legalMoves.Last().Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
                     board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
                     board[legalMoves.Last().Item1, legalMoves.Last().Item2].UpdatePosition(move.MoveIndex);
                 }

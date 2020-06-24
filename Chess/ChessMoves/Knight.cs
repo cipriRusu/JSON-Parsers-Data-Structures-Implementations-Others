@@ -64,7 +64,6 @@ namespace ChessMoves
             {
                 base.Move(move, board);
             }
-
             if (move.UserMoveType == UserMoveType.Capture)
             {
                 KnightCaptureMove(move, board);
@@ -80,7 +79,8 @@ namespace ChessMoves
             if (legalMoves.Count() > 0)
             {
                 board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
-                board[CurrentPosition.Item1, CurrentPosition.Item2].UpdatePosition(move.MoveIndex);
+                board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
+                board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition(move.MoveIndex);
             }
         }
     }
