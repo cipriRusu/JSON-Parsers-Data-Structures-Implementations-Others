@@ -18,7 +18,7 @@ namespace ChessMoves
 
         public void IterateMoves(List<UserMove> moves)
         {
-            foreach(var move in moves)
+            foreach (var move in moves)
             {
                 Move(move);
             }
@@ -28,21 +28,21 @@ namespace ChessMoves
 
         private void Move(UserMove move)
         {
-            for(int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
+            for (int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
             {
-                for(int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
+                for (int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
                 {
                     if (PieceRequrements(move, i, j))
                     {
                         if (RankConstraint(move, i, j))
                         {
-                            board[i, j].Move(move, board);
+                            board = board[i, j].Move(move, board);
                         }
                         else if (FileConstraint(move, i, j))
                         {
-                            board[i, j].Move(move, board);
+                            board = board[i, j].Move(move, board);
                         }
-                        else
+                        else if (move.SourceFile == '\0' && move.SourceRank == '\0')
                         {
                             board = board[i, j].Move(move, board);
                         }
@@ -51,16 +51,16 @@ namespace ChessMoves
             }
         }
 
-        private bool FileConstraint(UserMove move, int i, int j) => 
+        private bool FileConstraint(UserMove move, int i, int j) =>
             move.SourceFile != '\0' && move.SourceFile == board[i, j].File;
 
-        private bool RankConstraint(UserMove move, int i, int j) => 
+        private bool RankConstraint(UserMove move, int i, int j) =>
             move.SourceRank != '\0' && move.SourceRank == board[i, j].Rank;
 
         private bool PieceRequrements(UserMove move, int i, int j)
         {
-            return 
-                board[i, j] != null && 
+            return
+                board[i, j] != null &&
                 board[i, j].PlayerColour == move.PlayerColor &&
                 board[i, j].PieceType == move.PieceType;
         }

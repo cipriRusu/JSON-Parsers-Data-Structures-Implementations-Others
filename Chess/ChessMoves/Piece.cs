@@ -42,7 +42,7 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
-        internal Piece[,] Move(UserMove move, Piece[,] board)
+        internal virtual Piece[,] Move(UserMove move, Piece[,] board)
         {
             var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex);
 

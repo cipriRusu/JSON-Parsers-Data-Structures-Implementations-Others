@@ -91,5 +91,28 @@ namespace ChessMoves
 
             return captures;
         }
+
+        internal override Piece[,] Move(UserMove move, Piece[,] board)
+        {
+            if (move.UserMoveType == UserMoveType.Move)
+            {
+                return base.Move(move, board);
+            }
+            else if (move.UserMoveType == UserMoveType.Capture)
+            {
+                var cIndex = LegalPawnCaptureIndexes()
+                    .Where(x => x.Last() == move.MoveIndex)
+                    .SelectMany(x => x);
+
+                if(cIndex.Count() > 0)
+                {
+                    board[cIndex.Single().Item1, cIndex.Single().Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
+                    board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
+                    board[cIndex.Single().Item1, cIndex.Single().Item2].UpdatePosition(move.MoveIndex);
+                }
+            }
+
+            return board;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace ChessMoves
             base(currentPosition, playerColour)
         { base.PieceType = PieceType.Knight; }
 
-        public Knight(string chessBoardIndex, Player playerColour) : 
+        public Knight(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour)
         {
             base.PieceType = PieceType.Knight;
@@ -56,6 +56,32 @@ namespace ChessMoves
             }
 
             return legalMoves;
+        }
+
+        internal override Piece[,] Move(UserMove move, Piece[,] board)
+        {
+            if (move.UserMoveType == UserMoveType.Move)
+            {
+                base.Move(move, board);
+            }
+
+            if (move.UserMoveType == UserMoveType.Capture)
+            {
+                KnightCaptureMove(move, board);
+            }
+
+            return board;
+        }
+
+        private void KnightCaptureMove(UserMove move, Piece[,] board)
+        {
+            var legalMoves = GetLegalMoves().SelectMany(x => x).Where(x => x == move.MoveIndex);
+
+            if (legalMoves.Count() > 0)
+            {
+                board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
+                board[CurrentPosition.Item1, CurrentPosition.Item2].UpdatePosition(move.MoveIndex);
+            }
         }
     }
 }
