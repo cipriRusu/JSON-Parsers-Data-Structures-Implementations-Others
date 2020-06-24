@@ -9,11 +9,11 @@ namespace ChessMoves
 {
     internal class Pawn : Piece
     {
-        public Pawn((int, int) inputIndex, Player playerColour) : 
+        public Pawn((int, int) inputIndex, Player playerColour) :
             base(inputIndex, playerColour)
         { base.PieceType = PieceType.Pawn; }
 
-        public Pawn(string chessBoardIndex, Player playerColour) : 
+        public Pawn(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour)
         {
             base.PieceType = PieceType.Pawn;
@@ -37,7 +37,7 @@ namespace ChessMoves
                         paths.Add((i, CurrentPosition.Item2));
                     }
 
-                    if(CurrentPosition.Item1 == BLACKSTARTPOSITION)
+                    if (CurrentPosition.Item1 == BLACKSTARTPOSITION)
                     {
                         paths.Add((paths.Last().Item1 + 1, paths.Last().Item2));
                     }
@@ -60,6 +60,36 @@ namespace ChessMoves
             }
 
             return paths.Select((x, y) => paths.Take(y + 1)).Skip(1);
+        }
+
+        private IEnumerable<IEnumerable<(int, int)>> LegalPawnCaptureIndexes()
+        {
+            var captures = new List<IEnumerable<(int, int)>>();
+
+            if (PlayerColour == Player.White)
+            {
+                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1), 1));
+                }
+                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1), 1));
+                }
+            }
+            else if (PlayerColour == Player.Black)
+            {
+                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1), 1));
+                }
+                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1), 1));
+                }
+            }
+
+            return captures;
         }
     }
 }

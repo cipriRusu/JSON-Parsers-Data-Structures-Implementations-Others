@@ -1,30 +1,26 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace ChessMoves
 {
     public class ChessBoard
     {
         private const int CHESSBOARD_SIZE = 8;
-        public readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        internal Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
         public ChessBoard()
         {
             InitializeBoard();
         }
 
-        public void PerformMoves(List<UserMove> moves)
+        public void IterateMoves(List<UserMove> moves)
         {
-            foreach (var move in moves)
+            foreach(var move in moves)
             {
-                if (move.UserMoveType == UserMoveType.Move)
-                {
-                    Move(move);
-                }
+                Move(move);
             }
 
             DisplayBoard();
@@ -32,33 +28,42 @@ namespace ChessMoves
 
         private void Move(UserMove move)
         {
-            for (int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
+            for(int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
             {
-                for (int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
+                for(int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
                 {
-                    if (board[i, j] != null &&
-                        move.PlayerColor == board[i, j].PlayerColour &&
-                        move.PieceType == board[i, j].PieceType &&
-                        PathToTarget(move, i, j).Count() > 0 && IsPathClear(move, i, j))
+                    if (PieceRequrements(move, i, j))
                     {
-                        PerformMove(move, i, j);
+                        if (RankConstraint(move, i, j))
+                        {
+                            board[i, j].Move(move, board);
+                        }
+                        else if (FileConstraint(move, i, j))
+                        {
+                            board[i, j].Move(move, board);
+                        }
+                        else
+                        {
+                            board = board[i, j].Move(move, board);
+                        }
                     }
                 }
             }
         }
 
-        private void PerformMove(UserMove move, int i, int j)
+        private bool FileConstraint(UserMove move, int i, int j) => 
+            move.SourceFile != '\0' && move.SourceFile == board[i, j].File;
+
+        private bool RankConstraint(UserMove move, int i, int j) => 
+            move.SourceRank != '\0' && move.SourceRank == board[i, j].Rank;
+
+        private bool PieceRequrements(UserMove move, int i, int j)
         {
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[i, j];
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition((move.MoveIndex.Item1, move.MoveIndex.Item2));
-            board[i, j] = null;
+            return 
+                board[i, j] != null && 
+                board[i, j].PlayerColour == move.PlayerColor &&
+                board[i, j].PieceType == move.PieceType;
         }
-
-        private bool IsPathClear(UserMove move, int i, int j) =>
-            PathToTarget(move, i, j).SelectMany(x => x).Skip(1).All(x => board[x.Item1, x.Item2] == null);
-
-        private IEnumerable<IEnumerable<(int, int)>> PathToTarget(UserMove move, int i, int j) =>
-            board[i, j].GetLegalMoves().Where(x => x.Last() == move.MoveIndex);
 
         private void InitializeBoard()
         {

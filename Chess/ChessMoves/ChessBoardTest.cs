@@ -17,7 +17,7 @@ namespace ChessMoves
             moves.Add(new UserMove("e4") { PlayerColor = Player.White });
             moves.Add(new UserMove("e5") { PlayerColor = Player.Black });
 
-            testBoard.PerformMoves(moves);
+            testBoard.IterateMoves(moves);
 
             Assert.Null(testBoard.board[6, 4]);
             Assert.Null(testBoard.board[1, 4]);
@@ -50,7 +50,7 @@ namespace ChessMoves
             moves.Add(new UserMove("Bb5") { PlayerColor = Player.White });
             moves.Add(new UserMove("a6") { PlayerColor = Player.Black });
 
-            testBoard.PerformMoves(moves);
+            testBoard.IterateMoves(moves);
 
             Assert.Equal(testBoard.board[4, 4],
                 new Pawn("e4", Player.White)
@@ -106,7 +106,7 @@ namespace ChessMoves
             moves.Add(new UserMove("e4") { PlayerColor = Player.White });
             moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
 
-            testBoard.PerformMoves(moves);
+            testBoard.IterateMoves(moves);
 
             Assert.Equal(testBoard.board[4, 4],
                 new Pawn("e4", Player.Black)
@@ -121,6 +121,29 @@ namespace ChessMoves
                     CurrentPosition = (5, 2),
                     PieceType = PieceType.Knight
                 }, new PieceComparer());
+        }
+
+        [Fact]
+        public void ComputeTableReturnsValidBoardForMultipleValidAmbigousMovesAndMultipleCaptures()
+        {
+            var testBoard = new ChessBoard();
+
+            var moves = new List<UserMove>();
+            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
+            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
+            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
+
+            testBoard.IterateMoves(moves);
+
+            Assert.Equal(
+                new Knight("e4", Player.White)
+                {
+                    CurrentPosition = (4, 4),
+                    PieceType = PieceType.Knight
+                }, 
+                testBoard.board[4, 4], new PieceComparer());
         }
     }
 }

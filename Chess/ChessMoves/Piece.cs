@@ -41,5 +41,24 @@ namespace ChessMoves
             File = rankAndFile.File;
             Rank = rankAndFile.Rank;
         }
+
+        internal Piece[,] Move(UserMove move, Piece[,] board)
+        {
+            var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex);
+
+            if (move.UserMoveType == UserMoveType.Move)
+            {
+                if (moves.Count() > 0)
+                {
+                    var legalMoves = moves.SelectMany(x => x);
+                    board[legalMoves.Last().Item1, legalMoves.Last().Item2]
+                        = board[CurrentPosition.Item1, CurrentPosition.Item2];
+                    board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
+                    board[legalMoves.Last().Item1, legalMoves.Last().Item2].UpdatePosition(move.MoveIndex);
+                }
+            }
+
+            return board;
+        }
     }
 }

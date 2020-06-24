@@ -13,6 +13,8 @@ namespace ChessMoves
         public (int, int) MoveIndex;
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
+        public bool IsCheck { get; private set; }
+        public bool IsCheckMate { get; private set; }
 
         private readonly Index customIndex = new Index();
 
@@ -24,37 +26,19 @@ namespace ChessMoves
             {
                 PawnPromotion(input);
             }
-            else if (input.EndsWith('+'))
+            else if(input.EndsWith('+'))
             {
-                input = Check(input);
+                input = input[0..^1];
+                IsCheck = true;
             }
-            else if (input.EndsWith('#'))
+            else if(input.EndsWith('#'))
             {
-                input = CheckMate(input);
+                input = input[0..^1];
+                IsCheckMate = true;
             }
 
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
-        }
-
-        private string CheckMate(string input)
-        {
-            input = input[0..^1];
-            UserMoveType = UserMoveType.CheckMate;
-            return input;
-        }
-
-        private string Check(string input)
-        {
-            input = input[0..^1];
-            UserMoveType = UserMoveType.Check;
-            return input;
-        }
-
-        private void GetCheck(string input)
-        {
-            GetSource(string.Concat(input[0..^1].TakeLast(2)));
-            UserMoveType = UserMoveType.Check;
         }
 
         private void PawnPromotion(string input)
@@ -72,8 +56,9 @@ namespace ChessMoves
                 MoveIndex = customIndex.GetMatrixIndex(source);
             }
         }
+
         private void GetOrigin(IEnumerable<char> origin)
-        {
+         {
             foreach (var element in origin)
             {
                 if (element == 'x') { UserMoveType = UserMoveType.Capture; }
@@ -83,6 +68,7 @@ namespace ChessMoves
                 if (IsFile(element)) { SourceFile = element; }
             }
         }
+
         private bool IsRank(char c) => "12345678".Contains(c);
         private bool IsFile(char c) => "abcdefgh".Contains(c);
         private void GetPieceType(string input)

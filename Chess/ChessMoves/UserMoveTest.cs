@@ -114,7 +114,7 @@ namespace ChessMoves
             Assert.Equal(PieceType.Knight, movePiece.PieceType);
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((2, 5), movePiece.MoveIndex);
-            Assert.Equal(UserMoveType.Check, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheck);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace ChessMoves
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((0, 5), movePiece.MoveIndex);
             Assert.Equal('d', movePiece.SourceFile);
-            Assert.Equal(UserMoveType.Check, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheck);
         }
 
         [Fact]
@@ -136,7 +136,18 @@ namespace ChessMoves
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((5, 0), movePiece.MoveIndex);
             Assert.Equal('1', movePiece.SourceRank);
-            Assert.Equal(UserMoveType.Check, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheck);
+        }
+
+        [Fact]
+        public void UserMoveInputForCheckAndCapture()
+        {
+            var movePiece = new UserMove("Nxf6+");
+            Assert.Equal(PieceType.Knight, movePiece.PieceType);
+            Assert.Equal(Player.White, movePiece.PlayerColor);
+            Assert.Equal((2, 5), movePiece.MoveIndex);
+            Assert.Equal(UserMoveType.Capture, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheck);
         }
 
         [Fact]
@@ -146,7 +157,7 @@ namespace ChessMoves
             Assert.Equal(PieceType.Queen, movePiece.PieceType);
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((3, 7), movePiece.MoveIndex);
-            Assert.Equal(UserMoveType.CheckMate, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheckMate);
         }
 
         [Fact]
@@ -157,7 +168,7 @@ namespace ChessMoves
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((5, 0), movePiece.MoveIndex);
             Assert.Equal('1', movePiece.SourceRank);
-            Assert.Equal(UserMoveType.CheckMate, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheckMate);
         }
 
         [Fact]
@@ -168,7 +179,7 @@ namespace ChessMoves
             Assert.Equal(Player.White, movePiece.PlayerColor);
             Assert.Equal((0, 5), movePiece.MoveIndex);
             Assert.Equal('d', movePiece.SourceFile);
-            Assert.Equal(UserMoveType.CheckMate, movePiece.UserMoveType);
+            Assert.True(movePiece.IsCheckMate);
         }
     }
 }
