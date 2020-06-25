@@ -59,5 +59,20 @@ namespace ChessMoves
 
             return legalMoves;
         }
+
+        internal override bool IsChecked(Piece[,] board)
+        {
+            if(PlayerColour == Player.White)
+            {
+
+            }
+
+            if(PlayerColour == Player.Black)
+            {
+
+            }
+
+            return false;
+        }
     }
 }

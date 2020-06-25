@@ -3,7 +3,6 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace ChessMoves
 {
@@ -12,21 +11,42 @@ namespace ChessMoves
         private const int CHESSBOARD_SIZE = 8;
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
         public Piece this[int i, int j] => board[i, j];
-
-        public ChessBoard()
-        {
-            InitializeBoard();
-        }
+        public ChessBoard() => InitializeBoard();
 
         public void GetMoves(List<UserMove> moves)
         {
             foreach (var move in moves)
             {
+                if(move.PlayerColor == Player.White)
+                {
+                    VerifyCheck(board, Player.White);
+                }
+
+                if(move.PlayerColor == Player.Black)
+                {
+                    VerifyCheck(board, Player.Black);
+                }
+
                 Move(move);
             }
 
             DisplayBoard();
         }
+
+        private void VerifyCheck(Piece[,] board, Player player)
+        {
+            var res =
+                Enumerable.Range(0, CHESSBOARD_SIZE)
+                    .Select(x => Enumerable.Range(0, CHESSBOARD_SIZE).Select(y => (x, y)))
+                        .SelectMany(x => x).Where(x => FindKing(board, player, x.x, x.y)).Single();
+
+            var king = board[res.x, res.y].IsChecked(board);
+        }
+
+        private static bool FindKing(Piece[,] board, Player player, int i, int j) =>
+            board[i, j] != null && 
+            board[i, j].PlayerColour == player && 
+            board[i, j].PieceType == PieceType.King;
 
         private void Move(UserMove move)
         {
@@ -34,7 +54,7 @@ namespace ChessMoves
             {
                 for (int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
                 {
-                    if (PieceRequrements(move, i, j))
+                    if (PieceConstraint(move, i, j))
                     {
                         if (RankConstraint(move, i, j))
                         {
@@ -48,7 +68,7 @@ namespace ChessMoves
                         {
                             board = board[i, j].Move(move, board);
                         }
-                        else if (move.SourceFile == '\0' && move.SourceRank == '\0')
+                        else if (NoConstraint(move))
                         {
                             board = board[i, j].Move(move, board);
                         }
@@ -56,6 +76,9 @@ namespace ChessMoves
                 }
             }
         }
+
+        private static bool NoConstraint(UserMove move) => 
+            move.SourceFile == '\0' && move.SourceRank == '\0';
 
         private bool FileConstraint(UserMove move, int i, int j) =>
             move.SourceFile != '\0' && move.SourceRank == '\0' && move.SourceFile == board[i, j].File;
@@ -69,7 +92,7 @@ namespace ChessMoves
             move.SourceRank == board[i, j].Rank &&
             move.SourceFile == board[i, j].File;
 
-        private bool PieceRequrements(UserMove move, int i, int j)
+        private bool PieceConstraint(UserMove move, int i, int j)
         {
             return
                 board[i, j] != null &&

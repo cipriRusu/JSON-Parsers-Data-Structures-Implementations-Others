@@ -19,12 +19,7 @@ namespace ChessMoves
 
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
-        {
-            var horizontalAndVertical = new Rock(base.CurrentPosition, Player.White).GetLegalMoves();
-            var diagonals = new Bishop(base.CurrentPosition, Player.White).GetLegalMoves();
-
-            return horizontalAndVertical.Concat(diagonals);
-        }
+        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => 
+            new LinesAndColumns(CurrentPosition).AllRowsColumns.Concat(new Diagonals(CurrentPosition).AllDiagonals);
     }
 }

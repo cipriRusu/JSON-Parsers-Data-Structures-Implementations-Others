@@ -42,6 +42,8 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
+        internal virtual bool IsChecked(Piece[,] board) => false;
+
         internal virtual Piece[,] Move(UserMove move, Piece[,] board)
         {
             var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex && x.IsMovePathClear(board));

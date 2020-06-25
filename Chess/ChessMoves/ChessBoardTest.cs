@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Bson;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -149,7 +148,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableReturnsValidBoardForMultipleValidMovesAndCheck()
+        public void ComputeTableReturnsValidBoardForMultipleValidMovesAndCheckedKing()
         {
             var testBoard = new ChessBoard();
 
@@ -161,6 +160,33 @@ namespace ChessMoves
             moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
             moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
             moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
+            moves.Add(new UserMove("gxf6") { PlayerColor = Player.Black });
+
+            testBoard.GetMoves(moves);
+
+            Assert.Equal(new Pawn("f6", Player.Black)
+            {
+                CurrentPosition = (2, 5),
+                PieceType = PieceType.Pawn
+            },
+
+            testBoard[2, 5], new PieceComparer());
+        }
+
+        [Fact]
+        public void ComputeTableFailsForCheckedKingAndInvalidMove()
+        {
+            var testBoard = new ChessBoard();
+
+            var moves = new List<UserMove>();
+            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
+            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
+            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
+            moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
+            moves.Add(new UserMove("c6") { PlayerColor = Player.White });
 
             testBoard.GetMoves(moves);
         }
