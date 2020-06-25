@@ -18,7 +18,7 @@ namespace ChessMoves
             InitializeBoard();
         }
 
-        public void IterateMoves(List<UserMove> moves)
+        public void GetMoves(List<UserMove> moves)
         {
             foreach (var move in moves)
             {
@@ -88,8 +88,8 @@ namespace ChessMoves
             board[0, 0] = new Rock("a8", Player.Black);
             board[0, 1] = new Knight("b8", Player.Black);
             board[0, 2] = new Bishop("c8", Player.Black);
-            board[0, 3] = new Queen("e8", Player.Black);
-            board[0, 4] = new King("d8", Player.Black);
+            board[0, 3] = new Queen("d8", Player.Black);
+            board[0, 4] = new King("e8", Player.Black);
             board[0, 5] = new Bishop("f8", Player.Black);
             board[0, 6] = new Knight("g8", Player.Black);
             board[0, 7] = new Rock("h8", Player.Black);
@@ -101,7 +101,7 @@ namespace ChessMoves
             board[1, 4] = new Pawn("e7", Player.Black);
             board[1, 5] = new Pawn("f7", Player.Black);
             board[1, 6] = new Pawn("g7", Player.Black);
-            board[1, 7] = new Pawn("g7", Player.Black);
+            board[1, 7] = new Pawn("h7", Player.Black);
         }
 
         private void InitializeWhite()
@@ -109,8 +109,8 @@ namespace ChessMoves
             board[7, 0] = new Rock("a1", Player.White);
             board[7, 1] = new Knight("b1", Player.White);
             board[7, 2] = new Bishop("c1", Player.White);
-            board[7, 3] = new Queen("e1", Player.White);
-            board[7, 4] = new King("d1", Player.White);
+            board[7, 3] = new Queen("d1", Player.White);
+            board[7, 4] = new King("e1", Player.White);
             board[7, 5] = new Bishop("f1", Player.White);
             board[7, 6] = new Knight("g1", Player.White);
             board[7, 7] = new Rock("h1", Player.White);

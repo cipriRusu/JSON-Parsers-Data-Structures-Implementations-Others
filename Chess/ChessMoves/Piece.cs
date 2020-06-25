@@ -44,16 +44,15 @@ namespace ChessMoves
 
         internal virtual Piece[,] Move(UserMove move, Piece[,] board)
         {
-            var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex);
+            var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex && x.IsMovePathClear(board));
 
             if (move.UserMoveType == UserMoveType.Move)
             {
                 if (moves.Count() > 0)
                 {
-                    var legalMoves = moves.SelectMany(x => x);
-                    board[legalMoves.Last().Item1, legalMoves.Last().Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
+                    board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
                     board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
-                    board[legalMoves.Last().Item1, legalMoves.Last().Item2].UpdatePosition(move.MoveIndex);
+                    board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition(move.MoveIndex);
                 }
             }
 

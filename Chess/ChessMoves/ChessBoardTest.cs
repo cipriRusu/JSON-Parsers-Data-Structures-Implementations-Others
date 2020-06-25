@@ -17,7 +17,7 @@ namespace ChessMoves
             moves.Add(new UserMove("e4") { PlayerColor = Player.White });
             moves.Add(new UserMove("e5") { PlayerColor = Player.Black });
 
-            testBoard.IterateMoves(moves);
+            testBoard.GetMoves(moves);
 
             Assert.Null(testBoard[6, 4]);
             Assert.Null(testBoard[1, 4]);
@@ -50,7 +50,7 @@ namespace ChessMoves
             moves.Add(new UserMove("Bb5") { PlayerColor = Player.White });
             moves.Add(new UserMove("a6") { PlayerColor = Player.Black });
 
-            testBoard.IterateMoves(moves);
+            testBoard.GetMoves(moves);
 
             Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.White)
@@ -106,7 +106,7 @@ namespace ChessMoves
             moves.Add(new UserMove("e4") { PlayerColor = Player.White });
             moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
 
-            testBoard.IterateMoves(moves);
+            testBoard.GetMoves(moves);
 
             Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.Black)
@@ -137,7 +137,7 @@ namespace ChessMoves
             moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
             moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
 
-            testBoard.IterateMoves(moves);
+            testBoard.GetMoves(moves);
 
             Assert.Equal(
                 new Knight("e4", Player.White)
@@ -162,7 +162,7 @@ namespace ChessMoves
             moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
             moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
 
-            testBoard.IterateMoves(moves);
+            testBoard.GetMoves(moves);
         }
     }
 }
