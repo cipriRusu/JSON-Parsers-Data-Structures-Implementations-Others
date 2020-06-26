@@ -8,7 +8,7 @@ namespace ChessMoves
     public class ChessBoardTest
     {
         [Fact]
-        public void ComputeTableReturnsValidBoardForSingleValidMoves()
+        public void ChessBoardReturnsValidBoardForSingleValidMoves()
         {
             var testBoard = new ChessBoard();
 
@@ -37,7 +37,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableReturnsValidBoardForMultipleValidUnambiguousMoves()
+        public void ChessBoardReturnsValidBoardForMultipleValidUnambiguousMoves()
         {
             var testBoard = new ChessBoard();
 
@@ -95,7 +95,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableReturnsValidBoardForMultipleValidAmbigousMovesAndSinglePawnCapture()
+        public void ChessBoardReturnsValidBoardForMultipleValidAmbigousMovesAndSinglePawnCapture()
         {
             var testBoard = new ChessBoard();
 
@@ -125,7 +125,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableReturnsValidBoardForMultipleValidAmbigousMovesAndMultipleCaptures()
+        public void ChessBoardReturnsValidBoardForMultipleValidAmbigousMovesAndMultipleCaptures()
         {
             var testBoard = new ChessBoard();
 
@@ -148,7 +148,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableReturnsValidBoardForMultipleValidMovesAndCheckedKing()
+        public void ChessBoardReturnsValidBoardForMultipleValidMovesAndCheckedKing()
         {
             var testBoard = new ChessBoard();
 
@@ -174,7 +174,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableFailsForCheckedKingAndInvalidMove()
+        public void ChessBoardFailsForCheckedKingAndInvalidMove()
         {
             var moves = new List<UserMove>();
             moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
@@ -190,7 +190,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableFailsForFirstMoveFromBlackPlayer()
+        public void ChessBoardFailsForFirstMoveFromBlackPlayer()
         {
             var moves = new List<UserMove>
             {
@@ -202,7 +202,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ComputeTableFailsForConsecutiveMovesForSamePlayer()
+        public void ChessBoardFailsForConsecutiveMovesForSamePlayer()
         {
             var moves = new List<UserMove>
             {
