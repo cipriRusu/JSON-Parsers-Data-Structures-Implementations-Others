@@ -13,9 +13,30 @@ namespace ChessMoves
         public static bool IsCapturePathClear(this IEnumerable<(int, int)> input, Piece[,] board)
         {
             return
-                board[input.First().Item1, input.First().Item2] != null && 
-                board[input.Last().Item1, input.Last().Item2] != null && 
+                board[input.First().Item1, input.First().Item2] != null &&
+                board[input.Last().Item1, input.Last().Item2] != null &&
                 input.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null);
+        }
+
+        public static bool IsOpponentPathClear(this IEnumerable<(int, int)> input, Player player, Piece[,] board)
+        {
+            if (player == Player.White)
+            {
+                return board[input.First().Item1, input.First().Item2] != null &&
+                board[input.First().Item1, input.First().Item2].PlayerColour == player &&
+                board[input.Last().Item1, input.Last().Item2].PlayerColour == Player.Black &&
+                input.IsCapturePathClear(board);
+            }
+
+            if(player == Player.Black)
+            {
+                return board[input.First().Item1, input.First().Item2] != null &&
+                board[input.First().Item1, input.First().Item2].PlayerColour == player &&
+                board[input.Last().Item1, input.Last().Item2].PlayerColour == Player.White &&
+                input.IsCapturePathClear(board);
+            }
+
+            return false;
         }
     }
 }
