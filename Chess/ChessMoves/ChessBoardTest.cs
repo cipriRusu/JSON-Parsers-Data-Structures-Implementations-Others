@@ -190,6 +190,18 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void ComputeTableFailsForFirstMoveFromBlackPlayer()
+        {
+            var moves = new List<UserMove>
+            {
+                new UserMove("Nc3") { PlayerColor = Player.Black },
+                new UserMove("f5") { PlayerColor = Player.White }
+            };
+
+            Assert.Throws<ArgumentException>(() => new ChessBoard().GetMoves(moves));
+        }
+
+        [Fact]
         public void ComputeTableFailsForConsecutiveMovesForSamePlayer()
         {
             var moves = new List<UserMove>
@@ -199,6 +211,37 @@ namespace ChessMoves
             };
 
             Assert.Throws<ArgumentException>(() => new ChessBoard().GetMoves(moves));
+        }
+
+        [Fact]
+        public void TurnToMovePropertyReturnsValidOutputForWhiteTurn()
+        {
+            var moves = new List<UserMove>
+            {
+                new UserMove("Nc3") { PlayerColor = Player.White },
+                new UserMove("f5") { PlayerColor = Player.Black }
+            };
+
+            var board = new ChessBoard();
+            board.GetMoves(moves);
+
+            Assert.Equal(Player.White, board.TurnToMove);
+        }
+
+        [Fact]
+        public void TurnToMovePropertyReturnsValidOutputForBlackTurn()
+        {
+            var moves = new List<UserMove>
+            {
+                new UserMove("Nc3") { PlayerColor = Player.White },
+                new UserMove("f5") { PlayerColor = Player.Black },
+                new UserMove("e4") { PlayerColor = Player.White }
+        };
+
+            var board = new ChessBoard();
+            board.GetMoves(moves);
+
+            Assert.Equal(Player.Black, board.TurnToMove);
         }
     }
 }

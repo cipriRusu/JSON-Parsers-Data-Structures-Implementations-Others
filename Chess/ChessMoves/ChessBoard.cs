@@ -9,23 +9,27 @@ namespace ChessMoves
     {
         private const int CHESSBOARD_SIZE = 8;
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+
         public Piece this[int i, int j] => board[i, j];
         public ChessBoard() => InitializeBoard();
-        private Player playerTurn = Player.White;
+        public Player TurnToMove { get; private set; } = Player.White;
+
+        public readonly Player playerTurn = Player.White;
 
         public void GetMoves(List<UserMove> moves)
         {
             foreach (var move in moves)
             {
-                if (playerTurn == Player.White)
+                switch (TurnToMove)
                 {
-                    PerformMove(move, Player.White);
-                    playerTurn = Player.Black;
-                }
-                else if(playerTurn == Player.Black)
-                {
-                    PerformMove(move, Player.Black);
-                    playerTurn = Player.White;
+                    case Player.White:
+                        PerformMove(move, Player.White);
+                        TurnToMove = Player.Black;
+                        break;
+                    case Player.Black:
+                        PerformMove(move, Player.Black);
+                        TurnToMove = Player.White;
+                        break;
                 }
             }
 
@@ -34,12 +38,12 @@ namespace ChessMoves
 
         private void PerformMove(UserMove move, Player playerTurn)
         {
-            if(move.PlayerColor == playerTurn && VerifyCheckedKing(board, move.PlayerColor))
+            if (move.PlayerColor == playerTurn && VerifyCheckedKing(board, move.PlayerColor))
             {
                 Move(move);
                 ExceptionForInvalidMoveWhileCheck(move);
             }
-            else if(move.PlayerColor == playerTurn)
+            else if (move.PlayerColor == playerTurn)
             {
                 Move(move);
             }
@@ -86,10 +90,10 @@ namespace ChessMoves
 
         private void AllConstraints(UserMove move, int i, int j)
         {
-            if (PieceConstraint(move, i, j) && 
-                (RankConstraint(move, i, j) || 
-                FileConstraint(move, i, j) || 
-                FileAndRankConstraint(move, i, j) || 
+            if (PieceConstraint(move, i, j) &&
+                (RankConstraint(move, i, j) ||
+                FileConstraint(move, i, j) ||
+                FileAndRankConstraint(move, i, j) ||
                 NoConstraint(move)))
             {
                 board = board[i, j].Move(move, board);
@@ -254,6 +258,8 @@ namespace ChessMoves
 
                 Debug.Write('\n');
             }
+
+            Debug.WriteLine($"Turn to move : {TurnToMove}");
         }
     }
 }
