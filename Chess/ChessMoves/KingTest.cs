@@ -86,5 +86,84 @@ namespace ChessMoves
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void KingReturnsCheckFromKnightPiece()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 3] = new King((0, 3), Player.White);
+            testBoard[2, 2] = new Knight((2, 2), Player.Black);
+
+            Assert.True(testBoard[0, 3].IsChecked(testBoard));
+        }
+        
+        [Fact]
+        public void KingDoesNotReturnCheckFromOtherFoePieceInKnightPlace()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 3] = new King((0, 3), Player.White);
+            testBoard[2, 2] = new Bishop((2, 2), Player.Black);
+
+            Assert.False(testBoard[0, 3].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingDoesNotReturnCheckFromFriendlyKnight()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 3] = new King((0, 3), Player.White);
+            testBoard[2, 2] = new Knight((2, 2), Player.White);
+
+            Assert.False(testBoard[0, 3].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingReturnsCheckFromLinearPiece()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 0] = new King((0, 0), Player.White);
+            testBoard[0, 5] = new Rock((0, 5), Player.Black);
+
+            Assert.True(testBoard[0, 0].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingDoesNotReturnCheckForBlockedFoePiece()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 0] = new King((0, 0), Player.White);
+            testBoard[0, 5] = new Bishop((0, 5), Player.White);
+            testBoard[0, 7] = new Rock((0, 7), Player.Black);
+
+            Assert.False(testBoard[0, 0].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingReturnsCheckFromLinearPieceColumnAttack()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 0] = new King((0, 0), Player.White);
+            testBoard[7, 0] = new Rock((0, 7), Player.Black);
+
+            Assert.True(testBoard[0, 0].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingDoesNotReturnCheckForBlockedFoePieceColumnAttack()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 0] = new King((0, 0), Player.White);
+            testBoard[4, 0] = new Bishop((4, 0), Player.Black);
+            testBoard[7, 0] = new Rock((7, 0), Player.Black);
+
+            Assert.False(testBoard[0, 0].IsChecked(testBoard));
+        }
     }
 }

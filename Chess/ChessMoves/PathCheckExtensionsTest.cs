@@ -122,7 +122,7 @@ namespace ChessMoves
             testEnumerable.Add((0, 6));
             testEnumerable.Add((0, 7));
 
-            Assert.True(testEnumerable.IsOpponentPathClear(Player.White, testBoard));
+            Assert.True(testEnumerable.IsOpponentPathClear(Player.White, testBoard, false));
         }
 
         [Fact]
@@ -144,7 +144,7 @@ namespace ChessMoves
             testEnumerable.Add((0, 6));
             testEnumerable.Add((0, 7));
 
-            Assert.False(testEnumerable.IsOpponentPathClear(Player.White, testBoard));
+            Assert.False(testEnumerable.IsOpponentPathClear(Player.White, testBoard, false));
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace ChessMoves
             testEnumerable.Add((0, 6));
             testEnumerable.Add((0, 7));
 
-            Assert.False(testEnumerable.IsOpponentPathClear(Player.White, testBoard));
+            Assert.False(testEnumerable.IsOpponentPathClear(Player.White, testBoard, false));
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace ChessMoves
             testEnumerable.Add((3, 3));
             testEnumerable.Add((4, 4));
 
-            Assert.True(testEnumerable.IsOpponentPathClear(Player.White, testBoard));
+            Assert.True(testEnumerable.IsOpponentPathClear(Player.White, testBoard, false));
         }
 
         [Fact]
@@ -203,7 +203,7 @@ namespace ChessMoves
             testEnumerable.Add((5, 5));
             testEnumerable.Add((6, 6));
 
-            Assert.False(testEnumerable.IsOpponentPathClear(Player.White, testBoard));
+            Assert.False(testEnumerable.IsOpponentPathClear(Player.White, testBoard, false));
         }
     }
 }
