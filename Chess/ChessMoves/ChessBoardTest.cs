@@ -176,8 +176,6 @@ namespace ChessMoves
         [Fact]
         public void ComputeTableFailsForCheckedKingAndInvalidMove()
         {
-            var testBoard = new ChessBoard();
-
             var moves = new List<UserMove>();
             moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
             moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
@@ -186,9 +184,21 @@ namespace ChessMoves
             moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
             moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
             moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
-            moves.Add(new UserMove("c6") { PlayerColor = Player.White });
+            moves.Add(new UserMove("c6") { PlayerColor = Player.Black });
 
-            testBoard.GetMoves(moves);
+            Assert.Throws<ArgumentException>(()=> new ChessBoard().GetMoves(moves));
+        }
+
+        [Fact]
+        public void ComputeTableFailsForConsecutiveMovesForSamePlayer()
+        {
+            var moves = new List<UserMove>
+            {
+                new UserMove("Nc3") { PlayerColor = Player.White },
+                new UserMove("f5") { PlayerColor = Player.White }
+            };
+
+            Assert.Throws<ArgumentException>(() => new ChessBoard().GetMoves(moves));
         }
     }
 }

@@ -18,45 +18,8 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
-        {
-            var legalMoves = new List<IEnumerable<(int, int)>>();
-
-            if (CheckIndexes(base.CurrentPosition.Item1 - 2, CurrentPosition.Item2 + 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 2, CurrentPosition.Item2 + 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 2), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 - 2, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 2, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 2), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 2, CurrentPosition.Item2 + 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 2, CurrentPosition.Item2 + 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 2), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 2, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 2, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 2), 1));
-            }
-
-            return legalMoves;
-        }
+        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => 
+            new KnightMoves(CurrentPosition).AllMoves;
 
         internal override Piece[,] Move(UserMove move, Piece[,] board)
         {

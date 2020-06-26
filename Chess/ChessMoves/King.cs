@@ -12,7 +12,7 @@ namespace ChessMoves
             base(currentPosition, playerColour)
         { base.PieceType = PieceType.King; }
 
-        public King(string chessBoardIndex, Player playerColour) : 
+        public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour)
         {
             base.PieceType = PieceType.King;
@@ -62,14 +62,43 @@ namespace ChessMoves
 
         internal override bool IsChecked(Piece[,] board)
         {
-            if(PlayerColour == Player.White)
-            {
+            var diagonals = new Diagonals(CurrentPosition).AllDiagonals;
+            var linesColumns = new LinesAndColumns(CurrentPosition).AllRowsColumns;
+            var knights = new KnightMoves(CurrentPosition).AllMoves;
 
+            if (PlayerColour == Player.White)
+            {
+                var diagonalAttacks = diagonals.Where(x =>
+                board[x.Last().Item1, x.Last().Item2] != null &&
+                board[x.Last().Item1, x.Last().Item2].PlayerColour == Player.Black);
+
+                var verticalHorizontalAttacks = linesColumns.Where(x =>
+                board[x.Last().Item1, x.Last().Item2] != null &&
+                board[x.Last().Item1, x.Last().Item2].PlayerColour == Player.Black);
+
+                var knightsAttacks = knights.Where(x =>
+                board[x.Last().Item1, x.Last().Item2] != null &&
+                board[x.Last().Item1, x.Last().Item2].PlayerColour == Player.Black);
             }
 
-            if(PlayerColour == Player.Black)
+            if (PlayerColour == Player.Black)
             {
+                var diagonalAttacks = diagonals.Where(x =>
+                board[x.Last().Item1, x.Last().Item2] != null &&
+                board[x.Last().Item1, x.Last().Item2].PlayerColour == Player.White);
 
+                var verticalHorizontalAttacks = linesColumns.Where(x =>
+                board[x.Last().Item1, x.Last().Item2] != null &&
+                board[x.Last().Item1, x.Last().Item2].PlayerColour == Player.White);
+
+                var knightsAttacks = knights.Where(x =>
+                board[x.Last().Item1, x.Last().Item2] != null &&
+                board[x.Last().Item1, x.Last().Item2].PlayerColour == Player.White);
+
+                if(knightsAttacks.Count() > 0)
+                {
+                    return true;
+                }
             }
 
             return false;

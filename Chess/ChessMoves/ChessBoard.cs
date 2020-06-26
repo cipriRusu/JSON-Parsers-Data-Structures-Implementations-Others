@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,40 +11,66 @@ namespace ChessMoves
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
         public Piece this[int i, int j] => board[i, j];
         public ChessBoard() => InitializeBoard();
+        private Player playerTurn = Player.White;
 
         public void GetMoves(List<UserMove> moves)
         {
             foreach (var move in moves)
             {
-                if(move.PlayerColor == Player.White)
+                if (playerTurn == Player.White)
                 {
-                    VerifyCheck(board, Player.White);
+                    PerformMove(move, Player.White);
+                    playerTurn = Player.Black;
                 }
-
-                if(move.PlayerColor == Player.Black)
+                else if(playerTurn == Player.Black)
                 {
-                    VerifyCheck(board, Player.Black);
+                    PerformMove(move, Player.Black);
+                    playerTurn = Player.White;
                 }
-
-                Move(move);
             }
 
             DisplayBoard();
         }
 
-        private void VerifyCheck(Piece[,] board, Player player)
+        private void PerformMove(UserMove move, Player playerTurn)
+        {
+            if(move.PlayerColor == playerTurn && VerifyCheckedKing(board, move.PlayerColor))
+            {
+                Move(move);
+                ExceptionForInvalidMoveWhileCheck(move);
+            }
+            else if(move.PlayerColor == playerTurn)
+            {
+                Move(move);
+            }
+            else
+            {
+                throw new ArgumentException("Wrong turn!!");
+            }
+        }
+
+        private void ExceptionForInvalidMoveWhileCheck(UserMove move)
+        {
+            if (VerifyCheckedKing(board, move.PlayerColor))
+            {
+                throw new ArgumentException($"Illegal {move.PieceType} move at " +
+                    $"{move.MoveIndex} due to \"Check\" state of {move.PlayerColor} King");
+            }
+        }
+
+        private bool VerifyCheckedKing(Piece[,] board, Player player)
         {
             var res =
                 Enumerable.Range(0, CHESSBOARD_SIZE)
                     .Select(x => Enumerable.Range(0, CHESSBOARD_SIZE).Select(y => (x, y)))
                         .SelectMany(x => x).Where(x => FindKing(board, player, x.x, x.y)).Single();
 
-            var king = board[res.x, res.y].IsChecked(board);
+            return board[res.x, res.y].IsChecked(board);
         }
 
         private static bool FindKing(Piece[,] board, Player player, int i, int j) =>
-            board[i, j] != null && 
-            board[i, j].PlayerColour == player && 
+            board[i, j] != null &&
+            board[i, j].PlayerColour == player &&
             board[i, j].PieceType == PieceType.King;
 
         private void Move(UserMove move)
@@ -54,30 +79,24 @@ namespace ChessMoves
             {
                 for (int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
                 {
-                    if (PieceConstraint(move, i, j))
-                    {
-                        if (RankConstraint(move, i, j))
-                        {
-                            board = board[i, j].Move(move, board);
-                        }
-                        else if (FileConstraint(move, i, j))
-                        {
-                            board = board[i, j].Move(move, board);
-                        }
-                        else if (FileAndRankConstraint(move, i, j))
-                        {
-                            board = board[i, j].Move(move, board);
-                        }
-                        else if (NoConstraint(move))
-                        {
-                            board = board[i, j].Move(move, board);
-                        }
-                    }
+                    AllConstraints(move, i, j);
                 }
             }
         }
 
-        private static bool NoConstraint(UserMove move) => 
+        private void AllConstraints(UserMove move, int i, int j)
+        {
+            if (PieceConstraint(move, i, j) && 
+                (RankConstraint(move, i, j) || 
+                FileConstraint(move, i, j) || 
+                FileAndRankConstraint(move, i, j) || 
+                NoConstraint(move)))
+            {
+                board = board[i, j].Move(move, board);
+            }
+        }
+
+        private static bool NoConstraint(UserMove move) =>
             move.SourceFile == '\0' && move.SourceRank == '\0';
 
         private bool FileConstraint(UserMove move, int i, int j) =>
