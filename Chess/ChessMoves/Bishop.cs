@@ -15,6 +15,7 @@ namespace ChessMoves
         public Bishop((int, int) pieceIndex, Player playerColour) :
             base(pieceIndex, playerColour)
         {
+            PieceType = PieceType.Bishop;
             base.CurrentPosition = pieceIndex;
             base.PlayerColour = playerColour;
         }
