@@ -13,39 +13,80 @@ namespace ChessMoves
         public Piece this[int i, int j] => board[i, j];
         public ChessBoard() => InitializeBoard();
         public Player TurnToMove { get; private set; } = Player.White;
+        public bool IsCheckMate { get; private set; }
+        public bool IsCheck { get; private set; }
 
         public readonly Player playerTurn = Player.White;
 
         public void GetMoves(List<UserMove> moves)
         {
-            foreach (var move in moves)
+            for (int i = 0; i < moves.Count; i++)
             {
                 switch (TurnToMove)
                 {
                     case Player.White:
-                        PerformMove(move, Player.White);
-                        TurnToMove = Player.Black;
-                        break;
+
+                        if (PerformMove(moves[i], Player.White))
+                        { 
+                            TurnToMove = Player.Black; 
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    break;
+
                     case Player.Black:
-                        PerformMove(move, Player.Black);
-                        TurnToMove = Player.White;
-                        break;
+
+                        if (PerformMove(moves[i], Player.Black))
+                        { 
+                            TurnToMove = Player.White; 
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    break;
+                }
+
+                if(IsCheckMate == true)
+                {
+                    break;
                 }
             }
 
             DisplayBoard();
         }
 
-        private void PerformMove(UserMove move, Player playerTurn)
+        private bool PerformMove(UserMove move, Player playerTurn)
         {
             if (move.PlayerColor == playerTurn && VerifyCheckedKing(board, move.PlayerColor))
             {
                 Move(move);
                 ExceptionForInvalidMoveWhileCheck(move);
+                IsCheck = false;
+                return true;
             }
-            else if (move.PlayerColor == playerTurn)
+            if (move.PlayerColor == playerTurn)
             {
                 Move(move);
+
+                if (move.IsCheckMate)
+                {
+                    IsCheckMate = true;
+                    return false;
+                }
+                if (move.IsCheck)
+                {
+                    IsCheck = true;
+                    return true;
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
             {
@@ -259,7 +300,18 @@ namespace ChessMoves
                 Debug.Write('\n');
             }
 
-            Debug.WriteLine($"Turn to move : {TurnToMove}");
+            if(IsCheckMate == true)
+            {
+                Debug.WriteLine($"{TurnToMove} wins - CheckMate");
+            }
+            else if(IsCheck == true)
+            {
+                Debug.WriteLine($"{TurnToMove} King in Check");
+            }
+            else
+            {
+                Debug.WriteLine($"Turn to move : {TurnToMove}");
+            }
         }
     }
 }

@@ -174,6 +174,35 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void ChessBoardReturnsValidValueForFullGame()
+        {
+            var testBoard = new ChessBoard();
+
+            var moves = new List<UserMove>();
+            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
+            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
+            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
+            moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
+            moves.Add(new UserMove("gxf6") { PlayerColor = Player.Black });
+            moves.Add(new UserMove("Qh5#") { PlayerColor = Player.White });
+
+            testBoard.GetMoves(moves);
+
+            Assert.Equal(new Queen("h5", Player.White)
+            {
+                CurrentPosition = (3, 7),
+                PieceType = PieceType.Queen
+            },
+
+            testBoard[3, 7], new PieceComparer());
+
+            Assert.True(testBoard.IsCheckMate);
+        }
+
+        [Fact]
         public void ChessBoardFailsForCheckedKingAndInvalidMove()
         {
             var moves = new List<UserMove>();
