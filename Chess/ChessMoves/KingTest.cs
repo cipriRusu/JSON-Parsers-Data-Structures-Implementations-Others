@@ -165,5 +165,18 @@ namespace ChessMoves
 
             Assert.False(testBoard[0, 0].IsChecked(testBoard));
         }
+
+        [Fact]
+        public void KingReturnsCheckMateForValidAttack()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[0, 0] = new King((0, 0), Player.White);
+            testBoard[7, 0] = new Rock((7, 0), Player.Black);
+            testBoard[0, 7] = new Rock((0, 7), Player.Black);
+            testBoard[7, 7] = new Bishop((7, 7), Player.Black);
+
+            Assert.True(testBoard[0, 0].IsCheckMate(testBoard));
+        }
     }
 }

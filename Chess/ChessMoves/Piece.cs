@@ -60,5 +60,8 @@ namespace ChessMoves
 
             return board;
         }
+
+        internal virtual bool IsCheckMate(Piece[,] testBoard) => false;
+        internal virtual IEnumerable<IEnumerable<(int, int)>> PawnCapture() => null;
     }
 }

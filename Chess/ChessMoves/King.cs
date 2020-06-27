@@ -121,5 +121,12 @@ namespace ChessMoves
 
             return false;
         }
+
+        internal override bool IsCheckMate(Piece[,] board)
+        {
+            var allMoves = board[CurrentPosition.Item1, CurrentPosition.Item2].GetLegalMoves();
+
+            return false;
+        }
     }
 }
