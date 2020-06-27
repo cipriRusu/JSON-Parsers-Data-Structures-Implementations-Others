@@ -62,7 +62,7 @@ namespace ChessMoves
             return paths.Select((x, y) => paths.Take(y + 1)).Skip(1);
         }
 
-        private IEnumerable<IEnumerable<(int, int)>> LegalPawnCaptureIndexes()
+        internal override IEnumerable<IEnumerable<(int, int)>> PawnCapture()
         {
             var captures = new List<IEnumerable<(int, int)>>();
 
@@ -108,7 +108,7 @@ namespace ChessMoves
 
         private void PawnCaptureMove(UserMove move, Piece[,] board)
         {
-            var cIndex = LegalPawnCaptureIndexes()
+            var cIndex = PawnCapture()
                             .Where(x => x.Last() == move.MoveIndex)
                             .SelectMany(x => x);
 
