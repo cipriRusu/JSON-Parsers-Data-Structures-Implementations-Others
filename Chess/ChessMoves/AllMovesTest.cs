@@ -119,5 +119,195 @@ namespace ChessMoves
 
             Assert.Equal(output, allmoves.Moves, new UserMoveComparer());
         }
+
+        [Fact]
+        public void GetAllMovesForFullGame()
+        {
+            var allmoves =
+                new AllMoves(new string[] {
+                    "e4 e5",
+                    "Nf3 f6",
+                    "Nxe5 fxe5",
+                    "Qh5+ Ke7",
+                    "Qxe5+ Kf7",
+                    "Bc4+ d5",
+                    "Bxd5+ Kg6",
+                    "h4 h5",
+                    "Bxb7 Bxb7",
+                    "Qf5+ Kh6",
+                    "d4+ g5",
+                    "Qf7 Qe7",
+                    "hxg5+ Qxg5",
+                    "Rxh5#"
+                });
+
+            var output = new List<UserMove>()
+            {
+                new UserMove("e4")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (4, 4)
+                },
+                new UserMove("e5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 4)
+                },
+                new UserMove("Nf3")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Knight,
+                    MoveIndex = (5, 5)
+                },
+                new UserMove("f6")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (2, 5)
+                },
+                new UserMove("Nxe5")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Knight,
+                    MoveIndex = (3, 4)
+                },
+                new UserMove("fxe5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 4)
+                },
+                new UserMove("Qh5+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (3, 7)
+                },
+                new UserMove("Ke7")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.King,
+                    MoveIndex = (1, 4)
+                },
+                new UserMove("Qxe5+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (3, 4)
+                },
+                new UserMove("Kf7")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.King,
+                    MoveIndex = (1, 5)
+                },
+                new UserMove("Bc4+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Bishop,
+                    MoveIndex = (4, 2)
+                },
+                new UserMove("d5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 3)
+                },
+                new UserMove("Bxd5+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Bishop,
+                    MoveIndex = (3, 3)
+                },
+                new UserMove("Kg6")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.King,
+                    MoveIndex = (2, 6)
+                },
+                new UserMove("h4")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (4, 7)
+                },
+                new UserMove("h5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 7)
+                },
+                new UserMove("Bxb7")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Bishop,
+                    MoveIndex = (1, 1)
+                },
+                new UserMove("Bxb7")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Bishop,
+                    MoveIndex = (1, 1)
+                },
+                new UserMove("Qf5+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (3, 5)
+                },
+                new UserMove("Kh6")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.King,
+                    MoveIndex = (2, 7)
+                },
+                new UserMove("d4+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (4, 3)
+                },
+                new UserMove("g5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 6)
+                },
+                new UserMove("Qf7")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (1, 5)
+                },
+                new UserMove("Qe7")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (1, 4)
+                },
+                new UserMove("hxg5+")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 6)
+                },
+                new UserMove("Qxg5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (3, 6)
+                },
+                new UserMove("Rxh5#")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Rock,
+                    MoveIndex = (3, 7)
+                }
+            };
+
+            Assert.Equal(output, allmoves.Moves, new UserMoveComparer());
+        }
     }
 }
