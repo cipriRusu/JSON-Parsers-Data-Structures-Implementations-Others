@@ -50,5 +50,26 @@ namespace ChessMoves
 
             Assert.False(new KingCheck(board, Player.White).IsCheck);
         }
+
+        [Fact]
+        public void KingCheckReturnsTrueForUnBlockedDiagonal()
+        {
+            var board = new Piece[8, 8];
+            board[1, 5] = new King((1, 5), Player.Black);
+            board[4, 2] = new Bishop((4, 2), Player.White);
+
+            Assert.True(new KingCheck(board, Player.Black).IsCheck);
+        }
+
+        [Fact]
+        public void KingCheckReturnsFalseForBlockedDiagonal()
+        {
+            var board = new Piece[8, 8];
+            board[1, 5] = new King((1, 5), Player.Black);
+            board[4, 2] = new Bishop((4, 2), Player.White);
+            board[3, 3] = new Pawn((3, 3), Player.Black);
+
+            Assert.False(new KingCheck(board, Player.Black).IsCheck);
+        }
     }
 }
