@@ -35,7 +35,7 @@ namespace ChessMoves
 
         public Piece((int, int) pieceIndex, Player playerColour)
         {
-            var rankAndFile = new RankAndFile(CurrentPosition);
+            var rankAndFile = new RankAndFile(pieceIndex);
             CurrentPosition = pieceIndex;
             PlayerColour = playerColour;
             File = rankAndFile.File;
@@ -48,20 +48,21 @@ namespace ChessMoves
         {
             var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex && x.IsMovePathClear(board));
 
-            if (move.UserMoveType == UserMoveType.Move)
-            {
-                if (moves.Count() > 0)
-                {
-                    board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
-                    board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
-                    board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition(move.MoveIndex);
-                }
-            }
+            return move.UserMoveType == UserMoveType.Move && moves.Count() > 0 ? 
+                SwapPiecesAndUpdate(move.MoveIndex, board) : board;
+        }
+        internal virtual Piece[,] MoveTo((int, int) input, Piece[,] board) => SwapPiecesAndUpdate(input, board);
+
+        private Piece[,] SwapPiecesAndUpdate((int, int) input, Piece[,] board)
+        {
+            board[input.Item1, input.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
+            board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
+            board[input.Item1, input.Item2].UpdatePosition(input);
 
             return board;
         }
 
-        internal virtual bool IsCheckMate(Piece[,] testBoard) => false;
+        internal virtual bool IsCheckMate(Piece[,] chessBoard) => false;
         internal virtual IEnumerable<IEnumerable<(int, int)>> PawnCapture() => null;
     }
 }
