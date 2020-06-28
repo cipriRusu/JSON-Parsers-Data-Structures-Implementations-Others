@@ -8,13 +8,12 @@ namespace ChessMoves
         public bool Equals([AllowNull] UserMove x, [AllowNull] UserMove y)
         {
             return
-                x.SourceFile == y.SourceFile && 
+                x.SourceFile == y.SourceFile &&
                 x.SourceRank == y.SourceRank &&
                 x.PlayerColor == y.PlayerColor &&
                 x.PieceType == y.PieceType &&
                 x.UserMoveType == y.UserMoveType &&
-                x.MoveIndex.Item1.Equals(y.MoveIndex.Item1)
-                .Equals(x.MoveIndex.Item2.Equals(y.MoveIndex.Item2));
+                x.MoveIndex.Item1.Equals(y.MoveIndex.Item1) && x.MoveIndex.Item2.Equals(y.MoveIndex.Item2);
         }
 
         public int GetHashCode([DisallowNull] UserMove input)
