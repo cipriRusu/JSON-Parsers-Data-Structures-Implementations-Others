@@ -167,16 +167,51 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void KingReturnsCheckMateForValidAttack()
+        public void KingReturnsCheckFromPawnAttack()
         {
             var testBoard = new Piece[8, 8];
 
-            testBoard[0, 0] = new King((0, 0), Player.White);
-            testBoard[7, 0] = new Rock((7, 0), Player.Black);
-            testBoard[0, 7] = new Rock((0, 7), Player.Black);
-            testBoard[7, 7] = new Bishop((7, 7), Player.Black);
+            testBoard[0, 0] = new King((0, 0), Player.Black);
+            testBoard[1, 1] = new Pawn((1, 1), Player.White);
 
-            Assert.True(testBoard[0, 0].IsCheckMate(testBoard));
+            Assert.True(testBoard[0, 0].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingReturnsCheckForEmptyBoardAttack()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[2, 2] = new King((2, 2), Player.Black);
+            testBoard[6, 2] = new Rock((6, 2), Player.White);
+            testBoard[7, 4] = new King((7, 4), Player.White);
+
+            Assert.True(testBoard[2, 2].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingCheckFailsForEmptyBoardBlockedAttack()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[2, 2] = new King((2, 2), Player.Black);
+            testBoard[6, 2] = new Rock((6, 2), Player.White);
+            testBoard[4, 2] = new Rock((4, 2), Player.Black);
+            testBoard[7, 4] = new Rock((7, 4), Player.White);
+
+            Assert.False(testBoard[2, 2].IsChecked(testBoard));
+        }
+
+        [Fact]
+        public void KingCheckFailsForOppositeKingChecked()
+        {
+            var testBoard = new Piece[8, 8];
+
+            testBoard[2, 2] = new King((2, 2), Player.Black);
+            testBoard[6, 2] = new Rock((6, 2), Player.White);
+            testBoard[7, 4] = new King((7, 4), Player.White);
+
+            Assert.False(testBoard[7, 4].IsChecked(testBoard));
         }
     }
 }

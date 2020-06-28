@@ -60,73 +60,8 @@ namespace ChessMoves
             return legalMoves;
         }
 
-        internal override bool IsChecked(Piece[,] board)
-        {
-            var diagonals = new Diagonals(CurrentPosition).AllDiagonals;
-            var linesColumns = new LinesAndColumns(CurrentPosition).AllRowsColumns;
-            var knights = new KnightMoves(CurrentPosition).AllMoves;
+        internal override bool IsChecked(Piece[,] board) => new KingCheck(board, PlayerColour).IsCheck;
 
-            var diagonalPieces = new List<PieceType>
-            {
-                PieceType.Bishop,
-                PieceType.Queen
-            };
-
-            var lineColumnPieces = new List<PieceType>
-            {
-                PieceType.Rock,
-                PieceType.Queen,
-            };
-
-
-            if (PlayerColour == Player.White)
-            {
-                var diagonalAttacks = diagonals.Where(x =>
-                x.IsOpponentPathClear(PlayerColour, board, false))
-                    .Where(x => diagonalPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
-
-                var verticalHorizontalAttacks = linesColumns.Where(x =>
-                x.IsOpponentPathClear(PlayerColour, board, false))
-                    .Where(x => lineColumnPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
-
-                var knightsAttacks = knights.Where(x => 
-                x.IsOpponentPathClear(PlayerColour, board, true))
-                    .Where(x => board[x.Single().Item1, x.Single().Item2].PieceType == PieceType.Knight);
-
-                if (knightsAttacks.Count() > 0 || verticalHorizontalAttacks.Count() > 0 || diagonalAttacks.Count() > 0)
-                {
-                    return true;
-                }
-            }
-
-            if (PlayerColour == Player.Black)
-            {
-                var diagonalAttacks = diagonals.Where(x =>
-                x.IsOpponentPathClear(PlayerColour, board, false))
-                    .Where(x => diagonalPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
-
-                var verticalHorizontalAttacks = linesColumns.Where(x =>
-                x.IsOpponentPathClear(PlayerColour, board, false))
-                    .Where(x => lineColumnPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
-
-                var knightsAttacks = knights.Where(x =>
-                x.IsOpponentPathClear(PlayerColour, board, true))
-                    .Where(x => board[x.Single().Item1, x.Single().Item2].PieceType == PieceType.Knight);
-
-                if (knightsAttacks.Count() > 0 || verticalHorizontalAttacks.Count() > 0 || diagonalAttacks.Count() > 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal override bool IsCheckMate(Piece[,] board)
-        {
-            var allMoves = board[CurrentPosition.Item1, CurrentPosition.Item2].GetLegalMoves();
-
-            return false;
-        }
+        internal override bool IsCheckMate(Piece[,] board) => new KingCheck(board, PlayerColour).IsCheckMate;
     }
 }
