@@ -46,10 +46,22 @@ namespace ChessMoves
 
         internal virtual Piece[,] Move(UserMove move, Piece[,] board)
         {
-            var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex && x.IsMovePathClear(board));
+            if(move.UserMoveType == UserMoveType.Capture)
+            {
+                var captures = GetLegalMoves().Where(x => x.Last() == move.MoveIndex && x.IsCapturePathClear(board));
 
-            return move.UserMoveType == UserMoveType.Move && moves.Count() > 0 ? 
+                return move.UserMoveType == UserMoveType.Capture && captures.Count() > 0 ?
                 SwapPiecesAndUpdate(move.MoveIndex, board) : board;
+            }
+            else if(move.UserMoveType == UserMoveType.Move)
+            {
+                var moves = GetLegalMoves().Where(x => x.Last() == move.MoveIndex && x.IsMovePathClear(board));
+
+                return move.UserMoveType == UserMoveType.Move && moves.Count() > 0 ?
+                SwapPiecesAndUpdate(move.MoveIndex, board) : board;
+            }
+
+            return null;
         }
         internal virtual Piece[,] MoveTo((int, int) input, Piece[,] board) => SwapPiecesAndUpdate(input, board);
 
