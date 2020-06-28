@@ -16,7 +16,7 @@ namespace ChessMoves
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
 
-        public readonly Player playerTurn = Player.White;
+        public readonly Player PlayerTurn = Player.White;
 
         public void GetMoves(List<UserMove> moves)
         {
@@ -62,7 +62,7 @@ namespace ChessMoves
 
         private bool PerformMove(UserMove move, Player playerTurn)
         {
-            if (move.PlayerColor == playerTurn && VerifyCheckedKing(board, move.PlayerColor))
+            if (move.PlayerColor == playerTurn && new KingCheck(board, move.PlayerColor).IsCheck)
             {
                 Move(move);
                 ExceptionForInvalidMoveWhileCheck(move);
@@ -96,27 +96,12 @@ namespace ChessMoves
 
         private void ExceptionForInvalidMoveWhileCheck(UserMove move)
         {
-            if (VerifyCheckedKing(board, move.PlayerColor))
+            if (new KingCheck(board, move.PlayerColor).IsCheck)
             {
                 throw new ArgumentException($"Illegal {move.PieceType} move at " +
                     $"{move.MoveIndex} due to \"Check\" state of {move.PlayerColor} King");
             }
         }
-
-        private bool VerifyCheckedKing(Piece[,] board, Player player)
-        {
-            var res =
-                Enumerable.Range(0, CHESSBOARD_SIZE)
-                    .Select(x => Enumerable.Range(0, CHESSBOARD_SIZE).Select(y => (x, y)))
-                        .SelectMany(x => x).Where(x => FindKing(board, player, x.x, x.y)).Single();
-
-            return board[res.x, res.y].IsChecked(board);
-        }
-
-        private static bool FindKing(Piece[,] board, Player player, int i, int j) =>
-            board[i, j] != null &&
-            board[i, j].PlayerColour == player &&
-            board[i, j].PieceType == PieceType.King;
 
         private void Move(UserMove move)
         {
