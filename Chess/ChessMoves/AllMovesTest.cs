@@ -131,8 +131,92 @@ namespace ChessMoves
                 {
                     PlayerColor = Player.White,
                     PieceType = PieceType.Pawn,
-                    MoveIndex = (2, 3)
+                    MoveIndex = (2, 3),
                 }
+            };
+
+            Assert.Equal(output, allmoves.Moves, new UserMoveComparer());
+        }
+
+        [Fact]
+        public void GetAllMovesReturnsEnPassantMoveInGame()
+        {
+            var allmoves = new AllMoves(new string[] { 
+                "e4 e5", 
+                "Nf3 Nf6",
+                "d4 exd4",
+                "e5 Ne4",
+                "Qxd4 d5",
+                "exd6e.p." });
+
+            var output = new List<UserMove>()
+            {
+                new UserMove("e4")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (4, 4)
+                },
+                new UserMove("e5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 4)
+                },
+                new UserMove("Nf3")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Knight,
+                    MoveIndex = (5, 5)
+                },
+                new UserMove("Nf6")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Knight,
+                    MoveIndex = (2, 5)
+                },
+                new UserMove("d4")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (4, 3)
+                },
+                new UserMove("exd4")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (4, 3)
+                },
+                new UserMove("e5")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 4)
+                },
+                new UserMove("Ne4")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Knight,
+                    MoveIndex = (4, 4)
+                },
+                new UserMove("Qxd4")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Queen,
+                    MoveIndex = (4, 3)
+                },
+                new UserMove("d5")
+                {
+                    PlayerColor = Player.Black,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (3, 3)
+                },
+                new UserMove("exd6e.p.")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (2, 3)
+                },
             };
 
             Assert.Equal(output, allmoves.Moves, new UserMoveComparer());
