@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace ChessMoves
 {
@@ -35,7 +34,7 @@ namespace ChessMoves
                             break;
                         }
 
-                    break;
+                        break;
 
                     case Player.Black:
 
@@ -48,10 +47,10 @@ namespace ChessMoves
                             break;
                         }
 
-                    break;
+                        break;
                 }
 
-                if(IsCheckMate == true)
+                if (IsCheckMate == true)
                 {
                     break;
                 }
@@ -65,7 +64,8 @@ namespace ChessMoves
             if (move.PlayerColor == playerTurn && new KingCheck(board, move.PlayerColor).IsCheck)
             {
                 Move(move);
-                ExceptionForInvalidMoveWhileCheck(move);
+                InvalidCheckException(move);
+
                 IsCheck = false;
                 return true;
             }
@@ -94,7 +94,7 @@ namespace ChessMoves
             }
         }
 
-        private void ExceptionForInvalidMoveWhileCheck(UserMove move)
+        private void InvalidCheckException(UserMove move)
         {
             if (new KingCheck(board, move.PlayerColor).IsCheck)
             {
