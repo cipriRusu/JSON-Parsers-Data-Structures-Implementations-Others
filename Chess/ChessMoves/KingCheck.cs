@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 
 namespace ChessMoves
 {
@@ -24,24 +21,21 @@ namespace ChessMoves
 
         private bool CheckMate(Piece[,] board)
         {
-            var king = FindKing(board);
-
-            var allMoves = board[king.Item1, king.Item2].GetLegalMoves().SelectMany(x => x);
-
-            var moves = new List<Piece[,]>();
-
-            foreach(var move in allMoves)
+            foreach (var move in board[FindKing(board).Item1, FindKing(board).Item2]
+                .GetLegalMoves().SelectMany(x => x))
             {
-                var newBoard = board;
-                moves.Add(newBoard[FindKing(newBoard).Item1, FindKing(newBoard).Item2].MoveTo(move, newBoard).Clone() as Piece[,]);
+                new List<Piece[,]>().Add(board[FindKing(board).Item1, FindKing(board).Item2].MoveTo(move, board).Clone() as Piece[,]);
             }
 
-            return Check(board) && moves.All(x => Check(x) == true);
+            return Check(board) && new List<Piece[,]>().All(x => Check(x) == true);
         }
 
-        private (int, int) FindKing(Piece[,] board) => Enumerable.Range(0, CHESSBOARD_SIZE)
-                   .Select(x => Enumerable.Range(0, CHESSBOARD_SIZE).Select(y => (x, y)))
-                       .SelectMany(x => x).Where(x => FindKing(board, player, x.x, x.y)).Single();
+        private (int, int) FindKing(Piece[,] board) => 
+            Enumerable.Range(0, CHESSBOARD_SIZE)
+            .Select(x => Enumerable.Range(0, CHESSBOARD_SIZE).Select(y => (x, y)))
+            .SelectMany(x => x)
+            .Where(x => FindKing(board, player, x.x, x.y))
+            .Single();
 
         private bool Check(Piece[,] board) => IsChecked(FindKing(board), board);
 
@@ -50,12 +44,8 @@ namespace ChessMoves
             board[i, j].PlayerColour == player &&
             board[i, j].PieceType == PieceType.King;
 
-        private bool IsChecked((int, int) res, Piece[,] board)
+        private bool IsChecked((int, int) startIndex, Piece[,] board)
         {
-            var diagonals = new Diagonals(res).AllDiagonals;
-            var linesColumns = new LinesAndColumns(res).AllRowsColumns;
-            var knights = new KnightMoves(res).AllMoves;
-
             var diagonalPieces = new List<PieceType>
             {
                 PieceType.Bishop,
@@ -68,54 +58,76 @@ namespace ChessMoves
                 PieceType.Queen,
             };
 
-
-            if (player == Player.White)
+            return player switch
             {
-                var diagonalAttacks = diagonals.Where(x =>
-                x.IsOpponentPathClear(player, board, false))
-                    .Where(x => diagonalPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
+                Player.White when 
+                FindAttacks(
+                    player, startIndex, board, 
+                    new Diagonals(startIndex).AllDiagonals, 
+                    new LinesAndColumns(startIndex).AllRowsColumns, 
+                    new KnightMoves(startIndex).AllMoves, 
+                    diagonalPieces, lineColumnPieces) => true,
+                
+                Player.Black when 
 
-                var verticalHorizontalAttacks = linesColumns.Where(x =>
-                x.IsOpponentPathClear(player, board, false))
-                    .Where(x => lineColumnPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
+                FindAttacks(
+                    player, startIndex, board, 
+                    new Diagonals(startIndex).AllDiagonals, 
+                    new LinesAndColumns(startIndex).AllRowsColumns, 
+                    new KnightMoves(startIndex).AllMoves, 
+                    diagonalPieces, lineColumnPieces) => true,
+                _ => false
+            };
 
-                var knightsAttacks = knights.Where(x =>
-                x.IsOpponentPathClear(player, board, true))
-                    .Where(x => board[x.Single().Item1, x.Single().Item2].PieceType == PieceType.Knight);
-
-                var pawnAttacks = new PawnAggregate(board, Player.Black).Attacks
-                    .Where(x => x == res);
-
-                if (knightsAttacks.Count() > 0 || verticalHorizontalAttacks.Count() > 0 || diagonalAttacks.Count() > 0 || pawnAttacks.Count() > 0)
+            bool FindAttacks(
+                Player player, (int, int) startIndex, Piece[,] board,
+                IEnumerable<IEnumerable<(int, int)>> diagonals, 
+                IEnumerable<IEnumerable<(int, int)>> linesColumns, 
+                IEnumerable<IEnumerable<(int, int)>> knights, 
+                List<PieceType> diagonalPieces, List<PieceType> lineColumnPieces)
+            {
+                switch (player)
                 {
-                    return true;
+                    case Player.White:
+                        {
+                            return
+                            GetAttacks(player, board, knights, null, true).Count() > 0 ||
+                            GetAttacks(player, board, linesColumns, lineColumnPieces, false).Count() > 0 ||
+                            GetAttacks(player, board, diagonals, diagonalPieces, false).Count() > 0 ||
+                            new PawnAggregate(board, Player.Black).Attacks.Where(x => x == startIndex).Count() > 0;
+                        }
+
+                    case Player.Black:
+                        {
+                            return
+                            GetAttacks(player, board, knights, null, true).Count() > 0 ||
+                            GetAttacks(player, board, linesColumns, lineColumnPieces, false).Count() > 0 ||
+                            GetAttacks(player, board, diagonals, diagonalPieces, false).Count() > 0 ||
+                            new PawnAggregate(board, Player.White).Attacks.Where(x => x == startIndex).Count() > 0;
+                        }
                 }
+
+                return false;
             }
 
-            if (player == Player.Black)
+            IEnumerable<IEnumerable<(int, int)>> GetAttacks(
+                Player player, Piece[,] board,
+                IEnumerable<IEnumerable<(int, int)>> paths,
+                List<PieceType> attacks, bool IsKnight)
             {
-                var diagonalAttacks = diagonals.Where(x =>
-                x.IsOpponentPathClear(player, board, false))
-                    .Where(x => diagonalPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
-
-                var verticalHorizontalAttacks = linesColumns.Where(x =>
-                x.IsOpponentPathClear(player, board, false))
-                    .Where(x => lineColumnPieces.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
-
-                var knightsAttacks = knights.Where(x =>
-                x.IsOpponentPathClear(player, board, true))
-                    .Where(x => board[x.Single().Item1, x.Single().Item2].PieceType == PieceType.Knight);
-
-                var pawnAttacks = new PawnAggregate(board, Player.White).Attacks
-                    .Where(x => x == res);
-
-                if (knightsAttacks.Count() > 0 || verticalHorizontalAttacks.Count() > 0 || diagonalAttacks.Count() > 0 || pawnAttacks.Count() > 0)
+                if (IsKnight == true)
                 {
-                    return true;
+                    return paths.Where(x =>
+                    x.IsOpponentPathClear(player, board, true))
+                        .Where(x => board[x.Single().Item1, x.Single().Item2].PieceType == PieceType.Knight);
+                }
+                else
+                {
+                    return paths.Where(x =>
+                    x.IsOpponentPathClear(player, board, false))
+                        .Where(x => attacks.Contains(board[x.Last().Item1, x.Last().Item2].PieceType));
                 }
             }
-
-            return false;
         }
     }
 }
