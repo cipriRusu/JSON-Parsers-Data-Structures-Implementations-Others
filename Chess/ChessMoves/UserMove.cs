@@ -15,6 +15,7 @@ namespace ChessMoves
         public char SourceRank { get; private set; }
         public bool IsCheck { get; private set; }
         public bool IsCheckMate { get; private set; }
+        public bool IsEnPassant { get; private set; }
 
         private readonly Index customIndex = new Index();
 
@@ -35,6 +36,11 @@ namespace ChessMoves
             {
                 input = input[0..^1];
                 IsCheckMate = true;
+            }
+            else if(input.EndsWith("e.p."))
+            {
+                input = input[0..^4];
+                IsEnPassant = true;
             }
 
             GetSource(string.Concat(input.TakeLast(2)));

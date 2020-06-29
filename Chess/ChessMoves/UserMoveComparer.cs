@@ -8,6 +8,9 @@ namespace ChessMoves
         public bool Equals([AllowNull] UserMove x, [AllowNull] UserMove y)
         {
             return
+                x.IsCheck == y.IsCheck &&
+                x.IsCheckMate == y.IsCheckMate &&
+                x.IsEnPassant == y.IsEnPassant &&
                 x.SourceFile == y.SourceFile &&
                 x.SourceRank == y.SourceRank &&
                 x.PlayerColor == y.PlayerColor &&
