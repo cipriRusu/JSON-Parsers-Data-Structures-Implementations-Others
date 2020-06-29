@@ -57,14 +57,9 @@ namespace ChessMoves
             return board;
         }
 
-        private Piece[,] Movement(UserMove move, Piece[,] board)
-        {
-            var moves =
-                GetLegalMoves()
-                .Where(x => x.Last() == move.MoveIndex && x.CheckPath(board, move.UserMoveType));
-
-            return move.UserMoveType == UserMoveType.Move && moves.Count() > 0 ?
-            SwapPiecesAndUpdate(move.MoveIndex, board) : board;
-        }
+        private Piece[,] Movement(UserMove move, Piece[,] board) => GetLegalMoves()
+                .Where(x => x.Last() == move.MoveIndex &&
+                x.CheckPath(board, move.UserMoveType)).Count() > 0 ?
+                SwapPiecesAndUpdate(move.MoveIndex, board) : board;
     }
 }
