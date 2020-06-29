@@ -121,6 +121,24 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void GetAllMovesReturnsEnPassantMove()
+        {
+            var allmoves = new AllMoves(new string[] { "exd6e.p." });
+
+            var output = new List<UserMove>()
+            {
+                new UserMove("exd6e.p.")
+                {
+                    PlayerColor = Player.White,
+                    PieceType = PieceType.Pawn,
+                    MoveIndex = (2, 3)
+                }
+            };
+
+            Assert.Equal(output, allmoves.Moves, new UserMoveComparer());
+        }
+
+        [Fact]
         public void GetAllMovesForFullGame()
         {
             var allmoves =
