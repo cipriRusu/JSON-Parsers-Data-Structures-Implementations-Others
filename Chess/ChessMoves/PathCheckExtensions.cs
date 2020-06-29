@@ -7,10 +7,24 @@ namespace ChessMoves
 {
     public static class PathCheckExtensions
     {
-        public static bool IsMovePathClear(this IEnumerable<(int, int)> input, Piece[,] board) =>
+        public static bool CheckPath(this IEnumerable<(int, int)> input, Piece[,] board, UserMoveType userMove)
+        {
+            if (UserMoveType.Move == userMove)
+            {
+                return input.IsMovePathClear(board);
+            }
+            if (UserMoveType.Capture == userMove)
+            {
+                return input.IsCapturePathClear(board);
+            }
+
+            return false;
+        }
+
+        private static bool IsMovePathClear(this IEnumerable<(int, int)> input, Piece[,] board) =>
             input.Skip(1).All(x => board[x.Item1, x.Item2] == null);
 
-        public static bool IsCapturePathClear(this IEnumerable<(int, int)> input, Piece[,] board)
+        private static bool IsCapturePathClear(this IEnumerable<(int, int)> input, Piece[,] board)
         {
             return
                 board[input.First().Item1, input.First().Item2] != null &&
@@ -24,11 +38,11 @@ namespace ChessMoves
             switch (player)
             {
                 case Player.White:
-                    return isKnight == false ? IsOpponent(input, player, board, Player.Black) : 
+                    return isKnight == false ? IsOpponent(input, player, board, Player.Black) :
                         IsOpponentKnight(input, board, Player.Black);
 
                 case Player.Black:
-                    return isKnight == false ? IsOpponent(input, player, board, Player.White) : 
+                    return isKnight == false ? IsOpponent(input, player, board, Player.White) :
                         IsOpponentKnight(input, board, Player.White);
 
                 default:

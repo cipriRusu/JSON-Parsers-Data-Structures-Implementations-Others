@@ -18,7 +18,7 @@ namespace ChessMoves
             testEnumerable.Add((2, 0));
             testEnumerable.Add((3, 0));
 
-            Assert.True(testEnumerable.IsMovePathClear(testBoard));
+            Assert.True(testEnumerable.CheckPath(testBoard, UserMoveType.Move));
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace ChessMoves
             testEnumerable.Add((2, 0));
             testEnumerable.Add((3, 0));
 
-            Assert.False(testEnumerable.IsMovePathClear(testBoard));
+            Assert.False(testEnumerable.CheckPath(testBoard, UserMoveType.Move));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace ChessMoves
             testEnumerable.Add((3, 2));
             testEnumerable.Add((4, 3));
 
-            Assert.True(testEnumerable.IsCapturePathClear(testBoard));
+            Assert.True(testEnumerable.CheckPath(testBoard, UserMoveType.Capture));
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace ChessMoves
             testEnumerable.Add((3, 2));
             testEnumerable.Add((4, 3));
 
-            Assert.False(testEnumerable.IsCapturePathClear(testBoard));
+            Assert.False(testEnumerable.CheckPath(testBoard, UserMoveType.Capture));
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace ChessMoves
             testEnumerable.Add((3, 2));
             testEnumerable.Add((4, 3));
 
-            Assert.False(testEnumerable.IsCapturePathClear(testBoard));
+            Assert.False(testEnumerable.CheckPath(testBoard, UserMoveType.Capture));
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace ChessMoves
             testEnumerable.Add((3, 2));
             testEnumerable.Add((4, 3));
 
-            Assert.False(testEnumerable.IsMovePathClear(testBoard));
+            Assert.False(testEnumerable.CheckPath(testBoard, UserMoveType.Move));
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace ChessMoves
             testEnumerable.Add((0, 6));
             testEnumerable.Add((0, 7));
 
-            Assert.True(testEnumerable.IsOpponentPathClear(Player.White, testBoard, false));
+            Assert.True(testEnumerable.CheckPath(testBoard, UserMoveType.Capture));
         }
 
         [Fact]
