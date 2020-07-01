@@ -18,45 +18,54 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => 
-            new KnightMoves(CurrentPosition).AllMoves;
-
-        internal override Piece[,] Move(UserMove move, Piece[,] board)
+        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
         {
-            if (move.UserMoveType == UserMoveType.Move)
+            var legalMoves = new List<IEnumerable<(int, int)>>();
+
+            if (CheckIndexes(CurrentPosition.Item1 - 2, CurrentPosition.Item2 + 1))
             {
-                KnightMove(move, board);
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 2, CurrentPosition.Item2 + 1), 1));
             }
-            if (move.UserMoveType == UserMoveType.Capture)
+            if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 2))
             {
-                KnightCaptureMove(move, board);
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 2), 1));
+            }
+            if (CheckIndexes(CurrentPosition.Item1 - 2, CurrentPosition.Item2 - 1))
+            {
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 2, CurrentPosition.Item2 - 1), 1));
+            }
+            if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 2))
+            {
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 2), 1));
+            }
+            if (CheckIndexes(CurrentPosition.Item1 + 2, CurrentPosition.Item2 + 1))
+            {
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 2, CurrentPosition.Item2 + 1), 1));
+            }
+            if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 2))
+            {
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 2), 1));
+            }
+            if (CheckIndexes(CurrentPosition.Item1 + 2, CurrentPosition.Item2 - 1))
+            {
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 2, CurrentPosition.Item2 - 1), 1));
+            }
+            if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 2))
+            {
+                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 2), 1));
             }
 
-            return board;
+            return legalMoves;
         }
 
-        private void KnightMove(UserMove move, Piece[,] board)
+        internal override void Move(UserMove move, ChessBoard chessBoard)
         {
-            var containsMove = GetLegalMoves().SelectMany(x => x).Where(x => board[x.Item1, x.Item2] == null)
-                                .Contains(move.MoveIndex);
+            var validPath = ValidatePath(move).SelectMany(x => x);
 
-            if (containsMove && board[move.MoveIndex.Item1, move.MoveIndex.Item2] == null)
+            if(validPath.Any())
             {
-                board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
-                board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
-                board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition(move.MoveIndex);
-            }
-        }
-
-        private void KnightCaptureMove(UserMove move, Piece[,] board)
-        {
-            var legalMoves = GetLegalMoves().SelectMany(x => x).Where(x => x == move.MoveIndex);
-
-            if (legalMoves.Count() > 0)
-            {
-                board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
-                board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
-                board[move.MoveIndex.Item1, move.MoveIndex.Item2].UpdatePosition(move.MoveIndex);
+                chessBoard
+                    .PerformMove(CurrentPosition, validPath.Last());
             }
         }
     }
