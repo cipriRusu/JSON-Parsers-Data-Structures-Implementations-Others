@@ -59,9 +59,5 @@ namespace ChessMoves
 
             return legalMoves;
         }
-
-        internal override bool IsChecked(Piece[,] board) => new KingCheck(board, PlayerColour).IsCheck;
-
-        internal override bool IsCheckMate(Piece[,] board) => new KingCheck(board, PlayerColour).IsCheckMate;
     }
 }

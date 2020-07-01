@@ -17,7 +17,6 @@ namespace ChessMoves
             PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => 
-            new LinesAndColumns(CurrentPosition).AllRowsColumns;
+        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => RowsAndColumns();
     }
 }

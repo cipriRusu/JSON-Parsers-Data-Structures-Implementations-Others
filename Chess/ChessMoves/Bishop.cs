@@ -20,7 +20,6 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => 
-            new Diagonals(CurrentPosition).AllDiagonals;
+        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => Diagonals();
     }
 }
