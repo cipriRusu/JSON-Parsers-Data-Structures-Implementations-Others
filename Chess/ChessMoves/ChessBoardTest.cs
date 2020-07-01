@@ -204,5 +204,29 @@ namespace ChessMoves
 
             Assert.False(board.IsChecked(Player.White));
         }
+
+        [Fact]
+        public void IsPieceReturnsTrueForValidPieceTypeAndColour()
+        {
+            var board = new ChessBoard();
+
+            Assert.True(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Pawn, Player.Black));
+        }
+
+        [Fact]
+        public void IsPieceReturnsFalseForOtherPieceInPlace()
+        {
+            var board = new ChessBoard();
+
+            Assert.False(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Rock, Player.Black));
+        }
+        
+        [Fact]
+        public void IsPieceReturnsFalseForWrongPlayer()
+        {
+            var board = new ChessBoard();
+
+            Assert.False(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Pawn, Player.White));
+        }
     }
 }
