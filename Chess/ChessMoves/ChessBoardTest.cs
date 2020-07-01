@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using Xunit;
 
 namespace ChessMoves
@@ -12,11 +13,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            var moves = new List<UserMove>();
-            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("e5") { PlayerColor = Player.Black });
-
-            testBoard.GetMoves(moves);
+            testBoard.Moves(new string[] { "e4 e5" });
 
             Assert.Null(testBoard[6, 4]);
             Assert.Null(testBoard[1, 4]);
@@ -41,15 +38,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            var moves = new List<UserMove>();
-            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("e5") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nf3") { PlayerColor = Player.White });
-            moves.Add(new UserMove("Nc6") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Bb5") { PlayerColor = Player.White });
-            moves.Add(new UserMove("a6") { PlayerColor = Player.Black });
-
-            testBoard.GetMoves(moves);
+            testBoard.Moves(new string[] { "e4 e5", "Nf3 Nc6", "Bb5 a6" });
 
             Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.White)
@@ -105,7 +94,7 @@ namespace ChessMoves
             moves.Add(new UserMove("e4") { PlayerColor = Player.White });
             moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
 
-            testBoard.GetMoves(moves);
+            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4" });
 
             Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.Black)
@@ -120,8 +109,6 @@ namespace ChessMoves
                     CurrentPosition = (5, 2),
                     PieceType = PieceType.Knight
                 }, new PieceComparer());
-
-
         }
 
         [Fact]
@@ -129,21 +116,14 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            var moves = new List<UserMove>();
-            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
-            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
-
-            testBoard.GetMoves(moves);
+            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4" });
 
             Assert.Equal(
                 new Knight("e4", Player.White)
                 {
                     CurrentPosition = (4, 4),
                     PieceType = PieceType.Knight
-                }, 
+                },
                 testBoard[4, 4], new PieceComparer());
         }
 
@@ -152,17 +132,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            var moves = new List<UserMove>();
-            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
-            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
-            moves.Add(new UserMove("gxf6") { PlayerColor = Player.Black });
-
-            testBoard.GetMoves(moves);
+            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ gxf6" });
 
             Assert.Equal(new Pawn("f6", Player.Black)
             {
@@ -171,6 +141,8 @@ namespace ChessMoves
             },
 
             testBoard[2, 5], new PieceComparer());
+
+            Assert.True(testBoard.IsCheck);
         }
 
         [Fact]
@@ -178,18 +150,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            var moves = new List<UserMove>();
-            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
-            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
-            moves.Add(new UserMove("gxf6") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Qh5#") { PlayerColor = Player.White });
-
-            testBoard.GetMoves(moves);
+            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ gxf6", "Qh5#" });
 
             Assert.Equal(new Queen("h5", Player.White)
             {
@@ -205,54 +166,15 @@ namespace ChessMoves
         [Fact]
         public void ChessBoardFailsForCheckedKingAndInvalidMove()
         {
-            var moves = new List<UserMove>();
-            moves.Add(new UserMove("Nc3") { PlayerColor = Player.White });
-            moves.Add(new UserMove("f5") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("e4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxe4") { PlayerColor = Player.White });
-            moves.Add(new UserMove("Nf6") { PlayerColor = Player.Black });
-            moves.Add(new UserMove("Nxf6+") { PlayerColor = Player.White });
-            moves.Add(new UserMove("c6") { PlayerColor = Player.Black });
-
-            Assert.Throws<ArgumentException>(()=> new ChessBoard().GetMoves(moves));
-        }
-
-        [Fact]
-        public void ChessBoardFailsForFirstMoveFromBlackPlayer()
-        {
-            var moves = new List<UserMove>
-            {
-                new UserMove("Nc3") { PlayerColor = Player.Black },
-                new UserMove("f5") { PlayerColor = Player.White }
-            };
-
-            Assert.Throws<ArgumentException>(() => new ChessBoard().GetMoves(moves));
-        }
-
-        [Fact]
-        public void ChessBoardFailsForConsecutiveMovesForSamePlayer()
-        {
-            var moves = new List<UserMove>
-            {
-                new UserMove("Nc3") { PlayerColor = Player.White },
-                new UserMove("f5") { PlayerColor = Player.White }
-            };
-
-            Assert.Throws<ArgumentException>(() => new ChessBoard().GetMoves(moves));
+            Assert.Throws<ArgumentException>(() =>
+            new ChessBoard().Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ c6" }));
         }
 
         [Fact]
         public void TurnToMovePropertyReturnsValidOutputForWhiteTurn()
         {
-            var moves = new List<UserMove>
-            {
-                new UserMove("Nc3") { PlayerColor = Player.White },
-                new UserMove("f5") { PlayerColor = Player.Black }
-            };
-
             var board = new ChessBoard();
-            board.GetMoves(moves);
+            board.Moves(new string[] { "Nc3 f5" });
 
             Assert.Equal(Player.White, board.TurnToMove);
         }
@@ -260,17 +182,19 @@ namespace ChessMoves
         [Fact]
         public void TurnToMovePropertyReturnsValidOutputForBlackTurn()
         {
-            var moves = new List<UserMove>
-            {
-                new UserMove("Nc3") { PlayerColor = Player.White },
-                new UserMove("f5") { PlayerColor = Player.Black },
-                new UserMove("e4") { PlayerColor = Player.White }
-        };
-
             var board = new ChessBoard();
-            board.GetMoves(moves);
+            board.Moves(new string[] { "Nc3 f5", "e4" });
 
             Assert.Equal(Player.Black, board.TurnToMove);
+        }
+
+        [Fact]
+        public void PerformMoveSwitchesPiecePosition()
+        {
+            var board = new ChessBoard();
+            board.PerformMove((1, 0), (2, 0));
+
+            Assert.Equal(new Pawn((2, 0), Player.Black), board[2, 0], new PieceComparer());
         }
     }
 }
