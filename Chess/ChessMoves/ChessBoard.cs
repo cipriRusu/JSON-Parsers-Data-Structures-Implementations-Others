@@ -53,6 +53,24 @@ namespace ChessMoves
             }
         }
 
+        internal bool IsChecked(Player player)
+        {
+            for(int i = 0; i <= CHESSBOARD_SIZE - 1; i++)
+            {
+                for(int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
+                {
+                    if(board[i, j] != null &&
+                       board[i, j].PlayerColour == player &&
+                       board[i, j].PieceType == PieceType.King)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public void PerformMove((int, int) source, (int, int) destination)
         {
             SwitchTurn();

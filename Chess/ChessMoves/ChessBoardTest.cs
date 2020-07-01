@@ -196,5 +196,13 @@ namespace ChessMoves
 
             Assert.Equal(new Pawn((2, 0), Player.Black), board[2, 0], new PieceComparer());
         }
+
+        [Fact]
+        public void IsCheckedReturnsFalseForUncheckedKingAtGameStart()
+        {
+            var board = new ChessBoard();
+
+            Assert.False(board.IsChecked(Player.White));
+        }
     }
 }
