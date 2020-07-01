@@ -49,7 +49,10 @@ namespace ChessMoves
                 FileAndRankConstraint(move, i, j) ||
                 NoConstraint(move)))
             {
-                board[i, j].Move(move, this);
+                if(!IsChecked(TurnToMove))
+                {
+                    board[i, j].Move(move, this);
+                }
             }
         }
 
@@ -67,6 +70,14 @@ namespace ChessMoves
             }
 
             return false;
+        }
+
+        internal bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
+        {
+            return
+                board[currentPosition.Item1, currentPosition.Item2].CurrentPosition == currentPosition &&
+                board[currentPosition.Item1, currentPosition.Item2].PieceType == pieceType &&
+                board[currentPosition.Item1, currentPosition.Item2].PlayerColour == player;
         }
 
         public void PerformMove((int, int) source, (int, int) destination)
