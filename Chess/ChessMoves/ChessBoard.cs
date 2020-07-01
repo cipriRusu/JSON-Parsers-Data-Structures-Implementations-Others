@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 
 namespace ChessMoves
 {
@@ -10,98 +12,23 @@ namespace ChessMoves
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
         public Piece this[int i, int j] => board[i, j];
+
+        internal void Moves(string[] userMoves)
+        {
+            foreach (var move in new AllMoves(userMoves).Moves)
+            {
+                Move(move);
+            }
+
+            DisplayBoard();
+        }
+
         public ChessBoard() => InitializeBoard();
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
 
         public readonly Player PlayerTurn = Player.White;
-
-        public void GetMoves(List<UserMove> moves)
-        {
-            for (int i = 0; i < moves.Count; i++)
-            {
-                switch (TurnToMove)
-                {
-                    case Player.White:
-
-                        if (PerformMove(moves[i], Player.White))
-                        { 
-                            TurnToMove = Player.Black; 
-                        }
-                        else
-                        {
-                            break;
-                        }
-
-                        break;
-
-                    case Player.Black:
-
-                        if (PerformMove(moves[i], Player.Black))
-                        { 
-                            TurnToMove = Player.White; 
-                        }
-                        else
-                        {
-                            break;
-                        }
-
-                        break;
-                }
-
-                if (IsCheckMate == true)
-                {
-                    break;
-                }
-            }
-
-            DisplayBoard();
-        }
-
-        private bool PerformMove(UserMove move, Player playerTurn)
-        {
-            if (move.PlayerColor == playerTurn && new KingCheck(board, move.PlayerColor).IsCheck)
-            {
-                Move(move);
-                InvalidCheckException(move);
-
-                IsCheck = false;
-                return true;
-            }
-            if (move.PlayerColor == playerTurn)
-            {
-                Move(move);
-
-                if (move.IsCheckMate)
-                {
-                    IsCheckMate = true;
-                    return false;
-                }
-                if (move.IsCheck)
-                {
-                    IsCheck = true;
-                    return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Wrong turn!!");
-            }
-        }
-
-        private void InvalidCheckException(UserMove move)
-        {
-            if (new KingCheck(board, move.PlayerColor).IsCheck)
-            {
-                throw new ArgumentException($"Illegal {move.PieceType} move at " +
-                    $"{move.MoveIndex} due to \"Check\" state of {move.PlayerColor} King");
-            }
-        }
 
         private void Move(UserMove move)
         {
@@ -122,9 +49,21 @@ namespace ChessMoves
                 FileAndRankConstraint(move, i, j) ||
                 NoConstraint(move)))
             {
-                board = board[i, j].Move(move, board);
+                board[i, j].Move(move, this);
             }
         }
+
+        public void PerformMove((int, int) source, (int, int) destination)
+        {
+            SwitchTurn();
+
+            board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
+            board[destination.Item1, destination.Item2].Update(destination);
+            board[source.Item1, source.Item2] = null;
+        }
+
+        public bool IsPathClear(IEnumerable<(int, int)> input) =>
+            input.All(x => board[x.Item1, x.Item2] == null);
 
         private static bool NoConstraint(UserMove move) =>
             move.SourceFile == '\0' && move.SourceRank == '\0';
@@ -147,6 +86,19 @@ namespace ChessMoves
                 board[i, j] != null &&
                 board[i, j].PlayerColour == move.PlayerColor &&
                 board[i, j].PieceType == move.PieceType;
+        }
+
+        private void SwitchTurn()
+        {
+            switch (TurnToMove)
+            {
+                case Player.White:
+                    TurnToMove = Player.Black;
+                    break;
+                case Player.Black:
+                    TurnToMove = Player.White;
+                    break;
+            }
         }
 
         private void InitializeBoard()
@@ -285,11 +237,11 @@ namespace ChessMoves
                 Debug.Write('\n');
             }
 
-            if(IsCheckMate == true)
+            if (IsCheckMate == true)
             {
                 Debug.WriteLine($"{TurnToMove} wins - CheckMate");
             }
-            else if(IsCheck == true)
+            else if (IsCheck == true)
             {
                 Debug.WriteLine($"{TurnToMove} King in Check");
             }
