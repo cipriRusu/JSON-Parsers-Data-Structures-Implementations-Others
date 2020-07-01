@@ -59,11 +59,9 @@ namespace ChessMoves
             {
                 for(int j = 0; j <= CHESSBOARD_SIZE - 1; j++)
                 {
-                    if(board[i, j] != null &&
-                       board[i, j].PlayerColour == player &&
-                       board[i, j].PieceType == PieceType.King)
+                    if (FindKing(player, i, j))
                     {
-                        return true;
+                        return board[i, j].IsChecked(this);
                     }
                 }
             }
@@ -79,6 +77,10 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2].Update(destination);
             board[source.Item1, source.Item2] = null;
         }
+
+        private bool FindKing(Player player, int i, int j) => 
+            board[i, j] != null && board[i, j].PlayerColour == player &&
+            board[i, j].PieceType == PieceType.King;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) =>
             input.All(x => board[x.Item1, x.Item2] == null);
