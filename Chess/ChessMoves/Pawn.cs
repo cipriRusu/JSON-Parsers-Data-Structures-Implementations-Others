@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading;
 
 namespace ChessMoves
 {
@@ -62,61 +60,21 @@ namespace ChessMoves
             return paths.Select((x, y) => paths.Take(y + 1)).Skip(1);
         }
 
-        internal override IEnumerable<IEnumerable<(int, int)>> PawnCapture()
+        internal override void Move(UserMove move, ChessBoard chessBoard)
         {
-            var captures = new List<IEnumerable<(int, int)>>();
+            var validPath = ValidatePath(move).SelectMany(x => x);
 
-            if (PlayerColour == Player.White)
+            if (UserMoveType.Move == move.UserMoveType && 
+                validPath.Any() && 
+                chessBoard.IsPathClear(validPath.Skip(1)))
             {
-                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1), 1));
-                }
-                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1), 1));
-                }
-            }
-            else if (PlayerColour == Player.Black)
-            {
-                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1), 1));
-                }
-                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1), 1));
-                }
+                chessBoard
+                    .PerformMove(validPath.First(), validPath.Last());
             }
 
-            return captures;
-        }
-
-        internal override Piece[,] Move(UserMove move, Piece[,] board)
-        {
-            if (move.UserMoveType == UserMoveType.Move)
+            if(UserMoveType.Capture == move.UserMoveType && validPath.Any())
             {
-                return base.Move(move, board);
-            }
-            else if (move.UserMoveType == UserMoveType.Capture)
-            {
-                PawnCaptureMove(move, board);
-            }
-
-            return board;
-        }
-
-        private void PawnCaptureMove(UserMove move, Piece[,] board)
-        {
-            var cIndex = PawnCapture()
-                            .Where(x => x.Last() == move.MoveIndex)
-                            .SelectMany(x => x);
-
-            if (cIndex.Count() > 0)
-            {
-                board[cIndex.Single().Item1, cIndex.Single().Item2] = board[CurrentPosition.Item1, CurrentPosition.Item2];
-                board[CurrentPosition.Item1, CurrentPosition.Item2] = null;
-                board[cIndex.Single().Item1, cIndex.Single().Item2].UpdatePosition(move.MoveIndex);
+                chessBoard.PerformMove(CurrentPosition, validPath.Single());
             }
         }
     }
