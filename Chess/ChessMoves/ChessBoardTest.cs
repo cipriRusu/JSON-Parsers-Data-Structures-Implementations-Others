@@ -128,7 +128,7 @@ namespace ChessMoves
         }
 
         [Fact]
-        public void ChessBoardReturnsValidBoardForMultipleValidMovesAndCheckedKing()
+        public void ChessBoardReturnsValidBoardForMultipleValidMovesAndCheckedEscapedKing()
         {
             var testBoard = new ChessBoard();
 
@@ -146,7 +146,7 @@ namespace ChessMoves
 
             testBoard[2, 5], new PieceComparer());
 
-            Assert.True(testBoard.IsCheck);
+            Assert.False(testBoard.IsCheck);
         }
 
         [Fact]
