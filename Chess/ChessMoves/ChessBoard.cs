@@ -22,6 +22,8 @@ namespace ChessMoves
             {
                 Move(move);
             }
+
+            DisplayBoard();
         }
 
         public ChessBoard() => InitializeBoard();
@@ -47,7 +49,7 @@ namespace ChessMoves
             {
                 if (TurnToMove == move.PlayerColor)
                 {
-                    if(IsChecked(TurnToMove))
+                    if (IsChecked(TurnToMove))
                     {
                         var currentTurn = TurnToMove;
 
@@ -55,7 +57,11 @@ namespace ChessMoves
 
                         if (IsChecked(currentTurn))
                         {
-                            throw new ArgumentException("Check!!");
+                            throw new ArgumentException($" Move to {move.MoveIndex} illegal due to Check state ");
+                        }
+                        else
+                        {
+                            IsCheck = false;
                         }
                     }
                     else
@@ -294,8 +300,12 @@ namespace ChessMoves
 
                 Debug.Write('\n');
             }
-
-            if (IsCheck == true)
+            
+            if(IsCheckMate == true)
+            {
+                Debug.WriteLine($"{TurnToMove} King in CheckMate");
+            }
+            else if (IsCheck == true)
             {
                 Debug.WriteLine($"{TurnToMove} King in Check");
             }
