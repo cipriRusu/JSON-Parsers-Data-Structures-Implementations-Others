@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading;
 
 namespace ChessMoves
 {
+    [Serializable]
     public class Piece
     {
         public const int BOARDSIZE = 8;
@@ -39,20 +41,24 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
-        protected IEnumerable<IEnumerable<(int, int)>> ValidatePath(UserMove move)
+        protected IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
         {
             if (move.UserMoveType == UserMoveType.Move)
             {
                 if (move.PieceType == PieceType.Knight)
                 {
-                    return GetLegalMoves()
-                    .Where(x => x.Single() == move.MoveIndex);
+                    return 
+                        GetLegalMoves()
+                        .Where(
+                            x => x.Single() == move.MoveIndex);
                 }
                 else
                 {
-                    return GetLegalMoves()
-                    .Where(x => x.First() == CurrentPosition &&
-                                x.Last() == move.MoveIndex);
+                    return
+                        GetLegalMoves()
+                        .Where(
+                            x => x.First() == CurrentPosition &&
+                                 x.Last() == move.MoveIndex);
                 }
             }
 
@@ -60,22 +66,102 @@ namespace ChessMoves
             {
                 if (move.PieceType == PieceType.Knight)
                 {
-                    return GetLegalMoves()
-                    .Where(x => x.Single() == move.MoveIndex);
+                    return
+                        GetLegalMoves()
+                        .Where(
+                            x => x.Single() == move.MoveIndex &&
+                            board[x.Single().Item1, x.Single().Item2].PlayerColour ==
+                            Opponent(PlayerColour));
+
+
                 }
-                else if(move.PieceType == PieceType.Pawn)
+                if (move.PieceType == PieceType.Pawn)
                 {
-                    return PawnCapture()
-                    .Where(x => x.Single() == move.MoveIndex);
+                    return 
+                        PawnCapture()
+                        .Where(
+                            x => x.Single() == move.MoveIndex &&
+                            board[x.Single().Item1, x.Single().Item2].PlayerColour ==
+                            Opponent(PlayerColour));
+                }
+                else
+                {
+                    return
+                        GetLegalMoves()
+                        .Where(x =>
+                            x.First() == CurrentPosition &&
+                            x.Last() == move.MoveIndex &&
+                            board[x.Last().Item1, x.Last().Item2].PlayerColour ==
+                            Opponent(PlayerColour));
                 }
             }
 
             return null;
         }
 
-        internal bool IsChecked(ChessBoard chessBoard)
+        internal bool IsCheckMated(Player player, ChessBoard chessBoard)
         {
-            return false;
+            var moves = GetLegalMoves().Where(x => chessBoard.IsPathClear(x));
+
+            foreach(var move in moves)
+            {
+                var current = chessBoard.DeepClone();
+
+                current.PerformMove(CurrentPosition, move.Single());
+
+                if(!current.IsChecked(player))
+                {
+                    return false;
+                }
+            }
+
+            return moves.Count() > 0;
+        }
+
+        internal bool IsChecked(Player player, ChessBoard chessBoard)
+        {
+            switch (player)
+            {
+                case Player.Black:
+                    return CheckValidator(Player.White, chessBoard);
+                case Player.White:
+                    return CheckValidator(Player.Black, chessBoard);
+                default:
+                    return false;
+            }
+        }
+
+        public static Player Opponent(Player player)
+        {
+            switch (player)
+            {
+                case Player.White:
+                    return Player.Black;
+                case Player.Black:
+                    return Player.White;
+                default:
+                    throw new ArgumentException("Invalid player");
+            }
+        }
+
+        private bool CheckValidator(Player opponent, ChessBoard chessBoard)
+        {
+            var diags = Diagonals()
+                .Where(x =>
+                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
+                (chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent) ||
+                chessBoard.IsPiece(x.Last(), PieceType.Bishop, opponent)));
+
+            var rowsAndColumns = RowsAndColumns()
+                .Where(x =>
+                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
+                (chessBoard.IsPiece(x.Last(), PieceType.Rock, opponent) ||
+                chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent)));
+
+            var knight = new Knight(CurrentPosition, PlayerColour).GetLegalMoves()
+                .Where(x => chessBoard.IsPiece(x.Single(), PieceType.Knight, opponent));
+
+            return diags.Any() || rowsAndColumns.Any() || knight.Any();
         }
 
         protected IEnumerable<IEnumerable<(int, int)>> RowsAndColumns()
@@ -184,12 +270,11 @@ namespace ChessMoves
 
         internal virtual void Move(UserMove move, ChessBoard chessBoard)
         {
-            var validPath = ValidatePath(move).SelectMany(x => x);
+            var validPath = ValidatePath(chessBoard, move).SelectMany(x => x);
 
-            if (validPath.Any() && chessBoard.IsPathClear(validPath.Skip(1)))
+            if (validPath.Any() && chessBoard.IsPathClear(validPath.Skip(1).SkipLast(1)))
             {
-                chessBoard
-                    .PerformMove(validPath.First(), validPath.Last());
+                chessBoard.PerformMove(validPath.First(), validPath.Last());
             }
         }
     }

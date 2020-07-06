@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace ChessMoves
 {
+    [Serializable]
     internal class Pawn : Piece
     {
         public Pawn((int, int) inputIndex, Player playerColour) :
@@ -62,7 +64,7 @@ namespace ChessMoves
 
         internal override void Move(UserMove move, ChessBoard chessBoard)
         {
-            var validPath = ValidatePath(move).SelectMany(x => x);
+            var validPath = ValidatePath(chessBoard, move).SelectMany(x => x);
 
             if (UserMoveType.Move == move.UserMoveType && 
                 validPath.Any() && 

@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace ChessMoves
 {
+    [Serializable]
     internal class Queen : Piece
     {
         public Queen((int, int) currentPosition, Player playerColour) :

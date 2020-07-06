@@ -5,6 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace ChessMoves
 {
+    [Serializable]
     internal class Rock : Piece
     {
         public Rock((int, int) currentPosition, Player playerColour) : base(currentPosition, playerColour)

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ChessMoves
 {
+    [Serializable]
     internal class Knight : Piece
     {
         public Knight((int, int) currentPosition, Player playerColour) :
@@ -60,7 +62,7 @@ namespace ChessMoves
 
         internal override void Move(UserMove move, ChessBoard chessBoard)
         {
-            var validPath = ValidatePath(move).SelectMany(x => x);
+            var validPath = ValidatePath(chessBoard, move).SelectMany(x => x);
 
             if(validPath.Any())
             {

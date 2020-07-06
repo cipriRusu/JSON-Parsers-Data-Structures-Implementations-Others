@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace ChessMoves
 {
+    [Serializable]
     internal class Index
     {
         //Used for conversion of chessboard index to standard matrix index
