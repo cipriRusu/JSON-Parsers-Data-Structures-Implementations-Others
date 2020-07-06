@@ -76,7 +76,7 @@ namespace ChessMoves
                 }, new PieceComparer());
 
             Assert.Equal(testBoard[2, 0],
-                new Bishop("a6", Player.Black)
+                new Pawn("a6", Player.Black)
                 {
                     CurrentPosition = (2, 0),
                     PieceType = PieceType.Pawn,
@@ -132,7 +132,11 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ gxf6" });
+            testBoard.Moves(new string[] 
+            { "Nc3 f5", 
+              "e4 fxe4", 
+              "Nxe4 Nf6", 
+              "Nxf6+ gxf6" });
 
             Assert.Equal(new Pawn("f6", Player.Black)
             {
