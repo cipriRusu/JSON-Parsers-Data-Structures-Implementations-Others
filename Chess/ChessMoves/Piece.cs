@@ -60,7 +60,6 @@ namespace ChessMoves
             board[lastElement.Item1, lastElement.Item2].PlayerColour == Opponent(PlayerColour);
 
         private bool IsLast((int, int) actualLast, (int, int) expectedLast) => actualLast == expectedLast;
-
         internal virtual bool IsChecked(Player player, ChessBoard chessBoard) => false;
         internal virtual bool IsCheckMated(Player player, ChessBoard chessBoard) => false;
 

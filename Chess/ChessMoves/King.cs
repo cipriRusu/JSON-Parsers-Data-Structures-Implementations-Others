@@ -79,7 +79,58 @@ namespace ChessMoves
             var knight = new Knight(CurrentPosition, PlayerColour).GetLegalMoves()
                 .Where(x => chessBoard.IsPiece(x.Single(), PieceType.Knight, opponent));
 
-            return diags.Any() || rowsAndColumns.Any() || knight.Any();
+            return diags.Any() || rowsAndColumns.Any() || knight.Any() || PawnCheck(chessBoard);
+        }
+
+        private bool PawnCheck(ChessBoard chessBoard)
+        {
+            if (PlayerColour == Player.White)
+            {
+                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1))
+                {
+                    if (chessBoard
+                        .IsPiece((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1),
+                        PieceType.Pawn,
+                        Piece.Opponent(base.PlayerColour)))
+                    {
+                        return true;
+                    }
+                }
+                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1))
+                {
+                    if (chessBoard.IsPiece((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1),
+                        PieceType.Pawn,
+                        Piece.Opponent(base.PlayerColour)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (PlayerColour == Player.Black)
+            {
+                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
+                {
+                    if (chessBoard.IsPiece((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1),
+                        PieceType.Pawn,
+                        Piece.Opponent(base.PlayerColour)))
+                    {
+                        return true;
+                    }
+                }
+
+                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1))
+                {
+                    if (chessBoard.IsPiece((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1),
+                        PieceType.Pawn,
+                        Piece.Opponent(base.PlayerColour)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         internal override bool IsCheckMated(Player player, ChessBoard chessBoard)
