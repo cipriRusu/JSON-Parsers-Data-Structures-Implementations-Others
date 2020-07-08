@@ -80,6 +80,36 @@ namespace ChessMoves
             }
         }
 
+        protected IEnumerable<IEnumerable<(int, int)>> PawnCapture()
+        {
+            var captures = new List<IEnumerable<(int, int)>>();
+
+            if (PlayerColour == Player.White)
+            {
+                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1), 1));
+                }
+                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1), 1));
+                }
+            }
+            else if (PlayerColour == Player.Black)
+            {
+                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1), 1));
+                }
+                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1))
+                {
+                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1), 1));
+                }
+            }
+
+            return captures;
+        }
+
         protected override IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
         {
             if (move.UserMoveType == UserMoveType.Move)
