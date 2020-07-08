@@ -45,26 +45,22 @@ namespace ChessMoves
         {
             if (move.UserMoveType == UserMoveType.Move)
             {
-                return
-                    GetLegalMoves()
-                    .Where(
-                        x => x.First() == CurrentPosition &&
-                             x.Last() == move.MoveIndex);
+                return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex));
             }
 
-            if (move.UserMoveType == UserMoveType.Capture)
+            else if (move.UserMoveType == UserMoveType.Capture)
             {
-                return
-                    GetLegalMoves()
-                    .Where(x =>
-                        x.First() == CurrentPosition &&
-                        x.Last() == move.MoveIndex &&
-                        board[x.Last().Item1, x.Last().Item2].PlayerColour ==
-                        Opponent(PlayerColour));
+                return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex) && 
+                IsOpponentColour(board, x.Last()));
             }
 
             return null;
         }
+
+        private bool IsOpponentColour(ChessBoard board, (int, int) lastElement) => 
+            board[lastElement.Item1, lastElement.Item2].PlayerColour == Opponent(PlayerColour);
+
+        private bool IsLast((int, int) actualLast, (int, int) expectedLast) => actualLast == expectedLast;
 
         internal bool IsCheckMated(Player player, ChessBoard chessBoard)
         {
