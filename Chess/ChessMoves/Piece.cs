@@ -41,13 +41,25 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
+        public static Player Opponent(Player player)
+        {
+            switch (player)
+            {
+                case Player.White:
+                    return Player.Black;
+                case Player.Black:
+                    return Player.White;
+                default:
+                    throw new ArgumentException("Invalid player");
+            }
+        }
+
         protected virtual IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
         {
             switch (move.UserMoveType)
             {
                 case UserMoveType.Move:
                     return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex));
-
                 case UserMoveType.Capture:
                     return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex) &&
                     IsOpponentColour(board, x.Last()));
@@ -63,19 +75,6 @@ namespace ChessMoves
         internal virtual bool IsChecked(Player player, ChessBoard chessBoard) => false;
         internal virtual bool IsCheckMated(Player player, ChessBoard chessBoard) => false;
 
-        public static Player Opponent(Player player)
-        {
-            switch (player)
-            {
-                case Player.White:
-                    return Player.Black;
-                case Player.Black:
-                    return Player.White;
-                default:
-                    throw new ArgumentException("Invalid player");
-            }
-        }
-
         protected IEnumerable<IEnumerable<(int, int)>> RowsAndColumns()
         {
             var firstColumn = new List<(int, int)>();
@@ -88,12 +87,12 @@ namespace ChessMoves
                 firstColumn.Add((i, CurrentPosition.Item2));
             }
 
-            for (int i = CurrentPosition.Item2; i <= 7; i++)
+            for (int i = CurrentPosition.Item2; i <= BOARDSIZE - 1; i++)
             {
                 firstRow.Add((CurrentPosition.Item1, i));
             }
 
-            for (int i = CurrentPosition.Item1; i <= 7; i++)
+            for (int i = CurrentPosition.Item1; i <= BOARDSIZE - 1; i++)
             {
                 secondColumn.Add((i, CurrentPosition.Item2));
             }
