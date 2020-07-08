@@ -61,37 +61,8 @@ namespace ChessMoves
 
         private bool IsLast((int, int) actualLast, (int, int) expectedLast) => actualLast == expectedLast;
 
-        internal bool IsCheckMated(Player player, ChessBoard chessBoard)
-        {
-            var moves = GetLegalMoves().Where(x => chessBoard.IsPathClear(x));
-
-            foreach (var move in moves)
-            {
-                var current = chessBoard.DeepClone();
-
-                current.PerformMove(CurrentPosition, move.Single());
-
-                if (!current.IsChecked(player))
-                {
-                    return false;
-                }
-            }
-
-            return moves.Count() > 0;
-        }
-
-        internal bool IsChecked(Player player, ChessBoard chessBoard)
-        {
-            switch (player)
-            {
-                case Player.Black:
-                    return CheckValidator(Player.White, chessBoard);
-                case Player.White:
-                    return CheckValidator(Player.Black, chessBoard);
-                default:
-                    return false;
-            }
-        }
+        internal virtual bool IsChecked(Player player, ChessBoard chessBoard) => false;
+        internal virtual bool IsCheckMated(Player player, ChessBoard chessBoard) => false;
 
         public static Player Opponent(Player player)
         {
@@ -105,8 +76,6 @@ namespace ChessMoves
                     throw new ArgumentException("Invalid player");
             }
         }
-
-        protected virtual bool CheckValidator(Player opponent, ChessBoard chessBoard) { return false; }
 
         protected IEnumerable<IEnumerable<(int, int)>> RowsAndColumns()
         {

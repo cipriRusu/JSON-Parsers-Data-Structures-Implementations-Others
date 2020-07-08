@@ -62,7 +62,7 @@ namespace ChessMoves
             return legalMoves;
         }
 
-        protected override bool CheckValidator(Player opponent, ChessBoard chessBoard)
+        private bool CheckValidator(Player opponent, ChessBoard chessBoard)
         {
             var diags = Diagonals()
                 .Where(x =>
@@ -80,6 +80,38 @@ namespace ChessMoves
                 .Where(x => chessBoard.IsPiece(x.Single(), PieceType.Knight, opponent));
 
             return diags.Any() || rowsAndColumns.Any() || knight.Any();
+        }
+
+        internal override bool IsCheckMated(Player player, ChessBoard chessBoard)
+        {
+            var moves = GetLegalMoves().Where(x => chessBoard.IsPathClear(x));
+
+            foreach (var move in moves)
+            {
+                var current = chessBoard.DeepClone();
+
+                current.PerformMove(CurrentPosition, move.Single());
+
+                if (!current.IsChecked(player))
+                {
+                    return false;
+                }
+            }
+
+            return moves.Count() > 0;
+        }
+
+        internal override bool IsChecked(Player player, ChessBoard chessBoard)
+        {
+            switch (player)
+            {
+                case Player.Black:
+                    return CheckValidator(Player.White, chessBoard);
+                case Player.White:
+                    return CheckValidator(Player.Black, chessBoard);
+                default:
+                    return false;
+            }
         }
     }
 }
