@@ -18,7 +18,7 @@ namespace ChessMoves
 
         internal void Moves(string[] userMoves)
         {
-            foreach (var move in new AllMoves(userMoves).Moves)
+            foreach (var move in ConvertMoves(userMoves))
             {
                 Move(move);
             }
@@ -51,33 +51,44 @@ namespace ChessMoves
                 {
                     if (IsChecked(TurnToMove))
                     {
-                        var currentTurn = TurnToMove;
-
-                        board[i, j].Move(move, this);
-
-                        if (IsChecked(currentTurn))
-                        {
-                            throw new ArgumentException($" Move to {move.MoveIndex} illegal due to Check state ");
-                        }
-                        else
-                        {
-                            IsCheck = false;
-                        }
+                        CheckedMove(move, i, j);
                     }
                     else
                     {
-                        board[i, j].Move(move, this);
-
-                        if (IsChecked(TurnToMove))
-                        {
-                            IsCheck = true;
-                        }
-                        if (IsCheckMated(TurnToMove))
-                        {
-                            IsCheckMate = true;
-                        }
+                        UnCheckedMove(move, i, j);
                     }
                 }
+            }
+        }
+
+        private void UnCheckedMove(UserMove move, int i, int j)
+        {
+            board[i, j].Move(move, this);
+
+            if (IsChecked(TurnToMove))
+            {
+                IsCheck = true;
+            }
+            if (IsCheckMated(TurnToMove))
+            {
+                IsCheckMate = true;
+            }
+        }
+
+        private void CheckedMove(UserMove move, int i, int j)
+        {
+            var currentTurn = TurnToMove;
+
+            board[i, j].Move(move, this);
+
+            if (IsChecked(currentTurn))
+            {
+                throw new ArgumentException($" Move to {move.MoveIndex} illegal " +
+                    $"due to Check state of {move.PlayerColor} King");
+            }
+            else
+            {
+                IsCheck = false;
             }
         }
 
@@ -163,6 +174,29 @@ namespace ChessMoves
                     TurnToMove = Player.White;
                     break;
             }
+        }
+
+        private List<UserMove> ConvertMoves(string[] input)
+        {
+            var output = new List<UserMove>();
+
+            foreach (var move in input.Select(x => x.Split(' ')))
+            {
+                switch (move.Count())
+                {
+                    case 1:
+                        output.Add(new UserMove(move.First()) { PlayerColor = Player.White });
+                        break;
+                    case 2:
+                        output.Add(new UserMove(move.First()) { PlayerColor = Player.White });
+                        output.Add(new UserMove(move.Last()) { PlayerColor = Player.Black });
+                        break;
+                    default:
+                        throw new ArgumentException("Input not properly formated");
+                }
+            }
+
+            return output;
         }
 
         private void InitializeBoard()
