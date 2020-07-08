@@ -43,21 +43,20 @@ namespace ChessMoves
 
         protected virtual IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
         {
-            if (move.UserMoveType == UserMoveType.Move)
+            switch (move.UserMoveType)
             {
-                return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex));
-            }
+                case UserMoveType.Move:
+                    return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex));
 
-            else if (move.UserMoveType == UserMoveType.Capture)
-            {
-                return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex) && 
-                IsOpponentColour(board, x.Last()));
+                case UserMoveType.Capture:
+                    return GetLegalMoves().Where(x => IsLast(x.Last(), move.MoveIndex) &&
+                    IsOpponentColour(board, x.Last()));
+                default:
+                    throw new ArgumentException("Invalid move type or not yet handled");
             }
-
-            return null;
         }
 
-        private bool IsOpponentColour(ChessBoard board, (int, int) lastElement) => 
+        private bool IsOpponentColour(ChessBoard board, (int, int) lastElement) =>
             board[lastElement.Item1, lastElement.Item2].PlayerColour == Opponent(PlayerColour);
 
         private bool IsLast((int, int) actualLast, (int, int) expectedLast) => actualLast == expectedLast;
@@ -107,25 +106,7 @@ namespace ChessMoves
             }
         }
 
-        private bool CheckValidator(Player opponent, ChessBoard chessBoard)
-        {
-            var diags = Diagonals()
-                .Where(x =>
-                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
-                (chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent) ||
-                chessBoard.IsPiece(x.Last(), PieceType.Bishop, opponent)));
-
-            var rowsAndColumns = RowsAndColumns()
-                .Where(x =>
-                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
-                (chessBoard.IsPiece(x.Last(), PieceType.Rock, opponent) ||
-                chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent)));
-
-            var knight = new Knight(CurrentPosition, PlayerColour).GetLegalMoves()
-                .Where(x => chessBoard.IsPiece(x.Single(), PieceType.Knight, opponent));
-
-            return diags.Any() || rowsAndColumns.Any() || knight.Any();
-        }
+        protected virtual bool CheckValidator(Player opponent, ChessBoard chessBoard) { return false; }
 
         protected IEnumerable<IEnumerable<(int, int)>> RowsAndColumns()
         {
@@ -199,36 +180,6 @@ namespace ChessMoves
             var fourthSubArrays = fourthDiag.Select((x, y) => fourthDiag.Take(y + 1)).Skip(1);
 
             return firstSubArrays.Concat(secondSubArrays).Concat(thirdSubArrays).Concat(fourthSubArrays);
-        }
-
-        protected IEnumerable<IEnumerable<(int, int)>> PawnCapture()
-        {
-            var captures = new List<IEnumerable<(int, int)>>();
-
-            if (PlayerColour == Player.White)
-            {
-                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1), 1));
-                }
-                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1), 1));
-                }
-            }
-            else if (PlayerColour == Player.Black)
-            {
-                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1), 1));
-                }
-                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1))
-                {
-                    captures.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1), 1));
-                }
-            }
-
-            return captures;
         }
 
         internal virtual void Move(UserMove move, ChessBoard chessBoard)
