@@ -61,5 +61,25 @@ namespace ChessMoves
 
             return legalMoves;
         }
+
+        protected override bool CheckValidator(Player opponent, ChessBoard chessBoard)
+        {
+            var diags = Diagonals()
+                .Where(x =>
+                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
+                (chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent) ||
+                chessBoard.IsPiece(x.Last(), PieceType.Bishop, opponent)));
+
+            var rowsAndColumns = RowsAndColumns()
+                .Where(x =>
+                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
+                (chessBoard.IsPiece(x.Last(), PieceType.Rock, opponent) ||
+                chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent)));
+
+            var knight = new Knight(CurrentPosition, PlayerColour).GetLegalMoves()
+                .Where(x => chessBoard.IsPiece(x.Single(), PieceType.Knight, opponent));
+
+            return diags.Any() || rowsAndColumns.Any() || knight.Any();
+        }
     }
 }
