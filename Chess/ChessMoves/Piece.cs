@@ -41,43 +41,22 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
-        protected IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
+        protected virtual IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
         {
             if (move.UserMoveType == UserMoveType.Move)
             {
-                if (move.PieceType == PieceType.Knight)
-                {
-                    return 
-                        GetLegalMoves()
-                        .Where(
-                            x => x.Single() == move.MoveIndex);
-                }
-                else
-                {
-                    return
-                        GetLegalMoves()
-                        .Where(
-                            x => x.First() == CurrentPosition &&
-                                 x.Last() == move.MoveIndex);
-                }
+                return
+                    GetLegalMoves()
+                    .Where(
+                        x => x.First() == CurrentPosition &&
+                             x.Last() == move.MoveIndex);
             }
 
             if (move.UserMoveType == UserMoveType.Capture)
             {
-                if (move.PieceType == PieceType.Knight)
-                {
-                    return
-                        GetLegalMoves()
-                        .Where(
-                            x => x.Single() == move.MoveIndex &&
-                            board[x.Single().Item1, x.Single().Item2].PlayerColour ==
-                            Opponent(PlayerColour));
-
-
-                }
                 if (move.PieceType == PieceType.Pawn)
                 {
-                    return 
+                    return
                         PawnCapture()
                         .Where(
                             x => x.Single() == move.MoveIndex &&
@@ -103,13 +82,13 @@ namespace ChessMoves
         {
             var moves = GetLegalMoves().Where(x => chessBoard.IsPathClear(x));
 
-            foreach(var move in moves)
+            foreach (var move in moves)
             {
                 var current = chessBoard.DeepClone();
 
                 current.PerformMove(CurrentPosition, move.Single());
 
-                if(!current.IsChecked(player))
+                if (!current.IsChecked(player))
                 {
                     return false;
                 }

@@ -70,5 +70,30 @@ namespace ChessMoves
                     .PerformMove(CurrentPosition, validPath.Last());
             }
         }
+
+        protected override IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
+        {
+            if (move.UserMoveType == UserMoveType.Move)
+            {
+                return
+                    GetLegalMoves()
+                    .Where(
+                        x => x.Single() == move.MoveIndex);
+            }
+
+            if (move.UserMoveType == UserMoveType.Capture)
+            {
+                return
+                    GetLegalMoves()
+                    .Where(
+                        x => x.Single() == move.MoveIndex &&
+                        board[x.Single().Item1, x.Single().Item2].PlayerColour ==
+                        Opponent(PlayerColour));
+
+
+            }
+
+            return null;
+        }
     }
 }
