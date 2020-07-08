@@ -89,8 +89,6 @@ namespace ChessMoves
                         x => x.Single() == move.MoveIndex &&
                         board[x.Single().Item1, x.Single().Item2].PlayerColour ==
                         Opponent(PlayerColour));
-
-
             }
 
             return null;

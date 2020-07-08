@@ -54,25 +54,13 @@ namespace ChessMoves
 
             if (move.UserMoveType == UserMoveType.Capture)
             {
-                if (move.PieceType == PieceType.Pawn)
-                {
-                    return
-                        PawnCapture()
-                        .Where(
-                            x => x.Single() == move.MoveIndex &&
-                            board[x.Single().Item1, x.Single().Item2].PlayerColour ==
-                            Opponent(PlayerColour));
-                }
-                else
-                {
-                    return
-                        GetLegalMoves()
-                        .Where(x =>
-                            x.First() == CurrentPosition &&
-                            x.Last() == move.MoveIndex &&
-                            board[x.Last().Item1, x.Last().Item2].PlayerColour ==
-                            Opponent(PlayerColour));
-                }
+                return
+                    GetLegalMoves()
+                    .Where(x =>
+                        x.First() == CurrentPosition &&
+                        x.Last() == move.MoveIndex &&
+                        board[x.Last().Item1, x.Last().Item2].PlayerColour ==
+                        Opponent(PlayerColour));
             }
 
             return null;
