@@ -1,121 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ChessMoves
 {
     [Serializable]
     public class ChessBoard
     {
-        private const int CHESSBOARD_SIZE = 8;
-        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
-
-        public Piece this[int i, int j] => board[i, j];
-
-        internal void Moves(string[] userMoves)
-        {
-            foreach (var move in ConvertMoves(userMoves))
-            {
-                Move(move);
-            }
-
-            DisplayBoard();
-        }
-
         public ChessBoard() => InitializeBoard();
+        
+        public readonly static int CHESSBOARD_SIZE = 8;
+
+        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
 
+        public Piece this[int i, int j] => board[i, j];
+
+        internal void Moves(IEnumerable<string> userMoves)
+        {
+            foreach (var move in ConvertMoves(userMoves))
+            {
+                Move(move);
+            }
+        }
+
         private void Move(UserMove move)
         {
-            foreach (var i in Enumerable.Range(0, board.GetLength(0)))
-                foreach (var j in Enumerable.Range(0, board.GetLength(1)))
-                    AllConstraints(move, i, j);
+            var selectedPiece = new PieceSelector(move, this).GetValidPiece();
+            PieceNotFoundException(selectedPiece);
+            PerformMove(selectedPiece.CurrentPosition, move.MoveIndex);
         }
 
-        private void AllConstraints(UserMove move, int i, int j)
+        private static void PieceNotFoundException(Piece selectedPiece)
         {
-            if (PieceConstraint(move, i, j) &&
-                (RankConstraint(move, i, j) ||
-                FileConstraint(move, i, j) ||
-                FileAndRankConstraint(move, i, j) ||
-                NoConstraint(move)))
+            if (selectedPiece == null)
             {
-                if (TurnToMove == move.PlayerColor)
-                {
-                    if (IsChecked(TurnToMove))
-                    {
-                        CheckedMove(move, i, j);
-                    }
-                    else
-                    {
-                        UnCheckedMove(move, i, j);
-                    }
-                }
+                throw new ArgumentException("No valid piece was found that could perform the requested move");
             }
-        }
-
-        private void UnCheckedMove(UserMove move, int i, int j)
-        {
-            board[i, j].Move(move, this);
-
-            if (IsChecked(TurnToMove))
-            {
-                IsCheck = true;
-            }
-            if (IsCheckMated(TurnToMove))
-            {
-                IsCheckMate = true;
-            }
-        }
-
-        private void CheckedMove(UserMove move, int i, int j)
-        {
-            var currentTurn = TurnToMove;
-
-            board[i, j].Move(move, this);
-
-            if (IsChecked(currentTurn))
-            {
-                throw new ArgumentException($" Move to {move.MoveIndex} illegal " +
-                    $"due to Check state of {move.PlayerColor} King");
-            }
-            else
-            {
-                IsCheck = false;
-            }
-        }
-
-        private bool IsCheckMated(Player player)
-        {
-            foreach (var i in Enumerable.Range(0, board.GetLength(0)))
-                foreach (var j in Enumerable.Range(0, board.GetLength(1)))
-
-                    if (FindKing(player, i, j))
-                    {
-                        return board[i, j].IsCheckMated(player, this);
-                    }
-
-            return false;
-        }
-
-        internal bool IsChecked(Player player)
-        {
-            foreach (var i in Enumerable.Range(0, board.GetLength(0)))
-                foreach (var j in Enumerable.Range(0, board.GetLength(1)))
-
-                    if (FindKing(player, i, j))
-                    {
-                        return board[i, j].IsChecked(player, this);
-                    }
-
-            return false;
         }
 
         internal bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
@@ -127,7 +51,7 @@ namespace ChessMoves
                 board[currentPosition.Item1, currentPosition.Item2].PlayerColour == player;
         }
 
-        public void PerformMove((int, int) source, (int, int) destination)
+        private void PerformMove((int, int) source, (int, int) destination)
         {
             board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
             board[destination.Item1, destination.Item2].Update(destination);
@@ -136,32 +60,8 @@ namespace ChessMoves
             SwitchTurn();
         }
 
-        private bool FindKing(Player player, int i, int j) =>
-            board[i, j] != null && board[i, j].PlayerColour == player &&
-            board[i, j].PieceType == PieceType.King;
-
         public bool IsPathClear(IEnumerable<(int, int)> input) =>
             input.All(x => board[x.Item1, x.Item2] == null);
-
-        private static bool NoConstraint(UserMove move) =>
-            move.SourceFile == '\0' && move.SourceRank == '\0';
-
-        private bool FileConstraint(UserMove move, int i, int j) =>
-            move.SourceFile != '\0' && move.SourceRank == '\0' && move.SourceFile == board[i, j].File;
-
-        private bool RankConstraint(UserMove move, int i, int j) =>
-            move.SourceRank != '\0' && move.SourceFile == '\0' && move.SourceRank == board[i, j].Rank;
-
-        private bool FileAndRankConstraint(UserMove move, int i, int j) =>
-            move.SourceRank != '\0' &&
-            move.SourceFile != '\0' &&
-            move.SourceRank == board[i, j].Rank &&
-            move.SourceFile == board[i, j].File;
-
-        private bool PieceConstraint(UserMove move, int i, int j) =>
-                board[i, j] != null &&
-                board[i, j].PlayerColour == move.PlayerColor &&
-                board[i, j].PieceType == move.PieceType;
 
         private void SwitchTurn()
         {
@@ -176,7 +76,7 @@ namespace ChessMoves
             }
         }
 
-        private List<UserMove> ConvertMoves(string[] input)
+        private IEnumerable<UserMove> ConvertMoves(IEnumerable<string> input)
         {
             var output = new List<UserMove>();
 
@@ -245,108 +145,6 @@ namespace ChessMoves
             board[6, 5] = new Pawn("f2", Player.White);
             board[6, 6] = new Pawn("g2", Player.White);
             board[6, 7] = new Pawn("h2", Player.White);
-        }
-
-        private void DisplayBoard()
-        {
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                for (int j = 0; j < board.GetLength(1); j++)
-                {
-                    if (board[i, j] != null)
-                    {
-                        switch (board[i, j])
-                        {
-                            case Rock _:
-                                if (board[i, j].PlayerColour == Player.White)
-                                {
-                                    Debug.Write(" RkW ");
-                                }
-                                else
-                                {
-                                    Debug.Write(" RkB ");
-                                }
-                                break;
-                            case Knight _:
-                                if (board[i, j].PlayerColour == Player.White)
-                                {
-                                    Debug.Write(" KnW ");
-                                }
-                                else
-                                {
-                                    Debug.Write(" KnB ");
-                                }
-                                break;
-                            case Bishop _:
-                                if (board[i, j].PlayerColour == Player.White)
-                                {
-                                    Debug.Write(" BiW ");
-                                }
-                                else
-                                {
-                                    Debug.Write(" BiB ");
-                                }
-                                break;
-                            case King _:
-                                if (board[i, j].PlayerColour == Player.White)
-                                {
-                                    Debug.Write(" KgW ");
-                                }
-                                else
-                                {
-                                    Debug.Write(" KgB ");
-                                }
-                                break;
-                            case Queen _:
-                                if (board[i, j].PlayerColour == Player.White)
-                                {
-                                    Debug.Write(" QuW ");
-                                }
-                                else
-                                {
-                                    Debug.Write(" QuB ");
-                                }
-                                break;
-                            case Pawn _:
-                                if (board[i, j].PlayerColour == Player.White)
-                                {
-                                    Debug.Write(" PwW ");
-                                }
-                                else
-                                {
-                                    Debug.Write(" PwB ");
-                                }
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        if (i % 2 != 0 && j % 2 != 0 || (i % 2 == 0 && j % 2 == 0))
-                        {
-                            Debug.Write(" [ ] ");
-                        }
-                        else
-                        {
-                            Debug.Write(" | | ");
-                        }
-                    }
-                }
-
-                Debug.Write('\n');
-            }
-            
-            if(IsCheckMate == true)
-            {
-                Debug.WriteLine($"{TurnToMove} King in CheckMate");
-            }
-            else if (IsCheck == true)
-            {
-                Debug.WriteLine($"{TurnToMove} King in Check");
-            }
-            else
-            {
-                Debug.WriteLine($"Turn to move : {TurnToMove}");
-            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using Xunit;
 
 namespace ChessMoves
@@ -190,23 +189,6 @@ namespace ChessMoves
             board.Moves(new string[] { "Nc3 f5", "e4" });
 
             Assert.Equal(Player.Black, board.TurnToMove);
-        }
-
-        [Fact]
-        public void PerformMoveSwitchesPiecePosition()
-        {
-            var board = new ChessBoard();
-            board.PerformMove((1, 0), (2, 0));
-
-            Assert.Equal(new Pawn((2, 0), Player.Black), board[2, 0], new PieceComparer());
-        }
-
-        [Fact]
-        public void IsCheckedReturnsFalseForUncheckedKingAtGameStart()
-        {
-            var board = new ChessBoard();
-
-            Assert.False(board.IsChecked(Player.White));
         }
 
         [Fact]
