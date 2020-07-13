@@ -7,11 +7,11 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard
     {
+        private readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+
         public ChessBoard() => InitializeBoard();
         
         public readonly static int CHESSBOARD_SIZE = 8;
-
-        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; private set; }
@@ -21,7 +21,7 @@ namespace ChessMoves
 
         internal void Moves(IEnumerable<string> userMoves)
         {
-            foreach (var move in ConvertMoves(userMoves))
+            foreach (var move in ConvertToUserMoves(userMoves))
             {
                 Move(move);
             }
@@ -29,17 +29,9 @@ namespace ChessMoves
 
         private void Move(UserMove move)
         {
-            var selectedPiece = new PieceSelector(move, this).GetValidPiece();
-            PieceNotFoundException(selectedPiece);
-            PerformMove(selectedPiece.CurrentPosition, move.MoveIndex);
-        }
-
-        private static void PieceNotFoundException(Piece selectedPiece)
-        {
-            if (selectedPiece == null)
-            {
-                throw new ArgumentException("No valid piece was found that could perform the requested move");
-            }
+            var handledPiece = new MoveHandler(move, this).GetHandledPiece();
+            PieceNotFoundException(handledPiece);
+            PerformMove(handledPiece.CurrentPosition, move.MoveIndex);
         }
 
         internal bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
@@ -51,6 +43,17 @@ namespace ChessMoves
                 board[currentPosition.Item1, currentPosition.Item2].PlayerColour == player;
         }
 
+        public bool IsPathClear(IEnumerable<(int, int)> input) =>
+            input.All(x => board[x.Item1, x.Item2] == null);
+
+        private void PieceNotFoundException(Piece selectedPiece)
+        {
+            if (selectedPiece == null)
+            {
+                throw new ArgumentException("No valid piece was found that could perform the requested move");
+            }
+        }
+
         private void PerformMove((int, int) source, (int, int) destination)
         {
             board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
@@ -60,23 +63,7 @@ namespace ChessMoves
             SwitchTurn();
         }
 
-        public bool IsPathClear(IEnumerable<(int, int)> input) =>
-            input.All(x => board[x.Item1, x.Item2] == null);
-
-        private void SwitchTurn()
-        {
-            switch (TurnToMove)
-            {
-                case Player.White:
-                    TurnToMove = Player.Black;
-                    break;
-                case Player.Black:
-                    TurnToMove = Player.White;
-                    break;
-            }
-        }
-
-        private IEnumerable<UserMove> ConvertMoves(IEnumerable<string> input)
+        private IEnumerable<UserMove> ConvertToUserMoves(IEnumerable<string> input)
         {
             var output = new List<UserMove>();
 
@@ -97,6 +84,19 @@ namespace ChessMoves
             }
 
             return output;
+        }
+
+        private void SwitchTurn()
+        {
+            switch (TurnToMove)
+            {
+                case Player.White:
+                    TurnToMove = Player.Black;
+                    break;
+                case Player.Black:
+                    TurnToMove = Player.White;
+                    break;
+            }
         }
 
         private void InitializeBoard()
