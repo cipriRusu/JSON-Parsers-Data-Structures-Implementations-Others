@@ -22,61 +22,36 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
+        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.King });
+
+        internal override bool IsChecked(ChessBoard chessBoard, Player player)
         {
-            var legalMoves = new List<IEnumerable<(int, int)>>();
-
-            if (CheckIndexes(base.CurrentPosition.Item1, base.CurrentPosition.Item2 + 1))
+            switch (player)
             {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1, CurrentPosition.Item2 + 1), 1));
+                case Player.Black:
+                    return CheckValidator(Player.White, chessBoard);
+                case Player.White:
+                    return CheckValidator(Player.Black, chessBoard);
+                default:
+                    return false;
             }
-            if (CheckIndexes(base.CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((base.CurrentPosition.Item1 - 1, base.CurrentPosition.Item2 + 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 - 1, CurrentPosition.Item2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 1, CurrentPosition.Item2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2), 1));
-            }
-            if (CheckIndexes(base.CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1), 1));
-            }
-
-            return legalMoves;
         }
 
         private bool CheckValidator(Player opponent, ChessBoard chessBoard)
         {
-            var diags = Diagonals()
+            var diags = new Path(CurrentPosition, new PathType[] { PathType.Diagonals })
                 .Where(x =>
                 chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
                 (chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent) ||
                 chessBoard.IsPiece(x.Last(), PieceType.Bishop, opponent)));
 
-            var rowsAndColumns = RowsAndColumns()
+            var rowsAndColumns = new Path(CurrentPosition, new PathType[] { PathType.RowsAndColumns })
                 .Where(x =>
                 chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
                 (chessBoard.IsPiece(x.Last(), PieceType.Rock, opponent) ||
                 chessBoard.IsPiece(x.Last(), PieceType.Queen, opponent)));
 
-            var knight = new Knight(CurrentPosition, PlayerColour).GetLegalMoves()
+            var knight = new Path(CurrentPosition, new PathType[] { PathType.Knight })
                 .Where(x => chessBoard.IsPiece(x.Single(), PieceType.Knight, opponent));
 
             return diags.Any() || rowsAndColumns.Any() || knight.Any() || PawnCheck(chessBoard);
@@ -111,7 +86,7 @@ namespace ChessMoves
             {
                 if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1))
                 {
-                    if (chessBoard.IsPiece((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 1),
+                    if (chessBoard.IsPiece((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 1),
                         PieceType.Pawn,
                         Piece.Opponent(base.PlayerColour)))
                     {
@@ -131,38 +106,6 @@ namespace ChessMoves
             }
 
             return false;
-        }
-
-        internal override bool IsCheckMated(Player player, ChessBoard chessBoard)
-        {
-            var moves = GetLegalMoves().Where(x => chessBoard.IsPathClear(x));
-
-            foreach (var move in moves)
-            {
-                var current = chessBoard.DeepClone();
-
-                current.PerformMove(CurrentPosition, move.Single());
-
-                if (!current.IsChecked(player))
-                {
-                    return false;
-                }
-            }
-
-            return moves.Count() > 0;
-        }
-
-        internal override bool IsChecked(Player player, ChessBoard chessBoard)
-        {
-            switch (player)
-            {
-                case Player.Black:
-                    return CheckValidator(Player.White, chessBoard);
-                case Player.White:
-                    return CheckValidator(Player.Black, chessBoard);
-                default:
-                    return false;
-            }
         }
     }
 }

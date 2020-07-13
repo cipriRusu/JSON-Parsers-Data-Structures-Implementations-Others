@@ -22,6 +22,6 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves() => Diagonals();
+        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.Diagonals });
     }
 }

@@ -20,55 +20,13 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
+        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
+
+        internal override bool IsMoveValid(ChessBoard board, UserMove move)
         {
-            var legalMoves = new List<IEnumerable<(int, int)>>();
+            var currentPath = ValidatePath(board, move).SelectMany(x => x);
 
-            if (CheckIndexes(CurrentPosition.Item1 - 2, CurrentPosition.Item2 + 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 2, CurrentPosition.Item2 + 1), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 + 2), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 - 2, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 2, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 - 1, CurrentPosition.Item2 - 2), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 + 2, CurrentPosition.Item2 + 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 2, CurrentPosition.Item2 + 1), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 + 2), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 + 2, CurrentPosition.Item2 - 1))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 2, CurrentPosition.Item2 - 1), 1));
-            }
-            if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 2))
-            {
-                legalMoves.Add(Enumerable.Repeat((CurrentPosition.Item1 + 1, CurrentPosition.Item2 - 2), 1));
-            }
-
-            return legalMoves;
-        }
-
-        internal override void Move(UserMove move, ChessBoard chessBoard)
-        {
-            var validPath = ValidatePath(chessBoard, move).SelectMany(x => x);
-
-            if(validPath.Any())
-            {
-                chessBoard
-                    .PerformMove(CurrentPosition, validPath.Last());
-            }
+            return currentPath.Any();
         }
 
         protected override IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)

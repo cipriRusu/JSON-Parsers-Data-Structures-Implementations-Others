@@ -21,63 +21,13 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override IEnumerable<IEnumerable<(int, int)>> GetLegalMoves()
+        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.Pawn }, PlayerColour);
+
+        internal override bool IsMoveValid(ChessBoard board, UserMove move)
         {
-            const int BLACKSTARTPOSITION = 1;
-            const int WHITESTARTPOSITION = 6;
+            var path = ValidatePath(board, move).SelectMany(x => x);
 
-            var paths = new List<(int, int)>();
-
-            if (PlayerColour == Player.Black)
-            {
-                if (CheckIndexes(CurrentPosition.Item1 + 1, CurrentPosition.Item2))
-                {
-                    for (int i = CurrentPosition.Item1; i <= CurrentPosition.Item1 + 1; i++)
-                    {
-                        paths.Add((i, CurrentPosition.Item2));
-                    }
-
-                    if (CurrentPosition.Item1 == BLACKSTARTPOSITION)
-                    {
-                        paths.Add((paths.Last().Item1 + 1, paths.Last().Item2));
-                    }
-                }
-            }
-            else if (PlayerColour == Player.White)
-            {
-                if (CheckIndexes(CurrentPosition.Item1 - 1, CurrentPosition.Item2))
-                {
-                    for (int i = CurrentPosition.Item1; i >= CurrentPosition.Item1 - 1; i--)
-                    {
-                        paths.Add((i, CurrentPosition.Item2));
-                    }
-
-                    if (CurrentPosition.Item1 == WHITESTARTPOSITION)
-                    {
-                        paths.Add((paths.Last().Item1 - 1, paths.Last().Item2));
-                    }
-                }
-            }
-
-            return paths.Select((x, y) => paths.Take(y + 1)).Skip(1);
-        }
-
-        internal override void Move(UserMove move, ChessBoard chessBoard)
-        {
-            var validPath = ValidatePath(chessBoard, move).SelectMany(x => x);
-
-            if (UserMoveType.Move == move.UserMoveType && 
-                validPath.Any() && 
-                chessBoard.IsPathClear(validPath.Skip(1)))
-            {
-                chessBoard
-                    .PerformMove(validPath.First(), validPath.Last());
-            }
-
-            if(UserMoveType.Capture == move.UserMoveType && validPath.Any())
-            {
-                chessBoard.PerformMove(CurrentPosition, validPath.Single());
-            }
+            return path.Any() && board.IsPathClear(path.Skip(1));
         }
 
         protected IEnumerable<IEnumerable<(int, int)>> PawnCapture()
