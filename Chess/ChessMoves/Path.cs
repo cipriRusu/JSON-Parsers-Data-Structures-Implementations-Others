@@ -11,12 +11,13 @@ namespace ChessMoves
         public Path((int, int) startIndex, IEnumerable<PathType> paths, Player player = Player.White)
         {
             this.StartIndex = startIndex;
-            this.paths = paths;
+            this.Paths = paths;
             this.PlayerColour = player;
         }
         public (int, int) StartIndex { get; private set; }
         public Player PlayerColour { get; set; }
-        public IEnumerable<PathType> paths { get; private set; }
+
+        private readonly IEnumerable<PathType> Paths;
 
         private bool CheckIndexes(int x, int y) => (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
 
@@ -217,16 +218,17 @@ namespace ChessMoves
 
         public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
-            foreach(var path in paths)
+            foreach (var path in Paths)
             {
                 switch (path)
                 {
                     case PathType.RowsAndColumns:
 
-                        foreach(var currentPath in RownColumnPaths())
+                        foreach (var currentPath in RownColumnPaths())
                         {
                             yield return currentPath;
                         }
+
                         break;
 
                     case PathType.Diagonals:
@@ -235,6 +237,7 @@ namespace ChessMoves
                         {
                             yield return currentPath;
                         }
+
                         break;
 
                     case PathType.Knight:
@@ -243,6 +246,7 @@ namespace ChessMoves
                         {
                             yield return currentPath;
                         }
+
                         break;
 
                     case PathType.King:
@@ -251,13 +255,16 @@ namespace ChessMoves
                         {
                             yield return currentPath;
                         }
+
                         break;
 
                     case PathType.Pawn:
+
                         foreach (var currentPath in PawnPaths())
                         {
                             yield return currentPath;
                         }
+
                         break;
                 }
             }
