@@ -23,13 +23,6 @@ namespace ChessMoves
 
         public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.Pawn }, PlayerColour);
 
-        internal override bool IsMoveValid(ChessBoard board, UserMove move)
-        {
-            var path = ValidatePath(board, move).SelectMany(x => x);
-
-            return path.Any() && board.IsPathClear(path.Skip(1));
-        }
-
         protected IEnumerable<IEnumerable<(int, int)>> PawnCapture()
         {
             var captures = new List<IEnumerable<(int, int)>>();
@@ -58,25 +51,6 @@ namespace ChessMoves
             }
 
             return captures;
-        }
-
-        protected override IEnumerable<IEnumerable<(int, int)>> ValidatePath(ChessBoard board, UserMove move)
-        {
-            if (move.UserMoveType == UserMoveType.Move)
-            {
-                return base.ValidatePath(board, move);
-            }
-            if(move.UserMoveType == UserMoveType.Capture)
-            {
-                return
-                        PawnCapture()
-                        .Where(
-                            x => x.Single() == move.MoveIndex &&
-                            board[x.Single().Item1, x.Single().Item2].PlayerColour ==
-                            Opponent(PlayerColour));
-            }
-
-            return null;
         }
     }
 }
