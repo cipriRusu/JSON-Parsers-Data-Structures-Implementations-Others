@@ -11,7 +11,7 @@ namespace ChessMoves
         [Fact]
         public void BlackRockReturnsAllPossibleMovesFromStart()
         {
-            var rock = new Rock((0, 0), Player.Black);
+            var rock = new Rock("a8", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)> {(0, 0), (0, 1) },
@@ -39,7 +39,7 @@ namespace ChessMoves
         [Fact]
         public void BlackRockReturnsAllPossibleMovesFurtherDownBoard()
         {
-            var rock = new Rock((3, 2), Player.Black);
+            var rock = new Rock("c5", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(3, 2), (2, 2) },
@@ -69,7 +69,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteRockReturnsAllPossibleMovesFromStart()
         {
-            var rock = new Rock((7, 0), Player.White);
+            var rock = new Rock("a1", Player.White);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(7, 0), (6, 0) },
@@ -97,7 +97,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteRockReturnsAllPossibleMovesFurtherUpBoard()
         {
-            var rock = new Rock((5, 2), Player.White);
+            var rock = new Rock("c3", Player.White);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(5, 2), (4, 2) },
@@ -123,12 +123,6 @@ namespace ChessMoves
             var actual = rock.Moves();
 
             Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void test1()
-        {
-            var t1 = new Rock("a8", Player.Black);
         }
     }
 }

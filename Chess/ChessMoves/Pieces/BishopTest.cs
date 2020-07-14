@@ -11,7 +11,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteBishopReturnsAllPossibleMoves()
         {
-            var bishop = new Bishop((7, 2), Player.White);
+            var bishop = new Bishop("c1", Player.White);
             var expected = new List<List<(int, int)>>
             {
                 new List<(int, int)>() {(7, 2), (6, 1) },
@@ -32,7 +32,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteBishopReturnsAllPossibleMovesBoardInterior()
         {
-            var bishop = new Bishop((4, 5), Player.White);
+            var bishop = new Bishop("f4", Player.White);
             var expected = new List<List<(int, int)>>()
             {
                 new List<(int, int)>() {(4, 5), (3, 4) },
@@ -60,7 +60,7 @@ namespace ChessMoves
         [Fact]
         public void BlackBishopReturnsAllPossibleMovesBoardInterior()
         {
-            var bishop = new Bishop((2, 3), Player.Black);
+            var bishop = new Bishop("d6", Player.Black);
             var expected = new List<List<(int, int)>>()
             {
                 new List<(int, int)>(){(2, 3),(1, 2)},

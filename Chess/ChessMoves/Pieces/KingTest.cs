@@ -12,7 +12,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKingReturnsAllLegalMovesStartPosition()
         {
-            var king = new King((0, 4), Player.Black);
+            var king = new King("e8", Player.Black);
             var expected = new List<List<(int, int)>>()
             {
                 new List<(int, int)>{(0, 5)},
@@ -30,7 +30,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKingReturnsAllLegalMovesStartPosition()
         {
-            var king = new King((7, 4), Player.White);
+            var king = new King("e1", Player.White);
             var expected = new List<List<(int, int)>>()
             {
                 new List<(int, int)>{(7, 5)},
@@ -48,7 +48,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKingReturnsAllLegalMovesDownwardTable()
         {
-            var king = new King((2, 3), Player.Black);
+            var king = new King("d6", Player.Black);
             var expected = new List<List<(int, int)>>()
             {
                 new List<(int, int)>{(2, 4)},
@@ -69,7 +69,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKingReturnsAllLegalMovesUpwardTable()
         {
-            var king = new King((5, 6), Player.White);
+            var king = new King("g3", Player.White);
             var expected = new List<List<(int, int)>>()
             {
                 new List<(int, int)>{(5, 7)},

@@ -11,7 +11,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKnigtReturnsAllPossibleMovesDownwardBoardOnStartPosition()
         {
-            var knight = new Knight((0, 1), Player.Black);
+            var knight = new Knight("b8", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 Enumerable.Repeat((2, 2), 1),
@@ -27,7 +27,7 @@ namespace ChessMoves
         [Fact]
         public void SecondBlackKnightReturnsAllPossibleMovesDownwardBoardOnStartPosition()
         {
-            var knight = new Knight((0, 6), Player.Black);
+            var knight = new Knight("g8", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 Enumerable.Repeat((2, 7), 1),
@@ -43,7 +43,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKnightReturnsAllPossibleMovesUpwardBoardOnStartPosition()
         {
-            var knight = new Knight((7, 1), Player.White);
+            var knight = new Knight("b1", Player.White);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 Enumerable.Repeat((5, 2), 1),
@@ -59,7 +59,7 @@ namespace ChessMoves
         [Fact]
         public void SecondWhiteKnightReturnsAllPossibleMovesUpwardBoardOnStartPosition()
         {
-            var knight = new Knight((7, 6), Player.White);
+            var knight = new Knight("g1", Player.White);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 Enumerable.Repeat((5, 7), 1),
@@ -75,7 +75,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKnightReturnsAllPossibleMovesDownwardBoardMiddleBoard()
         {
-            var knight = new Knight((2, 2), Player.Black);
+            var knight = new Knight("c6", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 Enumerable.Repeat((0, 3), 1),
@@ -96,7 +96,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKnightReturnsAllPossibleMovesUpwardBoardMiddleBoard()
         {
-            var knight = new Knight((5, 5), Player.Black);
+            var knight = new Knight("f3", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 Enumerable.Repeat((3, 6), 1),

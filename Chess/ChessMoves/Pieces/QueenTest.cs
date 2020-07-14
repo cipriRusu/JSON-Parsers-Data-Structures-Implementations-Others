@@ -12,7 +12,7 @@ namespace ChessMoves
         [Fact]
         public void BlackQueenReturnsAllLegalMovesDownwardTable()
         {
-            var queen = new Queen((0, 3), Player.Black);
+            var queen = new Queen("d8", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(0, 3), (0, 4) },
@@ -50,7 +50,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteQueenReturnsAllLegalMovesUpwardTable()
         {
-            var queen = new Queen((7, 3), Player.Black);
+            var queen = new Queen("d1", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(7, 3), (6, 3) },
@@ -88,7 +88,7 @@ namespace ChessMoves
         [Fact]
         public void BlackQueenReturnsAllLegalMovesMiddleTable()
         {
-            var queen = new Queen((3, 4), Player.Black);
+            var queen = new Queen("e5", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(3, 4), (2, 4) },
@@ -139,7 +139,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteQueenReturnsAllLegalMovesMiddleTable()
         {
-            var queen = new Queen((5, 3), Player.Black);
+            var queen = new Queen("d3", Player.Black);
             var expected = new List<IEnumerable<(int, int)>>()
             {
                 new List<(int, int)>() {(5, 3), (4, 3) },
