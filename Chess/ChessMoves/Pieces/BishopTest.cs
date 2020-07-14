@@ -24,7 +24,7 @@ namespace ChessMoves
                 new List<(int, int)>() {(7, 2), (6, 3), (5, 4), (4, 5), (3, 6), (2, 7) },
             };
 
-            var actual = bishop.GetLegalMoves();
+            var actual = bishop.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -52,7 +52,7 @@ namespace ChessMoves
                 new List<(int, int)>() {(4, 5), (5, 6), (6, 7) },
             };
 
-            var actual = bishop.GetLegalMoves();
+            var actual = bishop.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -79,7 +79,7 @@ namespace ChessMoves
                 new List<(int, int)>() {(2, 3), (3, 4), (4, 5), (5, 6), (6, 7)},
             };
 
-            var actual = bishop.GetLegalMoves();
+            var actual = bishop.Moves();
 
             Assert.Equal(expected, actual);
         }

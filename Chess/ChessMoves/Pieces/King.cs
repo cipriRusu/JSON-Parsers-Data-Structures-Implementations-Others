@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 namespace ChessMoves
 {
     [Serializable]
-    internal class King : Piece
+    internal class King : Piece, IChessPiece
     {
         public King((int, int) currentPosition, Player playerColour) :
             base(currentPosition, playerColour)
@@ -22,7 +22,9 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.King });
+        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.King });
+
+        public override Path Captures() => Moves();
 
         internal override bool IsChecked(ChessBoard chessBoard, Player player)
         {

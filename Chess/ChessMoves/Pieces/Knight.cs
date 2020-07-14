@@ -6,7 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 namespace ChessMoves
 {
     [Serializable]
-    internal class Knight : Piece
+    internal class Knight : Piece, IChessPiece
     {
         public Knight((int, int) currentPosition, Player playerColour) :
             base(currentPosition, playerColour)
@@ -20,6 +20,8 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
+        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
+
+        public override Path Captures() => Moves();
     }
 }

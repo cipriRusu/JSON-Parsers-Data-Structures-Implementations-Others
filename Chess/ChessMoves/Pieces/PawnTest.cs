@@ -18,7 +18,7 @@ namespace ChessMoves
                 new List<(int, int)>{(1, 0), (2, 0), (3, 0) }
             };
 
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -31,7 +31,7 @@ namespace ChessMoves
             {
                 new List<(int, int)>{(4, 0), (5, 0)}
             };
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -47,7 +47,7 @@ namespace ChessMoves
                 new List<(int, int)>{(1, 5), (2, 5), (3, 5) }
             };
 
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -57,7 +57,7 @@ namespace ChessMoves
         {
             var pawn = new Pawn((7, 5), Player.Black);
             var expected = new List<IEnumerable<(int, int)>>() { };
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -67,7 +67,7 @@ namespace ChessMoves
         {
             var pawn = new Pawn((7, 0), Player.Black);
             var expected = new List<IEnumerable<(int, int)>>() { };
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -83,7 +83,7 @@ namespace ChessMoves
                 new List<(int, int)>{(6, 0), (5, 0), (4, 0) }
             };
 
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -100,7 +100,7 @@ namespace ChessMoves
             };
 
 
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -115,7 +115,7 @@ namespace ChessMoves
                 new List<(int, int)>{(5, 0), (4, 0) },
             };
 
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -126,7 +126,7 @@ namespace ChessMoves
             var pawn = new Pawn((0, 5), Player.White);
             var expected = new List<IEnumerable<(int, int)>>() { };
 
-            var actual = pawn.GetLegalMoves();
+            var actual = pawn.Moves();
 
             Assert.Equal(expected, actual);
         }

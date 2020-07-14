@@ -19,7 +19,7 @@ namespace ChessMoves
                 Enumerable.Repeat((2, 0), 1),
             };
 
-            var actual = knight.GetLegalMoves();
+            var actual = knight.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -35,7 +35,7 @@ namespace ChessMoves
                 Enumerable.Repeat((1, 4), 1),
             };
 
-            var actual = knight.GetLegalMoves();
+            var actual = knight.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -51,7 +51,7 @@ namespace ChessMoves
                 Enumerable.Repeat((5, 0), 1),
             };
 
-            var actual = knight.GetLegalMoves();
+            var actual = knight.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -67,7 +67,7 @@ namespace ChessMoves
                 Enumerable.Repeat((6, 4), 1),
             };
 
-            var actual = knight.GetLegalMoves();
+            var actual = knight.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -88,7 +88,7 @@ namespace ChessMoves
                 Enumerable.Repeat((3, 0), 1),
             };
 
-            var actual = knight.GetLegalMoves();
+            var actual = knight.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -109,7 +109,7 @@ namespace ChessMoves
                 Enumerable.Repeat((6, 3), 1),
             };
 
-            var actual = knight.GetLegalMoves();
+            var actual = knight.Moves();
 
             Assert.Equal(expected, actual);
         }

@@ -22,7 +22,7 @@ namespace ChessMoves
                 new List<(int, int)>{(1, 5)},
             };
 
-            var actual = king.GetLegalMoves();
+            var actual = king.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -40,7 +40,7 @@ namespace ChessMoves
                 new List<(int, int)>{(7, 3)},
             };
 
-            var actual = king.GetLegalMoves();
+            var actual = king.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -61,7 +61,7 @@ namespace ChessMoves
                 new List<(int, int)>{(3, 4)},
             };
 
-            var actual = king.GetLegalMoves();
+            var actual = king.Moves();
 
             Assert.Equal(expected, actual);
         }
@@ -82,7 +82,7 @@ namespace ChessMoves
                 new List<(int, int)>{(6, 7)},
             };
 
-            var actual = king.GetLegalMoves();
+            var actual = king.Moves();
 
             Assert.Equal(expected, actual);
         }

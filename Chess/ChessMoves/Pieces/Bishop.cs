@@ -8,7 +8,7 @@ using System.Reflection.Metadata.Ecma335;
 namespace ChessMoves
 {
     [Serializable]
-    internal class Bishop : Piece
+    internal class Bishop : Piece, IChessPiece
     {
         public Bishop(string matrixPosition, Player playerColour) :
             base(matrixPosition, playerColour)
@@ -22,6 +22,8 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override Path GetLegalMoves() => new Path(CurrentPosition, new PathType[] { PathType.Diagonals });
+        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Diagonals });
+
+        public override Path Captures() => Moves();
     }
 }

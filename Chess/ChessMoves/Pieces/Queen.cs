@@ -5,7 +5,7 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    internal class Queen : Piece
+    internal class Queen : Piece, IChessPiece
     {
         public Queen((int, int) currentPosition, Player playerColour) :
             base(currentPosition, playerColour)
@@ -19,7 +19,8 @@ namespace ChessMoves
             base.PlayerColour = playerColour;
         }
 
-        public override Path GetLegalMoves() => 
-            new Path(CurrentPosition, new PathType[] { PathType.RowsAndColumns, PathType.Diagonals });
+        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.RowsAndColumns, PathType.Diagonals });
+
+        public override Path Captures() => Moves();
     }
 }
