@@ -32,5 +32,18 @@ namespace ChessMoves
             File = rankAndFile.File;
             Rank = rankAndFile.Rank;
         }
+
+        public static Player Opponent(Player player)
+        {
+            switch (player)
+            {
+                case Player.White:
+                    return Player.Black;
+                case Player.Black:
+                    return Player.White;
+                default:
+                    throw new ArgumentException("Invalid player");
+            }
+        }
     }
 }
