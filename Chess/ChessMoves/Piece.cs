@@ -1,14 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
-using System.Threading;
 
 namespace ChessMoves
 {
     [Serializable]
     public abstract class Piece
     {
+        public Piece(string chessBoardIndex, Player playerColour)
+        {
+            CurrentPosition = matrixIndexConvertor.GetMatrixIndex(chessBoardIndex);
+            PlayerColour = playerColour;
+            File = chessBoardIndex.First();
+            Rank = chessBoardIndex.Last();
+        }
+
         public const int BOARDSIZE = 8;
         public (int, int) CurrentPosition { get; internal set; }
         public Player PlayerColour { get; internal set; }
@@ -18,14 +23,7 @@ namespace ChessMoves
         public virtual Path Moves() => null;
         public virtual Path Captures() => null;
 
-        internal Index customIndex = new Index();
-        public Piece(string chessBoardIndex, Player playerColour)
-        {
-            CurrentPosition = customIndex.GetMatrixIndex(chessBoardIndex);
-            PlayerColour = playerColour;
-            File = chessBoardIndex.First();
-            Rank = chessBoardIndex.Last();
-        }
+        private readonly Index matrixIndexConvertor = new Index();
 
         public void Update((int, int) newPosition)
         {
