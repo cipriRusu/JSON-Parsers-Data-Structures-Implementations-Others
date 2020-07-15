@@ -11,6 +11,7 @@ namespace ChessMoves
         public Player PlayerColor;
         public UserMoveType UserMoveType;
         public (int, int) MoveIndex;
+        public string NotationIndex { get; private set; }
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
         public bool IsCheck { get; private set; }
@@ -21,6 +22,7 @@ namespace ChessMoves
 
         public UserMove(string input)
         {
+            NotationIndex = input;
             GetPieceType(input);
 
             if (input.Contains('=') && PieceType == PieceType.Pawn)
