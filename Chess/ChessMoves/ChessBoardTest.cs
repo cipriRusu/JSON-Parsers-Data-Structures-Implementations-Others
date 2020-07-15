@@ -12,7 +12,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.Moves(new string[] { "e4 e5" });
+            testBoard.PerformMoves(new string[] { "e4 e5" });
 
             Assert.Null(testBoard[6, 4]);
             Assert.Null(testBoard[1, 4]);
@@ -37,7 +37,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.Moves(new string[] { "e4 e5", "Nf3 Nc6", "Bb5 a6" });
+            testBoard.PerformMoves(new string[] { "e4 e5", "Nf3 Nc6", "Bb5 a6" });
 
             Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.White)
@@ -93,7 +93,7 @@ namespace ChessMoves
             moves.Add(new UserMove("e4") { PlayerColor = Player.White });
             moves.Add(new UserMove("fxe4") { PlayerColor = Player.Black });
 
-            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4" });
+            testBoard.PerformMoves(new string[] { "Nc3 f5", "e4 fxe4" });
 
             Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.Black)
@@ -115,7 +115,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4" });
+            testBoard.PerformMoves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4" });
 
             Assert.Equal(
                 new Knight("e4", Player.White)
@@ -131,7 +131,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.Moves(new string[] 
+            testBoard.PerformMoves(new string[] 
             { "Nc3 f5", 
               "e4 fxe4", 
               "Nxe4 Nf6", 
@@ -153,7 +153,7 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ gxf6", "Qh5#" });
+            testBoard.PerformMoves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ gxf6", "Qh5#" });
 
             Assert.Equal(new Queen("h5", Player.White)
             {
@@ -170,14 +170,14 @@ namespace ChessMoves
         public void ChessBoardFailsForCheckedKingAndInvalidMove()
         {
             Assert.Throws<ArgumentException>(() =>
-            new ChessBoard().Moves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ c6" }));
+            new ChessBoard().PerformMoves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ c6" }));
         }
 
         [Fact]
         public void TurnToMovePropertyReturnsValidOutputForWhiteTurn()
         {
             var board = new ChessBoard();
-            board.Moves(new string[] { "Nc3 f5" });
+            board.PerformMoves(new string[] { "Nc3 f5" });
 
             Assert.Equal(Player.White, board.TurnToMove);
         }
@@ -186,7 +186,7 @@ namespace ChessMoves
         public void TurnToMovePropertyReturnsValidOutputForBlackTurn()
         {
             var board = new ChessBoard();
-            board.Moves(new string[] { "Nc3 f5", "e4" });
+            board.PerformMoves(new string[] { "Nc3 f5", "e4" });
 
             Assert.Equal(Player.Black, board.TurnToMove);
         }

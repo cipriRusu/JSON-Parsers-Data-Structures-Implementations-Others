@@ -7,66 +7,109 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard
     {
+        public Piece this[int i, int j] => board[i, j];
         private readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        public readonly static int CHESSBOARD_SIZE = 8;
 
         public ChessBoard() => InitializeBoard();
-        
-        public readonly static int CHESSBOARD_SIZE = 8;
 
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
 
-        public Piece this[int i, int j] => board[i, j];
-
-        internal void Moves(IEnumerable<string> userMoves)
+        internal void PerformMoves(IEnumerable<string> userMoves)
         {
             foreach (var move in ConvertToUserMoves(userMoves))
             {
-                Move(move);
+                Move(GetMovablePiece(move), move);
             }
         }
 
-        private void Move(UserMove move)
+        private void Move(Piece piece, UserMove move)
         {
-            foreach (var i in Enumerable.Range(0, CHESSBOARD_SIZE))
+            if (move.UserMoveType == UserMoveType.Move)
             {
-                foreach (var j in Enumerable.Range(0, CHESSBOARD_SIZE))
-                {
-                    if (PieceConstraint(move, i, j) &&
-                        (RankConstraint(move, i, j) ||
-                        FileConstraint(move, i, j) ||
-                        FileAndRankConstraint(move, i, j) ||
-                        NoConstraint(move)))
-                    {
-                        if (board[i, j].IsMoveValid(this, move))
-                        {
-                            PieceNotFoundException(board[i, j]);
-                            PerformMove(board[i, j].CurrentPosition, move.MoveIndex);
-                        }
-                    }
-                }
+                MoveCheck(piece, move, 1);
+            }
+
+            else if (move.UserMoveType == UserMoveType.Capture)
+            {
+                MoveCheck(piece, move, 1, 1);
             }
         }
 
-        internal bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
+        private void MoveCheck(Piece piece, UserMove move, int startSkip = 0, int endSkip = 0)
+        {
+            var validMove = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
+
+            if (IsPathClear(validMove.Skip(startSkip).SkipLast(endSkip)))
+            {
+                PerformMove(piece.CurrentPosition, move.MoveIndex);
+            }
+        }
+
+        private Piece GetMovablePiece(UserMove move) => GetAllPieces()
+            .Where(piece =>
+            IsPiece(move, piece) &&
+            AllMoveConstraints(move, piece) &&
+            CanReachTarget(move, piece)).Single();
+
+        private bool AllMoveConstraints(UserMove move, Piece x) =>
+            RankConstraint(move, x) ||
+            FileConstraint(move, x) ||
+            FileAndRankConstraint(move, x) ||
+            NoConstraint(move);
+
+        private bool CanReachTarget(UserMove move, Piece x)
+        {
+            if (move.UserMoveType == UserMoveType.Move)
+            {
+                return x.Moves().Any(x => x.Last() == move.MoveIndex);
+            }
+            if (move.UserMoveType == UserMoveType.Capture)
+            {
+                return x.Captures().Any(x => x.Last() == move.MoveIndex);
+            }
+
+            return false;
+        }
+
+        private bool NoConstraint(UserMove move) =>
+            move.SourceFile == '\0' &&
+            move.SourceRank == '\0';
+
+        private bool FileAndRankConstraint(UserMove move, Piece x) =>
+            move.SourceRank != '\0' &&
+            move.SourceFile != '\0' &&
+            move.SourceRank == x.Rank &&
+            move.SourceFile == x.File;
+
+        private bool FileConstraint(UserMove move, Piece x) =>
+            move.SourceFile != '\0' &&
+            move.SourceRank == '\0' &&
+            move.SourceFile == x.File;
+
+        private bool RankConstraint(UserMove move, Piece x) =>
+            move.SourceRank != '\0' &&
+            move.SourceFile == '\0' &&
+            move.SourceRank == x.Rank;
+
+        private bool IsPiece(UserMove move, Piece x) =>
+            x != null &&
+            x.PlayerColour == move.PlayerColor &&
+            x.PieceType == move.PieceType;
+
+        public IEnumerable<Piece> GetAllPieces() =>
+            Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
+            Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
+
+        public bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
         {
             return
                 board[currentPosition.Item1, currentPosition.Item2] != null &&
                 board[currentPosition.Item1, currentPosition.Item2].CurrentPosition == currentPosition &&
                 board[currentPosition.Item1, currentPosition.Item2].PieceType == pieceType &&
                 board[currentPosition.Item1, currentPosition.Item2].PlayerColour == player;
-        }
-
-        public bool IsPathClear(IEnumerable<(int, int)> input) =>
-            input.All(x => board[x.Item1, x.Item2] == null);
-
-        private void PieceNotFoundException(Piece selectedPiece)
-        {
-            if (selectedPiece == null)
-            {
-                throw new ArgumentException("No valid piece was found that could perform the requested move");
-            }
         }
 
         private void PerformMove((int, int) source, (int, int) destination)
@@ -78,50 +121,25 @@ namespace ChessMoves
             SwitchTurn();
         }
 
-        private bool NoConstraint(UserMove move) =>
-            move.SourceFile == '\0' && move.SourceRank == '\0';
-
-        private bool FileConstraint(UserMove move, int i, int j) =>
-            move.SourceFile != '\0' && move.SourceRank == '\0' && move.SourceFile == board[i, j].File;
-
-        private bool RankConstraint(UserMove move, int i, int j) =>
-            move.SourceRank != '\0' && move.SourceFile == '\0' && move.SourceRank == board[i, j].Rank;
-
-        private bool FileAndRankConstraint(UserMove move, int i, int j) =>
-            move.SourceRank != '\0' &&
-            move.SourceFile != '\0' &&
-            move.SourceRank == board[i, j].Rank &&
-            move.SourceFile == board[i, j].File;
-
-        private bool PieceConstraint(UserMove move, int i, int j)
-        {
-            return
-                board[i, j] != null &&
-                board[i, j].PlayerColour == move.PlayerColor &&
-                board[i, j].PieceType == move.PieceType;
-        }
+        private bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
 
         private IEnumerable<UserMove> ConvertToUserMoves(IEnumerable<string> input)
         {
-            var output = new List<UserMove>();
-
             foreach (var move in input.Select(x => x.Split(' ')))
             {
                 switch (move.Count())
                 {
                     case 1:
-                        output.Add(new UserMove(move.First()) { PlayerColor = Player.White });
+                        yield return new UserMove(move.First()) { PlayerColor = Player.White };
                         break;
                     case 2:
-                        output.Add(new UserMove(move.First()) { PlayerColor = Player.White });
-                        output.Add(new UserMove(move.Last()) { PlayerColor = Player.Black });
+                        yield return new UserMove(move.First()) { PlayerColor = Player.White };
+                        yield return new UserMove(move.Last()) { PlayerColor = Player.Black };
                         break;
                     default:
                         throw new ArgumentException("Input not properly formated");
                 }
             }
-
-            return output;
         }
 
         private void SwitchTurn()
