@@ -216,6 +216,36 @@ namespace ChessMoves
             return legalMoves;
         }
 
+        private IEnumerable<IEnumerable<(int, int)>> PawnCapture()
+        {
+            var captures = new List<IEnumerable<(int, int)>>();
+
+            if (PlayerColour == Player.White)
+            {
+                if (CheckIndexes(StartIndex.Item1 - 1, StartIndex.Item2 + 1))
+                {
+                    captures.Add(Enumerable.Repeat((StartIndex.Item1 - 1, StartIndex.Item2 + 1), 1));
+                }
+                if (CheckIndexes(StartIndex.Item1 - 1, StartIndex.Item2 - 1))
+                {
+                    captures.Add(Enumerable.Repeat((StartIndex.Item1 - 1, StartIndex.Item2 - 1), 1));
+                }
+            }
+            else if (PlayerColour == Player.Black)
+            {
+                if (CheckIndexes(StartIndex.Item1 + 1, StartIndex.Item2 - 1))
+                {
+                    captures.Add(Enumerable.Repeat((StartIndex.Item1 + 1, StartIndex.Item2 - 1), 1));
+                }
+                if (CheckIndexes(StartIndex.Item1 + 1, StartIndex.Item2 + 1))
+                {
+                    captures.Add(Enumerable.Repeat((StartIndex.Item1 + 1, StartIndex.Item2 + 1), 1));
+                }
+            }
+
+            return captures;
+        }
+
         public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
             foreach (var path in Paths)
@@ -261,6 +291,15 @@ namespace ChessMoves
                     case PathType.Pawn:
 
                         foreach (var currentPath in PawnPaths())
+                        {
+                            yield return currentPath;
+                        }
+
+                        break;
+
+                    case PathType.PawnCapture:
+
+                        foreach (var currentPath in PawnCapture())
                         {
                             yield return currentPath;
                         }

@@ -6,6 +6,7 @@
         Diagonals,
         Knight,
         King,
-        Pawn
+        Pawn,
+        PawnCapture
     }
 }
