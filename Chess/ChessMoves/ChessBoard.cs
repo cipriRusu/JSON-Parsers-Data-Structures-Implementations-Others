@@ -8,7 +8,10 @@ namespace ChessMoves
     public class ChessBoard
     {
         public Piece this[int i, int j] => board[i, j];
-        private readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        public Piece this[(int, int) index] => board[index.Item1, index.Item2];
+
+        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+
         public readonly static int CHESSBOARD_SIZE = 8;
 
         public ChessBoard() => InitializeBoard();
@@ -94,7 +97,7 @@ namespace ChessMoves
             move.SourceFile == '\0' &&
             move.SourceRank == x.Rank;
 
-        private bool IsPiece(UserMove move, Piece x) =>
+        public bool IsPiece(UserMove move, Piece x) =>
             x != null &&
             x.PlayerColour == move.PlayerColor &&
             x.PieceType == move.PieceType;
@@ -106,10 +109,10 @@ namespace ChessMoves
         public bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
         {
             return
-                board[currentPosition.Item1, currentPosition.Item2] != null &&
-                board[currentPosition.Item1, currentPosition.Item2].CurrentPosition == currentPosition &&
-                board[currentPosition.Item1, currentPosition.Item2].PieceType == pieceType &&
-                board[currentPosition.Item1, currentPosition.Item2].PlayerColour == player;
+                this[currentPosition] != null &&
+                this[currentPosition].CurrentPosition == currentPosition &&
+                this[currentPosition].PieceType == pieceType &&
+                this[currentPosition].PlayerColour == player;
         }
 
         private void PerformMove((int, int) source, (int, int) destination)
@@ -118,10 +121,15 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2].Update(destination);
             board[source.Item1, source.Item2] = null;
 
+            if(new CurrentPlayerStatus(TurnToMove, this).IsChecked)
+            {
+                throw new ArgumentException();
+            }
+
             SwitchTurn();
         }
 
-        private bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
+        public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
 
         private IEnumerable<UserMove> ConvertToUserMoves(IEnumerable<string> input)
         {
