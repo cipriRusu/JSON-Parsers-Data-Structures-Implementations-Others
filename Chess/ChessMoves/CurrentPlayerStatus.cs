@@ -7,10 +7,20 @@ namespace ChessMoves
 {
     public class CurrentPlayerStatus
     {
-        private readonly Player turnToMove;
-        private readonly ChessBoard chessBoard;
+        private Player turnToMove;
+        private ChessBoard chessBoard;
 
         public CurrentPlayerStatus(Player turnToMove, ChessBoard chessBoard)
+        {
+            this.turnToMove = turnToMove;
+            this.chessBoard = chessBoard;
+        }
+
+        public bool IsChecked => KingCheckStatus();
+
+        public bool IsCheckMated => KingCheckMateStatus();
+
+        public void GetCurrentState(Player turnToMove, ChessBoard chessBoard)
         {
             this.turnToMove = turnToMove;
             this.chessBoard = chessBoard;
@@ -20,60 +30,56 @@ namespace ChessMoves
         {
             Piece currentKing = FindKing();
 
-            var diagonalAttacks = new Path(currentKing.CurrentPosition,
-                new PathType[]
-                {
-                    PathType.Diagonals,
-                })
+            IEnumerable<IEnumerable<(int, int)>> diagonalAttacks =
+                GetAttacks(currentKing,
+                new PathType[] { PathType.Diagonals },
+                new PieceType[] { PieceType.Queen, PieceType.Bishop });
+
+            IEnumerable<IEnumerable<(int, int)>> verticalHorizontalAttacks =
+                GetAttacks(currentKing,
+                new PathType[] { PathType.RowsAndColumns },
+                new PieceType[] { PieceType.Queen, PieceType.Rock });
+
+            IEnumerable<IEnumerable<(int, int)>> knightAttacks =
+                GetAttacks(currentKing,
+                new PathType[] { PathType.Knight },
+                new PieceType[] { PieceType.Knight });
+
+            return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any();
+        }
+
+        private IEnumerable<IEnumerable<(int, int)>> GetAttacks(Piece currentKing, PathType[] pathTypes, PieceType[] attackers)
+        {
+            return new Path(currentKing.CurrentPosition, pathTypes)
                 .Where(x =>
-                chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
                 chessBoard[x.Last()] != null &&
-                chessBoard[x.Last()].PlayerColour == Piece.Opponent(turnToMove) &&
-                (chessBoard[x.Last()].PieceType == PieceType.Queen ||
-                chessBoard[x.Last()].PieceType == PieceType.Bishop)); ;
-
-            var verticalHorizontalAttacks = new Path(currentKing.CurrentPosition,
-                new PathType[]
-                {
-                    PathType.RowsAndColumns
-                })
-                .Where(x =>
                 chessBoard.IsPathClear(x.Skip(1).SkipLast(1)) &&
-                chessBoard[x.Last()] != null &&
                 chessBoard[x.Last()].PlayerColour == Piece.Opponent(turnToMove) &&
-                (chessBoard[x.Last()].PieceType == PieceType.Queen ||
-                chessBoard[x.Last()].PieceType == PieceType.Rock));
-
-            var knights = new Path(currentKing.CurrentPosition,
-                new PathType[]
-                {
-                    PathType.Knight
-                })
-                .Where(x => chessBoard[x.Single()] != null &&
-                chessBoard[x.Single()].PlayerColour == Piece.Opponent(turnToMove) &&
-                (chessBoard[x.Single()].PieceType == PieceType.Knight));
-
-            return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knights.Any();
+                attackers.Contains(chessBoard[x.Last()].PieceType));
         }
 
         private bool KingCheckMateStatus()
         {
-            return false;
+            var kingMoves = FindKing().Moves().Where(x => chessBoard.IsPathClear(x));
+
+            foreach (var move in kingMoves)
+            {
+                var currentBoardState = chessBoard.DeepClone();
+
+                currentBoardState.PerformMove(FindKing().CurrentPosition, move.Single());
+
+                if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
+                {
+                    return false;
+                }
+            }
+
+            return kingMoves.Count() > 0;
         }
 
-        private Piece FindKing() => 
-            chessBoard.GetAllPieces().Where(x => x != null && 
-            x.PieceType == PieceType.King && 
+        private Piece FindKing() =>
+            chessBoard.GetAllPieces().Where(x => x != null &&
+            x.PieceType == PieceType.King &&
             x.PlayerColour == turnToMove).Single();
-
-        public bool IsChecked
-        {
-            get => KingCheckStatus();
-        }
-
-        public bool IsCheckMated
-        {
-            get => KingCheckMateStatus();
-        }
     }
 }
