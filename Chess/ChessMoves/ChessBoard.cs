@@ -45,9 +45,31 @@ namespace ChessMoves
         {
             var validMove = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
 
-            if (IsPathClear(validMove.Skip(startSkip).SkipLast(endSkip)))
+            var status = new CurrentPlayerStatus(TurnToMove, this);
+
+            if (status.IsChecked)
             {
                 PerformMove(piece.CurrentPosition, move.MoveIndex);
+                status.GetCurrentState(TurnToMove, this);
+
+                if (status.IsChecked)
+                {
+                    throw new ArgumentException();
+                }
+
+                SwitchTurn();
+            }
+            else if (IsPathClear(validMove.Skip(startSkip).SkipLast(endSkip)))
+            {
+                PerformMove(piece.CurrentPosition, move.MoveIndex);
+                SwitchTurn();
+
+                status.GetCurrentState(TurnToMove, this);
+                
+                if (status.IsCheckMated)
+                {
+                    IsCheckMate = true;
+                }
             }
         }
 
@@ -115,18 +137,11 @@ namespace ChessMoves
                 this[currentPosition].PlayerColour == player;
         }
 
-        private void PerformMove((int, int) source, (int, int) destination)
+        public void PerformMove((int, int) source, (int, int) destination)
         {
             board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
             board[destination.Item1, destination.Item2].Update(destination);
             board[source.Item1, source.Item2] = null;
-
-            if(new CurrentPlayerStatus(TurnToMove, this).IsChecked)
-            {
-                throw new ArgumentException();
-            }
-
-            SwitchTurn();
         }
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
