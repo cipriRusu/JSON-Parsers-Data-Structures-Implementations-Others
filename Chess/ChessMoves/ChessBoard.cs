@@ -32,52 +32,41 @@ namespace ChessMoves
         {
             if (move.UserMoveType == UserMoveType.Move)
             {
-                MoveCheck(piece, move, 1);
+                MoveCheck(piece, move);
             }
 
             else if (move.UserMoveType == UserMoveType.Capture)
             {
-                MoveCheck(piece, move, 1, 1);
+                MoveCheck(piece, move);
             }
         }
 
-        private void MoveCheck(Piece piece, UserMove move, int startSkip = 0, int endSkip = 0)
+        private void MoveCheck(Piece piece, UserMove move)
         {
-            var validMove = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
+            PerformMove(piece.CurrentPosition, move.MoveIndex);
 
-            var status = new CurrentPlayerStatus(TurnToMove, this);
+            var currentPlayerStatus = new CurrentPlayerStatus(TurnToMove, this);
 
-            if (status.IsChecked)
+            if(currentPlayerStatus.IsChecked)
             {
-                PerformMove(piece.CurrentPosition, move.MoveIndex);
-                status.GetCurrentState(TurnToMove, this);
-
-                if (status.IsChecked)
-                {
-                    throw new ArgumentException();
-                }
-
-                SwitchTurn();
+                throw new ArgumentException();
             }
-            else if (IsPathClear(validMove.Skip(startSkip).SkipLast(endSkip)))
-            {
-                PerformMove(piece.CurrentPosition, move.MoveIndex);
-                SwitchTurn();
 
-                status.GetCurrentState(TurnToMove, this);
-                
-                if (status.IsCheckMated)
-                {
-                    IsCheckMate = true;
-                }
+            SwitchTurn();
+
+            var nextPlayerStatus = new CurrentPlayerStatus(TurnToMove, this);
+
+            if(nextPlayerStatus.IsCheckMated)
+            {
+                IsCheckMate = true;
             }
         }
 
-        private Piece GetMovablePiece(UserMove move) => GetAllPieces()
-            .Where(piece =>
-            IsPiece(move, piece) &&
-            AllMoveConstraints(move, piece) &&
-            CanReachTarget(move, piece)).Single();
+        private Piece GetMovablePiece(UserMove move) =>
+            GetAllPieces().Where(piece =>
+                IsPiece(move, piece) &&
+                AllMoveConstraints(move, piece) &&
+                CanReachTarget(piece, move)).Single();
 
         private bool AllMoveConstraints(UserMove move, Piece x) =>
             RankConstraint(move, x) ||
@@ -85,15 +74,19 @@ namespace ChessMoves
             FileAndRankConstraint(move, x) ||
             NoConstraint(move);
 
-        private bool CanReachTarget(UserMove move, Piece x)
+        private bool CanReachTarget(Piece piece, UserMove move)
         {
             if (move.UserMoveType == UserMoveType.Move)
             {
-                return x.Moves().Any(x => x.Last() == move.MoveIndex);
+                var path = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
+
+                return path.Count() > 0 && IsPathClear(path.Skip(1));
             }
             if (move.UserMoveType == UserMoveType.Capture)
             {
-                return x.Captures().Any(x => x.Last() == move.MoveIndex);
+                var path = piece.Captures().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
+
+                return path.Count() > 0 && IsPathClear(path.Skip(1).SkipLast(1));
             }
 
             return false;
