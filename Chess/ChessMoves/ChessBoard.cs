@@ -30,19 +30,6 @@ namespace ChessMoves
 
         private void Move(Piece piece, UserMove move)
         {
-            if (move.UserMoveType == UserMoveType.Move)
-            {
-                MoveCheck(piece, move);
-            }
-
-            else if (move.UserMoveType == UserMoveType.Capture)
-            {
-                MoveCheck(piece, move);
-            }
-        }
-
-        private void MoveCheck(Piece piece, UserMove move)
-        {
             PerformMove(piece.CurrentPosition, move.MoveIndex);
 
             var currentPlayerStatus = new CurrentPlayerStatus(TurnToMove, this);
