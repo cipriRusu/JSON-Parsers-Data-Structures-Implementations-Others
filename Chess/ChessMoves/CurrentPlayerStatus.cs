@@ -45,7 +45,12 @@ namespace ChessMoves
                 new PathType[] { PathType.Knight },
                 new PieceType[] { PieceType.Knight });
 
-            return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any();
+            IEnumerable<IEnumerable<(int, int)>> pawnAttacks =
+                GetAttacks(currentKing, 
+                new PathType[] { PathType.PawnCapture }, 
+                new PieceType[] { PieceType.Pawn });
+
+            return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any() || pawnAttacks.Any();
         }
 
         private IEnumerable<IEnumerable<(int, int)>> GetAttacks(Piece currentKing, PathType[] pathTypes, PieceType[] attackers)
