@@ -24,7 +24,7 @@ namespace ChessMoves
         {
             foreach (var move in ConvertToUserMoves(userMoves))
             {
-                Move(GetMovablePiece(move), move);
+                Move(GetPiece(move), move);
             }
         }
 
@@ -49,7 +49,7 @@ namespace ChessMoves
             }
         }
 
-        private Piece GetMovablePiece(UserMove move) =>
+        private Piece GetPiece(UserMove move) =>
             GetAllPieces().Where(piece =>
                 IsPiece(move, piece) &&
                 AllMoveConstraints(move, piece) &&
@@ -63,17 +63,29 @@ namespace ChessMoves
 
         private bool CanReachTarget(Piece piece, UserMove move)
         {
-            if (move.UserMoveType == UserMoveType.Move)
+            switch (move.UserMoveType)
             {
-                var path = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
-
-                return path.Count() > 0 && IsPathClear(path.Skip(1));
+                case UserMoveType.Move:
+                    return MoveValidation(piece, move, 1);
+                case UserMoveType.Capture:
+                    return MoveValidation(piece, move, 1, 1);
+                default:
+                    return false;
             }
-            if (move.UserMoveType == UserMoveType.Capture)
+        }
+
+        private bool MoveValidation(Piece piece, UserMove move, int startSkip = 0, int endSkip = 0)
+        {
+            if(move.UserMoveType == UserMoveType.Capture)
             {
                 var path = piece.Captures().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
+                return path.Count() > 0 && IsPathClear(path.Skip(startSkip).SkipLast(endSkip));
+            }
 
-                return path.Count() > 0 && IsPathClear(path.Skip(1).SkipLast(1));
+            if(move.UserMoveType == UserMoveType.Move)
+            {
+                var path = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
+                return path.Count() > 0 && IsPathClear(path.Skip(1).SkipLast(endSkip));
             }
 
             return false;
