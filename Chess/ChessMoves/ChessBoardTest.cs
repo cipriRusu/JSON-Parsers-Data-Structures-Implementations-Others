@@ -131,10 +131,10 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
 
-            testBoard.PerformMoves(new string[] 
-            { "Nc3 f5", 
-              "e4 fxe4", 
-              "Nxe4 Nf6", 
+            testBoard.PerformMoves(new string[]
+            { "Nc3 f5",
+              "e4 fxe4",
+              "Nxe4 Nf6",
               "Nxf6+ gxf6" });
 
             Assert.Equal(new Pawn("f6", Player.Black)
@@ -162,6 +162,34 @@ namespace ChessMoves
             },
 
             testBoard[3, 7], new PieceComparer());
+
+            Assert.True(testBoard.IsCheckMate);
+        }
+
+        [Fact]
+        public void ChessBoardReturnsValidValueForSecondFullGameWhitePlayerCheckMated()
+        {
+            var testBoard = new ChessBoard();
+
+            testBoard.PerformMoves(new string[] { "f4 c5", "Nf3 e6", "e3 h6", "Na3 b6", "b3 Be7",
+            "Ke2 Kf8", "g3 Bb7", "Bb2 Nf6", "h4 Ng4", "Qb1 Bf6", "Bh3 Bxb2",
+            "Qxb2 Bxf3+", "Kxf3 Nxe3", "Kxe3 Kg8", "Rhf1 h5", "Nc4 Qe8", "Ne5 d5",
+            "Ke2 Rh6","Kd1 a6", "Re1 Rf6", "Nf3 Rg6", "c4 d4", "Bg2 Qc6", "Rf1 Qc7",
+            "Nh2 Ra7", "g4 Nc6", "Rf3 hxg4", "Rd3 Rf6", "Qa3 Nb4", "Rc1 Qxf4", "Ra1 Qxh2", "Rh3 Qg1+","Ke2 Rf2#"});
+
+            Assert.True(testBoard.IsCheckMate);
+        }
+
+        [Fact]
+        public void ChessBoardReturnsValidValueForThirdFullGameBlackPlayerCheckMated()
+        {
+            var testBoard = new ChessBoard();
+
+            testBoard.PerformMoves(new string[] 
+            {
+            "d3 e5", "Bd2 Bd6", "g4 Qh4", "e3 Bb4","d4 Bd6","d5 f5",
+            "g5 Qg4","Nf3 b6","Na3 Ba6", "Bc3 c5", "Nb5 Be7","h3 Qa4",
+            "Nc7+ Kd8", "Bxa6 Qxa6", "d6 Bxd6","Qxd6 b5", "Ne6+ Kc8", "Qc7#"});
 
             Assert.True(testBoard.IsCheckMate);
         }
@@ -206,7 +234,7 @@ namespace ChessMoves
 
             Assert.False(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Rock, Player.Black));
         }
-        
+
         [Fact]
         public void IsPieceReturnsFalseForWrongPlayer()
         {
