@@ -24,7 +24,14 @@ namespace ChessMoves
         {
             foreach (var move in ConvertToUserMoves(userMoves))
             {
-                Move(GetPiece(move), move);
+                if (IsSpecialMove(move))
+                {
+                    new SpecialMoveHandler(move, this);
+                }
+                if (IsStandardMove(move))
+                {
+                    Move(GetPiece(move), move);
+                }
             }
         }
 
@@ -34,7 +41,7 @@ namespace ChessMoves
 
             var currentPlayerStatus = new CurrentPlayerStatus(TurnToMove, this);
 
-            if(currentPlayerStatus.IsChecked)
+            if (currentPlayerStatus.IsChecked)
             {
                 throw new ArgumentException();
             }
@@ -43,17 +50,23 @@ namespace ChessMoves
 
             var nextPlayerStatus = new CurrentPlayerStatus(TurnToMove, this);
 
-            if(nextPlayerStatus.IsCheckMated)
+            IsCheck = nextPlayerStatus.IsChecked;
+
+            if (nextPlayerStatus.IsChecked && nextPlayerStatus.IsCheckMated)
             {
                 IsCheckMate = true;
             }
         }
 
+        private bool IsStandardMove(UserMove move) =>
+            move.UserMoveType == UserMoveType.Move ||
+            move.UserMoveType == UserMoveType.Capture;
+
         private Piece GetPiece(UserMove move) =>
             GetAllPieces().Where(piece =>
-                IsPiece(move, piece) &&
-                AllMoveConstraints(move, piece) &&
-                CanReachTarget(piece, move)).Single();
+            IsPiece(move, piece) &&
+            AllMoveConstraints(move, piece) &&
+            CanReachTarget(piece, move)).Single();
 
         private bool AllMoveConstraints(UserMove move, Piece x) =>
             RankConstraint(move, x) ||
@@ -76,13 +89,13 @@ namespace ChessMoves
 
         private bool MoveValidation(Piece piece, UserMove move, int startSkip = 0, int endSkip = 0)
         {
-            if(move.UserMoveType == UserMoveType.Capture)
+            if (move.UserMoveType == UserMoveType.Capture)
             {
                 var path = piece.Captures().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
                 return path.Count() > 0 && IsPathClear(path.Skip(startSkip).SkipLast(endSkip));
             }
 
-            if(move.UserMoveType == UserMoveType.Move)
+            if (move.UserMoveType == UserMoveType.Move)
             {
                 var path = piece.Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
                 return path.Count() > 0 && IsPathClear(path.Skip(1).SkipLast(endSkip));
@@ -90,6 +103,12 @@ namespace ChessMoves
 
             return false;
         }
+
+        private bool IsSpecialMove(UserMove move) =>
+            move.UserMoveType == UserMoveType.KingCastling ||
+            move.UserMoveType == UserMoveType.QueenCastling ||
+            move.UserMoveType == UserMoveType.Promote ||
+            move.IsEnPassant == true;
 
         private bool NoConstraint(UserMove move) =>
             move.SourceFile == '\0' &&
@@ -134,6 +153,8 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
             board[destination.Item1, destination.Item2].Update(destination);
             board[source.Item1, source.Item2] = null;
+
+            board[destination.Item1, destination.Item2].IsMoved = true;
         }
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
@@ -157,7 +178,7 @@ namespace ChessMoves
             }
         }
 
-        private void SwitchTurn()
+        public void SwitchTurn()
         {
             switch (TurnToMove)
             {
