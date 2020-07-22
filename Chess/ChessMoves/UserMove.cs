@@ -29,20 +29,28 @@ namespace ChessMoves
             {
                 PawnPromotion(input);
             }
-            else if(input.EndsWith('+'))
+            else if (input.EndsWith('+'))
             {
                 input = input[0..^1];
                 IsCheck = true;
             }
-            else if(input.EndsWith('#'))
+            else if (input.EndsWith('#'))
             {
                 input = input[0..^1];
                 IsCheckMate = true;
             }
-            else if(input.EndsWith("e.p."))
+            else if (input.EndsWith("e.p."))
             {
                 input = input[0..^4];
                 IsEnPassant = true;
+            }
+            else if (input == "0-0")
+            {
+                UserMoveType = UserMoveType.KingCastling;
+            }
+            else if (input == "0-0-0")
+            {
+                UserMoveType = UserMoveType.QueenCastling;
             }
 
             GetSource(string.Concat(input.TakeLast(2)));
@@ -66,7 +74,7 @@ namespace ChessMoves
         }
 
         private void GetOrigin(IEnumerable<char> origin)
-         {
+        {
             foreach (var element in origin)
             {
                 if (element == 'x') { UserMoveType = UserMoveType.Capture; }

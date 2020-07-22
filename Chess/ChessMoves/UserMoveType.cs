@@ -4,6 +4,8 @@
     {
         Move,
         Capture,
-        Promote
+        Promote,
+        KingCastling,
+        QueenCastling
     }
 }
