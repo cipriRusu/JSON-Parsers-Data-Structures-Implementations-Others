@@ -224,6 +224,7 @@ namespace ChessMoves
 
             Assert.True(testBoard[0, 6].PieceType == PieceType.King);
             Assert.True(testBoard[0, 5].PieceType == PieceType.Rock);
+            Assert.True(testBoard.TurnToMove == Player.White);
         }
 
         [Fact]
@@ -235,6 +236,7 @@ namespace ChessMoves
 
             Assert.True(testBoard[7, 6].PieceType == PieceType.King);
             Assert.True(testBoard[7, 5].PieceType == PieceType.Rock);
+            Assert.True(testBoard.TurnToMove == Player.White);
         }
 
         [Fact]

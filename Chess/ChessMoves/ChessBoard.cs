@@ -43,7 +43,7 @@ namespace ChessMoves
 
             if (currentPlayerStatus.IsChecked)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Move keeps Check state of current player King");
             }
 
             SwitchTurn();
@@ -52,10 +52,7 @@ namespace ChessMoves
 
             IsCheck = nextPlayerStatus.IsChecked;
 
-            if (nextPlayerStatus.IsChecked && nextPlayerStatus.IsCheckMated)
-            {
-                IsCheckMate = true;
-            }
+            IsCheckMate = nextPlayerStatus.IsCheckMated;
         }
 
         private bool IsStandardMove(UserMove move) =>
