@@ -14,12 +14,20 @@ namespace ChessMoves
             this.move = move;
             this.chessBoard = chessBoard;
 
-            HandleCastling();
+            MoveHandler();
         }
 
-        private void HandleCastling()
+        private void MoveHandler()
         {
-            new Castling(chessBoard, move);
+            if (move.UserMoveType == UserMoveType.KingCastling ||
+                move.UserMoveType == UserMoveType.QueenCastling)
+            {
+                new Castling(chessBoard, move);
+            }
+            if (move.IsPromotion)
+            {
+                new Promotion(chessBoard, move);
+            }
         }
     }
 }
