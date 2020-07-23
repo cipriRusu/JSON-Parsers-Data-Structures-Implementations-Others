@@ -11,7 +11,7 @@ namespace ChessMoves
         private ChessBoard chessBoard;
         private Piece _currentKing
         {
-            get => FindKing();
+            get => GetKing();
             set => _currentKing = value;
         }
 
@@ -65,59 +65,20 @@ namespace ChessMoves
                 && attackers.Contains(chessBoard[x.Last()].PieceType));
         }
 
-        internal bool IsCastlingValid(UserMove move, IEnumerable<(int, int)> castlingPath)
-        {
-            switch (move.UserMoveType)
-            {
-                case UserMoveType.KingCastling:
-                    return CastlingValidator(castlingPath, 1);
-                case UserMoveType.QueenCastling:
-                    return CastlingValidator(castlingPath, 2);
-                default:
-                    return true;
-            }
-        }
-
-        private bool CastlingValidator(IEnumerable<(int, int)> castlingPath, int edgeSkip) => 
-            KingCastlingValidation(castlingPath) && 
-            castlingPath.Skip(edgeSkip)
-                        .SkipLast(1)
-                        .Select(x => !KingAttackStatus(x))
-                        .All(x => true);
-
-        private bool KingCastlingValidation(IEnumerable<(int, int)> castlingPath) =>
-            !KingCheckStatus()
-            && chessBoard.IsPathClear(castlingPath.Skip(1).SkipLast(1));
-
-        private bool KingAttackStatus((int, int) targetPosition)
+        public bool PlaceCheckStatus((int, int) target)
         {
             var currentBoardState = chessBoard.DeepClone();
-
-            currentBoardState.PerformMove(FindKing().CurrentPosition, targetPosition);
-
+            currentBoardState.PerformMove(GetKing().CurrentPosition, target);
             return new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked;
         }
 
         private bool KingCheckMateStatus()
         {
-            var kingMoves = FindKing().Moves().Where(x => chessBoard.IsPathClear(x));
-
-            foreach (var move in kingMoves)
-            {
-                var currentBoardState = chessBoard.DeepClone();
-
-                currentBoardState.PerformMove(FindKing().CurrentPosition, move.Single());
-
-                if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
-                {
-                    return false;
-                }
-            }
-
-            return kingMoves.Count() > 0;
+            var kingMoves = GetKing().Moves().Where(x => chessBoard.IsPathClear(x));
+            return kingMoves.Where(x => !PlaceCheckStatus(x.Single())).Count() <= 0 && kingMoves.Count() > 0 && KingCheckStatus();
         }
 
-        private Piece FindKing() =>
+        public Piece GetKing() =>
             chessBoard.GetAllPieces().Where(
             x => x != null
                  && x.PieceType == PieceType.King
