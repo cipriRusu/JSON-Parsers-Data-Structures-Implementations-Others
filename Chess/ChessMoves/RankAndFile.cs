@@ -11,6 +11,7 @@ namespace ChessMoves
         const int CHESSBOARDSIZE = 8;
         public char Rank { get; private set; }
         public char File { get; private set; }
+        public string GetRankAndFile => string.Concat(File, Rank);
         public RankAndFile((int, int) input)
         {
             if (CheckIndexes(input.Item1, input.Item2))
