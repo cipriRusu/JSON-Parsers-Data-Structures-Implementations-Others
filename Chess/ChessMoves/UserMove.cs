@@ -17,6 +17,7 @@ namespace ChessMoves
         public bool IsCheck { get; private set; }
         public bool IsCheckMate { get; private set; }
         public bool IsEnPassant { get; private set; }
+        public bool IsPromotion { get; private set; }
 
         private readonly Index customIndex = new Index();
 
@@ -27,7 +28,8 @@ namespace ChessMoves
 
             if (input.Contains('=') && PieceType == PieceType.Pawn)
             {
-                PawnPromotion(input);
+                input = input[0..^2];
+                IsPromotion = true;
             }
             else if (input.EndsWith('+'))
             {
@@ -55,14 +57,6 @@ namespace ChessMoves
 
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
-        }
-
-        private void PawnPromotion(string input)
-        {
-            var source = string.Concat(input.Take(2));
-            GetSource(source);
-            GetPieceType(string.Concat(input.Last()));
-            UserMoveType = UserMoveType.Promote;
         }
 
         private void GetSource(string source)
