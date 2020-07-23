@@ -24,13 +24,13 @@ namespace ChessMoves
         {
             foreach (var move in ConvertToUserMoves(userMoves))
             {
-                if (IsSpecialMove(move))
-                {
-                    new SpecialMoveHandler(move, this);
-                }
                 if (IsStandardMove(move))
                 {
                     Move(GetPiece(move), move);
+                }
+                if (IsSpecialMove(move))
+                {
+                    new SpecialMoveHandler(move, this);
                 }
             }
         }
@@ -56,6 +56,7 @@ namespace ChessMoves
         }
 
         private bool IsStandardMove(UserMove move) =>
+            move.UserMoveType == UserMoveType.Promote ||
             move.UserMoveType == UserMoveType.Move ||
             move.UserMoveType == UserMoveType.Capture;
 
@@ -104,7 +105,7 @@ namespace ChessMoves
         private bool IsSpecialMove(UserMove move) =>
             move.UserMoveType == UserMoveType.KingCastling ||
             move.UserMoveType == UserMoveType.QueenCastling ||
-            move.UserMoveType == UserMoveType.Promote ||
+            move.IsPromotion == true ||
             move.IsEnPassant == true;
 
         private bool NoConstraint(UserMove move) =>
@@ -153,6 +154,9 @@ namespace ChessMoves
 
             board[destination.Item1, destination.Item2].IsMoved = true;
         }
+
+        public void PromoteTo(Piece target, Piece updated) => 
+            board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
 

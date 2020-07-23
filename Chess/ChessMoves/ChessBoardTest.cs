@@ -252,6 +252,30 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void ChessBoardreturnsValidValuesForPawnPromotionBlackPlayer()
+        {
+            var testBoard = new ChessBoard();
+
+            testBoard.PerformMoves(new string[] {
+                "e4 Nf6", "Nc3 d5", "e5 d4", "exf6 dxc3", 
+                "d4 cxb2", "fxg7 bxa1=Q"});
+
+            Assert.True(testBoard[7, 0].PieceType == PieceType.Queen);
+        }
+
+        [Fact]
+        public void ChessBoardReturnsValidValuesForPawnPromotionWhitePlayer()
+        {
+            var testBoard = new ChessBoard();
+
+            testBoard.PerformMoves(new string[] {
+                "e4 Nf6", "Nc3 d5", "e5 d4", "exf6 dxc3",
+                "d4 cxb2", "fxg7 bxa1=Q", "gxh8=Q Qxa2"});
+
+            Assert.True(testBoard[0, 7].PieceType == PieceType.Queen);
+        }
+
+        [Fact]
         public void ChessBoardReturnsValidValuesForBigCastlingBlackPlayer()
         {
             var testBoard = new ChessBoard();
