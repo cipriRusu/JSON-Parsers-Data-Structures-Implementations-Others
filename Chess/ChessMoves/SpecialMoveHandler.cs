@@ -6,8 +6,8 @@ namespace ChessMoves
 {
     internal class SpecialMoveHandler
     {
-        private UserMove move;
-        private ChessBoard chessBoard;
+        private readonly UserMove move;
+        private readonly ChessBoard chessBoard;
 
         public SpecialMoveHandler(UserMove move, ChessBoard chessBoard)
         {
@@ -19,14 +19,17 @@ namespace ChessMoves
 
         private void MoveHandler()
         {
-            if (move.UserMoveType == UserMoveType.KingCastling ||
-                move.UserMoveType == UserMoveType.QueenCastling)
+            if (move.IsCastling)
             {
                 new Castling(chessBoard, move);
             }
-            if (move.IsPromotion)
+            else if (move.IsPromotion)
             {
                 new Promotion(chessBoard, move);
+            }
+            else if (move.IsEnPassant)
+            {
+                new EnPassant(chessBoard, move);
             }
         }
     }
