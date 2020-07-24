@@ -14,6 +14,7 @@ namespace ChessMoves
         public string NotationIndex { get; private set; }
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
+        public bool IsCastling { get; private set; }
         public bool IsCheck { get; private set; }
         public bool IsCheckMate { get; private set; }
         public bool IsEnPassant { get; private set; }
@@ -49,10 +50,12 @@ namespace ChessMoves
             else if (input == "0-0")
             {
                 UserMoveType = UserMoveType.KingCastling;
+                IsCastling = true;
             }
             else if (input == "0-0-0")
             {
                 UserMoveType = UserMoveType.QueenCastling;
+                IsCastling = true;
             }
 
             GetSource(string.Concat(input.TakeLast(2)));
