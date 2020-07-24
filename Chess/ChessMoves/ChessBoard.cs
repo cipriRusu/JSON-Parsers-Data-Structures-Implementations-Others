@@ -37,6 +37,8 @@ namespace ChessMoves
 
         private void Move(Piece piece, UserMove move)
         {
+            FlagPassant(piece, move);
+
             PerformMove(piece.CurrentPosition, move.MoveIndex);
 
             var currentPlayerStatus = new CurrentPlayerStatus(TurnToMove, this);
@@ -53,6 +55,31 @@ namespace ChessMoves
             IsCheck = nextPlayerStatus.IsChecked;
 
             IsCheckMate = nextPlayerStatus.IsCheckMated;
+        }
+
+        private void FlagPassant(Piece piece, UserMove move)
+        {
+            if (piece.PieceType == PieceType.Pawn && !piece.IsMoved)
+            {
+                if (move.PlayerColor == Player.White)
+                {
+                    if (piece.CurrentPosition.Item1 - move.MoveIndex.Item1 == 2)
+                    {
+                        piece.IsPassantCapturable = true;
+                    }
+                }
+                else if (move.PlayerColor == Player.Black)
+                {
+                    if (move.MoveIndex.Item1 - piece.CurrentPosition.Item1 == 2)
+                    {
+                        piece.IsPassantCapturable = true;
+                    }
+                }
+            }
+            else
+            {
+                piece.IsPassantCapturable = false;
+            }
         }
 
         private bool IsStandardMove(UserMove move) =>
@@ -155,8 +182,9 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2].IsMoved = true;
         }
 
-        public void PromoteTo(Piece target, Piece updated) => 
+        public void PromoteTo(Piece target, Piece updated) =>
             board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
+        public void Remove((int, int) target) => board[target.Item1, target.Item2] = null;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
 

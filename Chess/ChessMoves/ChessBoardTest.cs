@@ -290,6 +290,16 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void ChessBoardReturnsValidValuesForWhiteEnPassantCapture()
+        {
+            var testBoard = new ChessBoard();
+            testBoard.PerformMoves(new string[] { "d3 Nh6", "d4 Na6", "Na3 Ng4", "d5 e5", "dxe6e.p." });
+            Assert.True(testBoard[2, 4].PieceType == PieceType.Pawn);
+            Assert.True(testBoard[2, 4].PlayerColour == Player.White);
+            Assert.Null(testBoard[3, 4]);
+        }
+
+        [Fact]
         public void ChessBoardReturnsValidValueForSecondFullGameWhitePlayerCheckMated()
         {
             var testBoard = new ChessBoard();
