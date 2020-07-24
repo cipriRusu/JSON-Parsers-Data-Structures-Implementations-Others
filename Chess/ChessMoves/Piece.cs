@@ -21,6 +21,7 @@ namespace ChessMoves
         public char Rank { get; private set; }
         public PieceType PieceType { get; internal set; }
         public bool IsMoved { get; internal set; }
+        public bool IsPassantCapturable { get; set; }
         public virtual Path Moves() => null;
         public virtual Path Captures() => null;
 
