@@ -23,8 +23,10 @@ namespace ChessMoves
 
         private void CastlingHandler()
         {
-            if (!currentPlayerStatus.GetKing().IsMoved
-                && !GetSwappableRock(currentPlayerStatus.GetKing(), move.UserMoveType).IsMoved)
+            var kingToSwap = currentPlayerStatus.GetKing();
+            var rockToSwap = GetSwappableRock(currentPlayerStatus.GetKing(), move.UserMoveType);
+
+            if (!kingToSwap.IsMoved && rockToSwap != null && !rockToSwap.IsMoved)
             {
                 if (chessBoard.IsPathClear(GetCastlingPath(move).Skip(1).SkipLast(1)))
                 {
@@ -38,6 +40,14 @@ namespace ChessMoves
                             break;
                     }
                 }
+                else
+                {
+                    throw new UserMoveException(move, "Castling move not available with unclear path!");
+                }
+            }
+            else
+            {
+                throw new UserMoveException(move, "Castling move not available with moved pieces!");
             }
         }
 
@@ -47,6 +57,10 @@ namespace ChessMoves
             {
                 PerformCastling(currentPlayerStatus.GetKing(),
                     GetSwappableRock(currentPlayerStatus.GetKing(), move.UserMoveType), kingSource, rockSource);
+            }
+            else
+            {
+                throw new UserMoveException(move, "Castling move not available through Check!");
             }
         }
 
