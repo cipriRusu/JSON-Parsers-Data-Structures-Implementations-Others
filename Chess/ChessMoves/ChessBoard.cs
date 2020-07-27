@@ -7,21 +7,23 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard
     {
-        public Piece this[int i, int j] => board[i, j];
-        public Piece this[(int, int) index] => board[index.Item1, index.Item2];
+        public Piece this[int i, int j] => _board[i, j];
+        public Piece this[(int, int) index] => _board[index.Item1, index.Item2];
 
-        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        private const int TwoSteps = 2;
+        private Piece[,] _board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
-        public readonly static int CHESSBOARD_SIZE = 8;
+        public static readonly int CHESSBOARD_SIZE = 8;
 
         public ChessBoard() => InitializeBoard();
-
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
 
         internal void PerformMoves(IEnumerable<string> userMoves)
         {
+            UserInputExceptions(userMoves);
+
             foreach (var move in ConvertToUserMoves(userMoves))
             {
                 if (IsStandardMove(move))
@@ -61,19 +63,10 @@ namespace ChessMoves
         {
             if (piece.PieceType == PieceType.Pawn && !piece.IsMoved)
             {
-                if (move.PlayerColor == Player.White)
+                if (move.PlayerColor == Player.White && IsFlaggable(piece.CurrentPosition, move.MoveIndex) ||
+                    (move.PlayerColor == Player.Black && IsFlaggable(move.MoveIndex, piece.CurrentPosition)))
                 {
-                    if (piece.CurrentPosition.Item1 - move.MoveIndex.Item1 == 2)
-                    {
-                        piece.IsPassantCapturable = true;
-                    }
-                }
-                else if (move.PlayerColor == Player.Black)
-                {
-                    if (move.MoveIndex.Item1 - piece.CurrentPosition.Item1 == 2)
-                    {
-                        piece.IsPassantCapturable = true;
-                    }
+                    piece.IsPassantCapturable = true;
                 }
             }
             else
@@ -82,16 +75,21 @@ namespace ChessMoves
             }
         }
 
+        private bool IsFlaggable((int, int) first, (int, int) second) => first.Item1 - second.Item1 == TwoSteps;
+
         private bool IsStandardMove(UserMove move) =>
             move.UserMoveType == UserMoveType.Promote ||
             move.UserMoveType == UserMoveType.Move ||
             move.UserMoveType == UserMoveType.Capture;
 
-        private Piece GetPiece(UserMove move) =>
-            GetAllPieces().Where(piece =>
-            IsPiece(move, piece) &&
-            AllMoveConstraints(move, piece) &&
-            CanReachTarget(piece, move)).Single();
+        private Piece GetPiece(UserMove move)
+        {
+            var targetPiece = GetAllPieces().Where(x =>
+            IsPiece(move, x) && AllMoveConstraints(move, x) && CanReachTarget(x, move));
+            PieceExceptions(move, targetPiece);
+
+            return targetPiece.Single();
+        }
 
         private bool AllMoveConstraints(UserMove move, Piece x) =>
             RankConstraint(move, x) ||
@@ -155,14 +153,14 @@ namespace ChessMoves
             move.SourceFile == '\0' &&
             move.SourceRank == x.Rank;
 
-        public bool IsPiece(UserMove move, Piece x) =>
-            x != null &&
-            x.PlayerColour == move.PlayerColor &&
-            x.PieceType == move.PieceType;
+        public bool IsPiece(UserMove move, Piece x)
+        {
+            return x != null && x.PlayerColour == move.PlayerColor && x.PieceType == move.PieceType;
+        }
 
         public IEnumerable<Piece> GetAllPieces() =>
             Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
-            Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
+            Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => _board[i, j]));
 
         public bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
         {
@@ -175,16 +173,16 @@ namespace ChessMoves
 
         public void PerformMove((int, int) source, (int, int) destination)
         {
-            board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
-            board[destination.Item1, destination.Item2].Update(destination);
-            board[source.Item1, source.Item2] = null;
+            _board[destination.Item1, destination.Item2] = _board[source.Item1, source.Item2];
+            _board[destination.Item1, destination.Item2].Update(destination);
+            _board[source.Item1, source.Item2] = null;
 
-            board[destination.Item1, destination.Item2].IsMoved = true;
+            _board[destination.Item1, destination.Item2].IsMoved = true;
         }
 
         public void PromoteTo(Piece target, Piece updated) =>
-            board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
-        public void Remove((int, int) target) => board[target.Item1, target.Item2] = null;
+            _board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
+        public void Remove((int, int) target) => _board[target.Item1, target.Item2] = null;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
 
@@ -228,44 +226,65 @@ namespace ChessMoves
 
         private void InitializeBlack()
         {
-            board[0, 0] = new Rock("a8", Player.Black);
-            board[0, 1] = new Knight("b8", Player.Black);
-            board[0, 2] = new Bishop("c8", Player.Black);
-            board[0, 3] = new Queen("d8", Player.Black);
-            board[0, 4] = new King("e8", Player.Black);
-            board[0, 5] = new Bishop("f8", Player.Black);
-            board[0, 6] = new Knight("g8", Player.Black);
-            board[0, 7] = new Rock("h8", Player.Black);
+            _board[0, 0] = new Rock("a8", Player.Black);
+            _board[0, 1] = new Knight("b8", Player.Black);
+            _board[0, 2] = new Bishop("c8", Player.Black);
+            _board[0, 3] = new Queen("d8", Player.Black);
+            _board[0, 4] = new King("e8", Player.Black);
+            _board[0, 5] = new Bishop("f8", Player.Black);
+            _board[0, 6] = new Knight("g8", Player.Black);
+            _board[0, 7] = new Rock("h8", Player.Black);
 
-            board[1, 0] = new Pawn("a7", Player.Black);
-            board[1, 1] = new Pawn("b7", Player.Black);
-            board[1, 2] = new Pawn("c7", Player.Black);
-            board[1, 3] = new Pawn("d7", Player.Black);
-            board[1, 4] = new Pawn("e7", Player.Black);
-            board[1, 5] = new Pawn("f7", Player.Black);
-            board[1, 6] = new Pawn("g7", Player.Black);
-            board[1, 7] = new Pawn("h7", Player.Black);
+            _board[1, 0] = new Pawn("a7", Player.Black);
+            _board[1, 1] = new Pawn("b7", Player.Black);
+            _board[1, 2] = new Pawn("c7", Player.Black);
+            _board[1, 3] = new Pawn("d7", Player.Black);
+            _board[1, 4] = new Pawn("e7", Player.Black);
+            _board[1, 5] = new Pawn("f7", Player.Black);
+            _board[1, 6] = new Pawn("g7", Player.Black);
+            _board[1, 7] = new Pawn("h7", Player.Black);
         }
 
         private void InitializeWhite()
         {
-            board[7, 0] = new Rock("a1", Player.White);
-            board[7, 1] = new Knight("b1", Player.White);
-            board[7, 2] = new Bishop("c1", Player.White);
-            board[7, 3] = new Queen("d1", Player.White);
-            board[7, 4] = new King("e1", Player.White);
-            board[7, 5] = new Bishop("f1", Player.White);
-            board[7, 6] = new Knight("g1", Player.White);
-            board[7, 7] = new Rock("h1", Player.White);
+            _board[7, 0] = new Rock("a1", Player.White);
+            _board[7, 1] = new Knight("b1", Player.White);
+            _board[7, 2] = new Bishop("c1", Player.White);
+            _board[7, 3] = new Queen("d1", Player.White);
+            _board[7, 4] = new King("e1", Player.White);
+            _board[7, 5] = new Bishop("f1", Player.White);
+            _board[7, 6] = new Knight("g1", Player.White);
+            _board[7, 7] = new Rock("h1", Player.White);
 
-            board[6, 0] = new Pawn("a2", Player.White);
-            board[6, 1] = new Pawn("b2", Player.White);
-            board[6, 2] = new Pawn("c2", Player.White);
-            board[6, 3] = new Pawn("d2", Player.White);
-            board[6, 4] = new Pawn("e2", Player.White);
-            board[6, 5] = new Pawn("f2", Player.White);
-            board[6, 6] = new Pawn("g2", Player.White);
-            board[6, 7] = new Pawn("h2", Player.White);
+            _board[6, 0] = new Pawn("a2", Player.White);
+            _board[6, 1] = new Pawn("b2", Player.White);
+            _board[6, 2] = new Pawn("c2", Player.White);
+            _board[6, 3] = new Pawn("d2", Player.White);
+            _board[6, 4] = new Pawn("e2", Player.White);
+            _board[6, 5] = new Pawn("f2", Player.White);
+            _board[6, 6] = new Pawn("g2", Player.White);
+            _board[6, 7] = new Pawn("h2", Player.White);
+        }
+
+        private static void PieceExceptions(UserMove move, IEnumerable<Piece> targetPiece)
+        {
+            if (!targetPiece.Any())
+            {
+                throw new UserMoveException(move, "No valid piece found that can perform current move!");
+            }
+
+            if (targetPiece.Count() > 1)
+            {
+                throw new PieceException(move, targetPiece, "Current move is ambiguous, as there are multiple pieces that can perform provided move!");
+            }
+        }
+
+        private static void UserInputExceptions(IEnumerable<string> userMoves)
+        {
+            if (!userMoves.Any() || userMoves.Count() == 0)
+            {
+                throw new UserMoveException("User input is empty!");
+            }
         }
     }
 }

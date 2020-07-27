@@ -8,6 +8,122 @@ namespace ChessMoves
     public class ChessBoardTest
     {
         [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForEmptyInput()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForEmptyStringInput()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForEmptyStringInInput()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 e5", "", "Nc3"}));
+        }
+
+        [Fact]
+        public void ChesBoardThrowsUserMoveExceptionForInvalidTextInInput()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "gibberish", "as input" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidInputInGame()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "Nc3 f5", "AABC Nf3" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForValidInputAndInvalidMove()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 e5", "exd4" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForValidAmbiguousMoveAndUnspecifiedFile()
+        {
+            Assert.Throws<PieceException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 Nh6", "e5 Na6", "e6 xe6" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForValidAmbiguousMoveAndUnspecfiedRank()
+        {
+            Assert.Throws<PieceException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 h5", "Nc3 a5", "e5 Ra6", "e6 Rh6", "Nh3 Rxe6" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForValidMoveAndUnspecifiedPiece()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 e5", "a3 h4" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForEnPassantCaptureOfInvalidPawn()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 d5", "e5 dxe4e.p." }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidSmallCastlingMovedPiece()
+        {
+            Assert.Throws<UserMoveException>(() =>
+               new ChessBoard().PerformMoves(new string[] { "Nh3 Na6", "g3 d6",
+                "Bg2 Bxh3", "Bxh3 Rb8", "Kf1 Qd7", "Ke1 Nc5", "0-0" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidSmallCastlingThroughCheck()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "g3 e5", "Nf3 d6", "Bh3 Bxh3", "0-0" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidSmallCastlingUnclearPath()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "g3 e5", "Nh3 Na6", "0-0" }));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidLargeCastlingMovedPiece()
+        {
+            Assert.Throws<UserMoveException>(() =>
+               new ChessBoard().PerformMoves(new string[] { "e4 e5", "Na3 d6",
+                "Nh3 Bxh3", "c3 Na6", "Rg1 Qd7", "Nc4 Rb8", "Nxe5 Ra8", "Rh1 0-0-0"}));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidLargeCastlingThroughCheck()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().PerformMoves(new string[] { "e4 e5", "Na3 d6", "Nh3 Bxh3",
+                "c3 Na6", "Rg1 Qd7", "Nb5 Qe6", "Nxd6 0-0-0"}));
+        }
+
+        [Fact]
+        public void ChessBoardThrowsUserMoveExceptionForInvalidLargeCastlingUnclearPath()
+        {
+            Assert.Throws<UserMoveException>(() => new ChessBoard().PerformMoves(
+                new string[] {"e4 e5", "Na3 d6", "Nh3 Bxh3", "c3 Na6","Rg1 Qd7",
+            "Nb5 Qe6", "a4 Nb8", "a5 0-0-0"}));
+        }
+
+        [Fact]
         public void ChessBoardReturnsValidBoardForSingleValidMoves()
         {
             var testBoard = new ChessBoard();
@@ -257,7 +373,7 @@ namespace ChessMoves
             var testBoard = new ChessBoard();
 
             testBoard.PerformMoves(new string[] {
-                "e4 Nf6", "Nc3 d5", "e5 d4", "exf6 dxc3", 
+                "e4 Nf6", "Nc3 d5", "e5 d4", "exf6 dxc3",
                 "d4 cxb2", "fxg7 bxa1=Q"});
 
             Assert.True(testBoard[7, 0].PieceType == PieceType.Queen);
@@ -297,6 +413,16 @@ namespace ChessMoves
             Assert.True(testBoard[2, 4].PieceType == PieceType.Pawn);
             Assert.True(testBoard[2, 4].PlayerColour == Player.White);
             Assert.Null(testBoard[3, 4]);
+        }
+
+        [Fact]
+        public void ChessBoardReturnsValidValueForBlackEnPassantCapture()
+        {
+            var testBoard = new ChessBoard();
+            testBoard.PerformMoves(new string[] { "Na3 e5", "Nh3 e4", "d4 exd3e.p." });
+            Assert.True(testBoard[5, 3].PieceType == PieceType.Pawn);
+            Assert.True(testBoard[5, 3].PlayerColour == Player.Black);
+            Assert.Null(testBoard[4, 3]);
         }
 
         [Fact]
