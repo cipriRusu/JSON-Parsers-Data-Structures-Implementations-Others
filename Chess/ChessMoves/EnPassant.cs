@@ -24,15 +24,28 @@ namespace ChessMoves
                 {
                     chessBoard.Remove((move.MoveIndex.Item1 + 1, move.MoveIndex.Item2));
                 }
+                else
+                {
+                    throw new UserMoveException(move, "En Passant capture invalid!");
+                }
             }
-            if (move.PlayerColor == Player.Black)
+            else if (move.PlayerColor == Player.Black)
             {
                 if (chessBoard[move.MoveIndex.Item1 - 1, move.MoveIndex.Item2].PlayerColour == Piece.Opponent(move.PlayerColor)
                     && chessBoard[move.MoveIndex.Item1 - 1, move.MoveIndex.Item2].IsPassantCapturable)
                 {
                     chessBoard.Remove((move.MoveIndex.Item1 - 1, move.MoveIndex.Item2));
                 }
+                else
+                {
+                    throw new UserMoveException(move, "En Passant capture invalid!");
+                }
             }
+            else
+            {
+                throw new UserMoveException(move, "En Passant capture invalid!");
+            }
+
         }
     }
 }
