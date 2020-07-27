@@ -24,6 +24,8 @@ namespace ChessMoves
 
         public UserMove(string input)
         {
+            UserMoveInputExceptions(input);
+
             NotationIndex = input;
             GetPieceType(input);
 
@@ -60,6 +62,14 @@ namespace ChessMoves
 
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
+        }
+
+        private static void UserMoveInputExceptions(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new UserMoveException("Current user input is empty!");
+            }
         }
 
         private void GetSource(string source)
