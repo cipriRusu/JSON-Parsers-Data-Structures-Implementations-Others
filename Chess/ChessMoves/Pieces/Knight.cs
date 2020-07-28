@@ -12,8 +12,7 @@ namespace ChessMoves
             base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Knight;
 
-        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
-
-        public override Path Captures() => Moves();
+        public Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
+        public Path Captures() => Moves();
     }
 }
