@@ -47,6 +47,8 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
             board[destination.Item1, destination.Item2].Update(destination);
             board[formerPosition.Item1, formerPosition.Item2] = null;
+
+            SwitchTurn();
         }
 
         public void PromoteTo(Piece target, Piece updated) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
