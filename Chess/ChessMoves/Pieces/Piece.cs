@@ -22,6 +22,8 @@ namespace ChessMoves
         public char Rank { get; private set; }
         public PieceType PieceType { get; internal set; }
         public bool IsMoved { get; internal set; }
+        public virtual Path Moves() => null;
+        public virtual Path Captures() => null;
 
         public void Update((int, int) newPosition)
         {
@@ -41,6 +43,18 @@ namespace ChessMoves
                     return Player.White;
                 default:
                     throw new ArgumentException("Invalid player");
+            }
+        }
+
+        public virtual bool CanReach((int, int) destination) => Moves().Any(x => x.Last() == destination);
+
+        public virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) 
+        {
+            var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
+
+            if(chessBoard.IsPathClear(validPath.Skip(1)))
+            {
+                chessBoard.PerformMove(this, targetMove);
             }
         }
     }
