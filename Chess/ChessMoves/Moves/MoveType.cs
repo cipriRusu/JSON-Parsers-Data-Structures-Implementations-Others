@@ -7,7 +7,7 @@ namespace ChessMoves.Moves
     public class MoveType
     {
         private readonly string userInput;
-        public IMove Move { get; private set; }
+        public IUserMove Move { get; private set; }
         public Player PlayerTurn { get; private set; }
         public MoveType(string userInput, Player playerTurn)
         {
@@ -15,7 +15,7 @@ namespace ChessMoves.Moves
             Move = MovementTypeDeterminator(userInput, playerTurn);
         }
 
-        private IMove MovementTypeDeterminator(string input, Player playerTurn)
+        private IUserMove MovementTypeDeterminator(string input, Player playerTurn)
         {
             if (input.Contains('='))
             {
