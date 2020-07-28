@@ -8,5 +8,10 @@ namespace ChessMoves.Moves
     public class MoveUserMove : UserMove, IUserMove
     {
         public MoveUserMove(string input, Player playerTurn) : base(input, playerTurn)  { }
+
+        public void Move(ChessBoard board) 
+        {
+
+        }
     }
 }
