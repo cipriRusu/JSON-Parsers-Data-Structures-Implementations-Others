@@ -6,8 +6,13 @@ namespace ChessMoves
 {
     public interface IChessPiece
     {
-        virtual Path Moves() { return null; }
-        virtual Path Captures() { return null; }
+        char File { get; }
+        char Rank { get; }
+        (int, int) CurrentPosition { get; }
+        Player PlayerColour { get; }
+        Path Moves() { return null; }
+        Path Captures() { return null; }
         virtual bool CanReach((int, int) destination) { return false; }
+        virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) { }
     }
 }

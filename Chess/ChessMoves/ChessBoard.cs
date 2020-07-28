@@ -19,7 +19,7 @@ namespace ChessMoves
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
 
-        internal void PerformMoves(IEnumerable<string> userMoves)
+        internal void UserMoves(IEnumerable<string> userMoves)
         {
             foreach (var userMove in GetMoveType(userMoves))
             {
@@ -40,13 +40,13 @@ namespace ChessMoves
                 this[currentPosition].PlayerColour == player;
         }
 
-        public void PerformMove((int, int) source, (int, int) destination)
+        public void PerformMove(IChessPiece piece, (int, int) destination)
         {
-            board[destination.Item1, destination.Item2] = board[source.Item1, source.Item2];
-            board[destination.Item1, destination.Item2].Update(destination);
-            board[source.Item1, source.Item2] = null;
+            var formerPosition = piece.CurrentPosition;
 
-            board[destination.Item1, destination.Item2].IsMoved = true;
+            board[destination.Item1, destination.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
+            board[destination.Item1, destination.Item2].Update(destination);
+            board[formerPosition.Item1, formerPosition.Item2] = null;
         }
 
         public void PromoteTo(Piece target, Piece updated) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
