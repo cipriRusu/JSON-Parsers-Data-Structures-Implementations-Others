@@ -23,7 +23,7 @@ namespace ChessMoves
         {
             foreach (var userMove in GetMoveType(userMoves))
             {
-                userMove.Move(this);
+                userMove.PerformMoveType(this);
             }
         }
 
