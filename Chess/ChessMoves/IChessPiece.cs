@@ -14,6 +14,8 @@ namespace ChessMoves
         Path Moves() { return null; }
         Path Captures() { return null; }
         virtual bool CanReach((int, int) destination) { return false; }
+        virtual bool CanCapture((int, int) target) { return false; }
         virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) { }
+        virtual void PerformCapture((int, int) targetCapture, ChessBoard chessBoard) { }
     }
 }
