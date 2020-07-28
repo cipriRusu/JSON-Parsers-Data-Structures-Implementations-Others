@@ -47,6 +47,7 @@ namespace ChessMoves
         }
 
         public virtual bool CanReach((int, int) destination) => Moves().Any(x => x.Last() == destination);
+        public virtual bool CanCapture((int, int) target) => Captures().Any(x => x.Last() == target);
 
         public virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) 
         {
@@ -55,6 +56,18 @@ namespace ChessMoves
             if(chessBoard.IsPathClear(validPath.Skip(1)))
             {
                 chessBoard.PerformMove(this, targetMove);
+            }
+        }
+
+        public virtual void PerformCapture((int, int) targetCapture, ChessBoard chessBoard)
+        {
+            var validPath = Captures().Where(x => x.Last() == targetCapture).SelectMany(x => x);
+
+            var validTarget = chessBoard[validPath.Last()];
+
+            if (chessBoard.IsPathClear(validPath.Skip(1).SkipLast(1)) && validTarget.PlayerColour == Opponent(PlayerColour))
+            {
+                chessBoard.PerformMove(this, targetCapture);
             }
         }
     }
