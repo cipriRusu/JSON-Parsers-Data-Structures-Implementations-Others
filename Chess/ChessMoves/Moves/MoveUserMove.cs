@@ -15,7 +15,8 @@ namespace ChessMoves.Moves
                 .Where(x => x != null
                             && x.PlayerColour == PlayerColor
                             && x.PieceType == PieceType
-                            && x.CanReach(MoveIndex));
+                            && x.CanReach(MoveIndex)
+                            && new ConstraintValidator(x, this).IsValid);
 
             current.Single().PerformMove(MoveIndex, board);
         }
