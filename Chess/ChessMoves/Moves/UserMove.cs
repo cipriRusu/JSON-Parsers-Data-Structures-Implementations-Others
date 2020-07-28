@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace ChessMoves
 {
-    public abstract class UserMove : IMove
+    public abstract class UserMove
     {
         public PieceType PieceType { get; private set; }
         public (int, int) MoveIndex { get; private set; }
@@ -14,8 +14,6 @@ namespace ChessMoves
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
         public Player PlayerColor { get; private set; }
-
-        private readonly Index customIndex = new Index();
 
         public UserMove(string input, Player playerTurn)
         {
@@ -31,7 +29,7 @@ namespace ChessMoves
         {
             if (source.All(x => IsRank(x) || IsFile(x)))
             {
-                MoveIndex = customIndex.GetMatrixIndex(source);
+                MoveIndex = new Index().GetMatrixIndex(source);
             }
         }
 
