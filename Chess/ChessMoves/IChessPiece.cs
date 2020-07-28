@@ -10,6 +10,7 @@ namespace ChessMoves
         char Rank { get; }
         (int, int) CurrentPosition { get; }
         Player PlayerColour { get; }
+        PieceType PieceType { get; }
         Path Moves() { return null; }
         Path Captures() { return null; }
         virtual bool CanReach((int, int) destination) { return false; }

@@ -11,7 +11,11 @@ namespace ChessMoves.Moves
 
         public void Move(ChessBoard board)
         {
-            var current = board.GetAllPieces().Where(x => x != null && x.PlayerColour == PlayerColor && x.CanReach(MoveIndex));
+            var current = board.GetAllPieces()
+                .Where(x => x != null
+                            && x.PlayerColour == PlayerColor
+                            && x.PieceType == PieceType
+                            && x.CanReach(MoveIndex));
 
             current.Single().PerformMove(MoveIndex, board);
         }
