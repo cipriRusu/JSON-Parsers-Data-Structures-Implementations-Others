@@ -12,13 +12,13 @@ namespace ChessMoves
             base(chessBoardIndex, playerColour) =>
             PieceType = PieceType.Knight;
 
+        public override bool CanCapture((int, int) target) => Captures().Any(x => x.Single() == target);
+        public override bool CanReach((int, int) destination) => Moves().Any(x => x.Single() == destination);
         public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
         public override Path Captures() => Moves();
-        public override bool CanReach((int, int) destination) => Moves().Any(x => x.Single() == destination);
         public override void PerformMove((int, int) targetMove, ChessBoard chessBoard)
         {
-            var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
-
+            var validPath = Moves().Where(x => x.Single() == targetMove).SelectMany(x => x);
             chessBoard.PerformMove(this, targetMove);
         }
     }
