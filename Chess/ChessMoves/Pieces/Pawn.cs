@@ -15,5 +15,7 @@ namespace ChessMoves
         public Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Pawn }, PlayerColour);
 
         public Path Captures() => new Path(CurrentPosition, new PathType[] { PathType.PawnCapture}, PlayerColour);
+
+        public bool CanReach((int, int) destination) => Moves().Any(x => x.Last() == destination);
     }
 }

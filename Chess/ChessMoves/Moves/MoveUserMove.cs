@@ -9,9 +9,9 @@ namespace ChessMoves.Moves
     {
         public MoveUserMove(string input, Player playerTurn) : base(input, playerTurn)  { }
 
-        public void Move(ChessBoard board) 
+        public void Move(ChessBoard board)
         {
-
+            var toMove = board.GetAllPieces().Where(x => x != null && x.CanReach(MoveIndex));
         }
     }
 }
