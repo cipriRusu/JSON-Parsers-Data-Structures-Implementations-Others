@@ -12,10 +12,10 @@ namespace ChessMoves
             base(chessBoardIndex, playerColour) =>
             PieceType = PieceType.Knight;
 
-        public Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
-        public Path Captures() => Moves();
-        public bool CanReach((int, int) destination) => Moves().Any(x => x.Single() == destination);
-        public void PerformMove((int, int) targetMove, ChessBoard chessBoard)
+        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
+        public override Path Captures() => Moves();
+        public override bool CanReach((int, int) destination) => Moves().Any(x => x.Single() == destination);
+        public override void PerformMove((int, int) targetMove, ChessBoard chessBoard)
         {
             var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
 

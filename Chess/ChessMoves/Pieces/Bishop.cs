@@ -13,7 +13,7 @@ namespace ChessMoves
         public Bishop(string matrixPosition, Player playerColour) : 
             base(matrixPosition, playerColour) => PieceType = PieceType.Bishop;
 
-        public Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Diagonals });
-        public Path Captures() => Moves();
+        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Diagonals });
+        public override Path Captures() => Moves();
     }
 }
