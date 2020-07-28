@@ -21,14 +21,6 @@ namespace ChessMoves.Moves
             {
                 return new PromotionUserMove(input[0..^2], playerTurn);
             }
-            else if (input.EndsWith('+'))
-            {
-                return new CheckUserMove(input[0..^1], playerTurn);
-            }
-            else if (input.EndsWith('#'))
-            {
-                return new CheckMateUserMove(input[0..^1], playerTurn);
-            }
             else if (input.EndsWith("e.p."))
             {
                 return new EnPassantUserMove(input[0..^4], playerTurn);
