@@ -99,5 +99,17 @@ namespace ChessMoves
                 throw new UserMoveException(this, "Check move invalid");
             }
         }
+
+        public void MoveAndPieceExceptions(IUserMove move, IEnumerable<IChessPiece> pieces)
+        {
+            if (!pieces.Any())
+            {
+                throw new UserMoveException(this, "No piece found that can handle current user input");
+            }
+            if (pieces.Count() > 1)
+            {
+                throw new PieceException(move, pieces, "Multiple pieces found that can perform current move due to ambiguous input");
+            }
+        }
     }
 }
