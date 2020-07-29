@@ -25,7 +25,7 @@ namespace ChessMoves
 
         public bool IsCheckMated => KingCheckMateStatus();
 
-        public bool KingPositionStatus((int, int) position)
+        public bool KingPositionCheckStatus((int, int) position)
         {
             var currentBoardState = chessBoard.DeepClone();
             currentBoardState.PerformMove(King, position);
