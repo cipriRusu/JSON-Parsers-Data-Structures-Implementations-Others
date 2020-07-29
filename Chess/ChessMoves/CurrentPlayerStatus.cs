@@ -23,6 +23,15 @@ namespace ChessMoves
 
         public bool IsChecked => KingCheckStatus();
 
+        public bool IsCheckMated => KingCheckMateStatus();
+
+        public bool KingPositionStatus((int, int) position)
+        {
+            var currentBoardState = chessBoard.DeepClone();
+            currentBoardState.PerformMove(King, position);
+            return new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked;
+        }
+
         private bool KingCheckStatus()
         {
             IEnumerable<IEnumerable<(int, int)>> diagonalAttacks =
@@ -46,6 +55,25 @@ namespace ChessMoves
                 new PieceType[] { PieceType.Pawn });
 
             return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any() || pawnAttacks.Any();
+        }
+
+        private bool KingCheckMateStatus()
+        {
+            var legalMoves = King.Moves().Where(x => chessBoard.IsPathClear(x));
+
+            foreach(var move in legalMoves)
+            {
+                var currentBoardState = chessBoard.DeepClone();
+
+                currentBoardState.PerformMove(King, move.Single());
+
+                if(!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
+                {
+                    return false;
+                }
+            }
+
+            return legalMoves.Count() > 0;
         }
 
         private IEnumerable<IEnumerable<(int, int)>> GetAttacks(IChessPiece currentKing, PathType[] pathTypes, PieceType[] attackers)
