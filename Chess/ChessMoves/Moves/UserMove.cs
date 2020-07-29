@@ -87,5 +87,17 @@ namespace ChessMoves
                 throw new UserMoveException("Current user input is empty!");
             }
         }
+
+        internal void CheckVerification(ChessBoard board)
+        {
+            if(new CurrentPlayerStatus(PlayerColor, board).IsChecked)
+            {
+                throw new UserMoveException(this, "Move invalid");
+            }
+            if (IsCheck && !new CurrentPlayerStatus(Piece.Opponent(PlayerColor), board).IsChecked)
+            {
+                throw new UserMoveException(this, "Check move invalid");
+            }
+        }
     }
 }
