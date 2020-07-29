@@ -14,8 +14,6 @@ namespace ChessMoves
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
         public Player PlayerColor { get; private set; }
-        public bool IsCheck { get; private set; }
-        public bool IsCheckMate { get; private set; }
 
         public UserMove(string input, Player playerTurn)
         {
