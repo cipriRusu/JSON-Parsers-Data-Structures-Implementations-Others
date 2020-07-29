@@ -51,6 +51,8 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
+        public void Promote(ChessBoard chessBoard) => chessBoard.Promote(this);
+
         public static Player Opponent(Player player)
         {
             switch (player)

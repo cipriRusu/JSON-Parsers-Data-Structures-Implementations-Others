@@ -16,6 +16,7 @@ namespace ChessMoves
         bool IsPassantCapturable { get; }
         Path Moves() { return null; }
         Path Captures() { return null; }
+        void Promote(ChessBoard chessBoard) { }
         void MarkPassant(IChessPiece piece, (int, int) destination) { }
         bool CanReach((int, int) destination, ChessBoard chessBoard) =>
             Moves().Any(x => x.Last() == destination && chessBoard.IsPathClear(x.Skip(1)));

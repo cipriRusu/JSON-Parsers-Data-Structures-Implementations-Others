@@ -62,7 +62,11 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2].IsMoved = true;
         }
 
-        public void PromoteTo(Piece target, Piece updated) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
+        public void Promote(IChessPiece piece) => 
+            board[piece.CurrentPosition.Item1,
+                  piece.CurrentPosition.Item2] = new Queen(string.Concat(piece.File,piece.Rank),
+                                                           piece.PlayerColour);
+
         public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
