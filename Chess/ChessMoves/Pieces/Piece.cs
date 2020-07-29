@@ -46,9 +46,6 @@ namespace ChessMoves
             }
         }
 
-        public virtual bool CanReach((int, int) destination) => Moves().Any(x => x.Last() == destination);
-        public virtual bool CanCapture((int, int) target) => Captures().Any(x => x.Last() == target);
-
         public virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) 
         {
             var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
