@@ -155,7 +155,7 @@ namespace ChessMoves
 
             testBoard.UserMoves(new string[] { "e4 e5", "Nf3 Nc6", "Bb5 a6" });
 
-            Assert.Equal(testBoard[(4, 4)],
+            Assert.Equal(testBoard[4, 4],
                 new Pawn("e4", Player.White)
                 {
                     CurrentPosition = (4, 4),
@@ -257,7 +257,7 @@ namespace ChessMoves
         [Fact]
         public void ChessBoardFailsForCheckedKingAndInvalidMove()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<UserMoveException>(() =>
             new ChessBoard().UserMoves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nxf6+ c6" }));
         }
 
