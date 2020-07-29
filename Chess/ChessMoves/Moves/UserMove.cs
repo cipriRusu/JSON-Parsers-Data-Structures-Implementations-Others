@@ -90,13 +90,13 @@ namespace ChessMoves
 
         internal void CheckVerification(ChessBoard board)
         {
-            if(new CurrentPlayerStatus(PlayerColor, board).IsChecked)
+            if (new CurrentPlayerStatus(PlayerColor, board).IsChecked)
             {
                 throw new UserMoveException(this, "Move invalid");
             }
-            if (IsCheck && !new CurrentPlayerStatus(Piece.Opponent(PlayerColor), board).IsChecked)
+            else
             {
-                throw new UserMoveException(this, "Check move invalid");
+                board.IsCheck = false;
             }
         }
 

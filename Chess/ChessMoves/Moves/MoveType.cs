@@ -25,6 +25,10 @@ namespace ChessMoves.Moves
             {
                 return new QueenCastlingUserMove(input, playerTurn);
             }
+            else if(input.EndsWith("+"))
+            {
+                return new KingCheckUserMove(input[0..^1], playerTurn);
+            }
             else if (input.Contains('='))
             {
                 return new PromotionUserMove(input[0..^2], playerTurn);

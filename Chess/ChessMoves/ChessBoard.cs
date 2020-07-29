@@ -16,7 +16,7 @@ namespace ChessMoves
         public ChessBoard() => InitializeBoard();
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; private set; }
-        public bool IsCheck { get; private set; }
+        public bool IsCheck { get; set; }
 
         internal void UserMoves(IEnumerable<string> userMoves)
         {
@@ -28,10 +28,6 @@ namespace ChessMoves
             foreach (var userMove in GetMoveType(userMoves))
             {
                 userMove.PerformMoveType(this);
-
-                IsCheck = new CurrentPlayerStatus(Piece.Opponent(TurnToMove), this).IsChecked;
-
-                IsCheckMate = new CurrentPlayerStatus(Piece.Opponent(TurnToMove), this).IsCheckMated;
 
                 SwitchTurn();
             }
