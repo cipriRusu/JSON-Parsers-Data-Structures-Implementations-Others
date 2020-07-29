@@ -22,6 +22,24 @@ namespace ChessMoves
         public char Rank { get; private set; }
         public PieceType PieceType { get; internal set; }
         public bool IsMoved { get; internal set; }
+        public bool PassantCapturable { get; private set; }
+        public bool IsPassantCapturable { get; private set; }
+        public void MarkPassant(IChessPiece piece, (int, int) destination)
+        {
+            if (piece.PieceType == PieceType.Pawn)
+            {
+                switch (piece.PlayerColour)
+                {
+                    case Player.White:
+                        IsPassantCapturable = destination.Item2 - piece.CurrentPosition.Item2 == 2;
+                        break;
+                    case Player.Black:
+                        IsPassantCapturable = piece.CurrentPosition.Item2 - destination.Item2 == 2;
+                        break;
+                }
+            }
+        }
+
         public virtual Path Moves() => null;
         public virtual Path Captures() => null;
 
