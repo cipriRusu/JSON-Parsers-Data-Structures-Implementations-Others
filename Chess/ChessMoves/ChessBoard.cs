@@ -9,7 +9,6 @@ namespace ChessMoves
     public class ChessBoard
     {
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
-
         public Piece this[int i, int j] => board[i, j];
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
 
@@ -53,6 +52,7 @@ namespace ChessMoves
 
         public void PerformMove(IChessPiece piece, (int, int) destination)
         {
+            piece.MarkPassant(piece, destination);
             var formerPosition = piece.CurrentPosition;
 
             board[destination.Item1, destination.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
@@ -63,7 +63,7 @@ namespace ChessMoves
         }
 
         public void PromoteTo(Piece target, Piece updated) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
-        public void Remove((int, int) target) => board[target.Item1, target.Item2] = null;
+        public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
 
