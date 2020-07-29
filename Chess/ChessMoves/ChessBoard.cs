@@ -15,7 +15,7 @@ namespace ChessMoves
         public static readonly int CHESSBOARD_SIZE = 8;
         public ChessBoard() => InitializeBoard();
         public Player TurnToMove { get; private set; } = Player.White;
-        public bool IsCheckMate { get; private set; }
+        public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
 
         internal void UserMoves(IEnumerable<string> userMoves)

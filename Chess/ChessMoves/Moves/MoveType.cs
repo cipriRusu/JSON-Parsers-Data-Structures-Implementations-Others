@@ -29,6 +29,10 @@ namespace ChessMoves.Moves
             {
                 return new KingCheckUserMove(input[0..^1], playerTurn);
             }
+            else if(input.EndsWith("#"))
+            {
+                return new KingCheckMateUserMove(input[0..^1], playerTurn);
+            }
             else if (input.Contains('='))
             {
                 return new PromotionUserMove(input[0..^2], playerTurn);
