@@ -11,7 +11,7 @@ namespace ChessMoves
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
 
         public Piece this[int i, int j] => board[i, j];
-        public Piece this[(int, int) index] => board[index.Item1, index.Item2];
+        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
 
         public static readonly int CHESSBOARD_SIZE = 8;
         public ChessBoard() => InitializeBoard();
@@ -21,9 +21,20 @@ namespace ChessMoves
 
         internal void UserMoves(IEnumerable<string> userMoves)
         {
+            if(!userMoves.Any() || userMoves.Count() == 0)
+            {
+                throw new UserMoveException("No user input provided");
+            }
+
             foreach (var userMove in GetMoveType(userMoves))
             {
                 userMove.PerformMoveType(this);
+
+                IsCheck = new CurrentPlayerStatus(Piece.Opponent(TurnToMove), this).IsChecked;
+
+                IsCheckMate = new CurrentPlayerStatus(Piece.Opponent(TurnToMove), this).IsCheckMated;
+
+                SwitchTurn();
             }
         }
 
@@ -48,7 +59,7 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2].Update(destination);
             board[formerPosition.Item1, formerPosition.Item2] = null;
 
-            SwitchTurn();
+            board[destination.Item1, destination.Item2].IsMoved = true;
         }
 
         public void PromoteTo(Piece target, Piece updated) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = updated;
