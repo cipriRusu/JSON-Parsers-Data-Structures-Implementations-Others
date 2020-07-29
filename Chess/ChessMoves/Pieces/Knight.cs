@@ -12,8 +12,9 @@ namespace ChessMoves
             base(chessBoardIndex, playerColour) =>
             PieceType = PieceType.Knight;
 
-        public override bool CanCapture((int, int) target) => Captures().Any(x => x.Single() == target);
-        public override bool CanReach((int, int) destination) => Moves().Any(x => x.Single() == destination);
+        public bool CanCapture((int, int) target, ChessBoard board) => Captures().Any(x => x.Single() == target);
+        public bool CanReach((int, int) destination, ChessBoard board) => Moves().Any(x => x.Single() == destination);
+
         public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
         public override Path Captures() => Moves();
         public override void PerformMove((int, int) targetMove, ChessBoard chessBoard)
