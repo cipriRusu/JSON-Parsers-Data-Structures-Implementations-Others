@@ -17,7 +17,15 @@ namespace ChessMoves.Moves
 
         private IUserMove MovementTypeDeterminator(string input, Player playerTurn)
         {
-            if (input.Contains('='))
+            if (input.Equals("0-0"))
+            {
+                return new KingCastlingUserMove(input, playerTurn);
+            }
+            else if(input.Equals("0-0-0"))
+            {
+                return new QueenCastlingUserMove(input, playerTurn);
+            }
+            else if (input.Contains('='))
             {
                 return new PromotionUserMove(input[0..^2], playerTurn);
             }
