@@ -18,6 +18,8 @@ namespace ChessMoves
                             && x.CanCapture(MoveIndex, board)
                             && new ConstraintValidator(x, this).IsValid);
 
+            MoveAndPieceExceptions(this, current);
+
             current.Single().PerformCapture(MoveIndex, board);
 
             CheckVerification(board);

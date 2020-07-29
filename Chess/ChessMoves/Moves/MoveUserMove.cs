@@ -18,6 +18,8 @@ namespace ChessMoves.Moves
                             && x.CanReach(MoveIndex, board)
                             && new ConstraintValidator(x, this).IsValid);
 
+            MoveAndPieceExceptions(this, current);
+
             current.Single().PerformMove(MoveIndex, board);
 
             CheckVerification(board);
