@@ -19,17 +19,6 @@ namespace ChessMoves
 
         public UserMove(string input, Player playerTurn)
         {
-            if(input.EndsWith('+'))
-            {
-                input = input[0..^1];
-                IsCheck = true;
-            }
-            else if(input.EndsWith('#'))
-            {
-                input = input[0..^1];
-                IsCheckMate = true;
-            }
-
             NotationIndex = input;
             PlayerColor = playerTurn;
             UserMoveInputExceptions(input);
