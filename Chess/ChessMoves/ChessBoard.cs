@@ -9,9 +9,7 @@ namespace ChessMoves
     public class ChessBoard : IBoardState
     {
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
-        public Piece this[int i, int j] => board[i, j];
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
-
         public static readonly int CHESSBOARD_SIZE = 8;
         public ChessBoard() => InitializeBoard();
         public Player TurnToMove { get; private set; } = Player.White;
@@ -27,7 +25,7 @@ namespace ChessMoves
 
             foreach (var userMove in GetMoveType(userMoves))
             {
-                userMove.PerformMoveType(this);
+                userMove.GetCurrentState(this);
 
                 SwitchTurn();
             }
