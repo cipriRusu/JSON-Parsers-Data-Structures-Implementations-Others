@@ -19,7 +19,7 @@ namespace ChessMoves.Moves
             }
             else
             {
-                new UserMoveException(this, "Check move not valid");
+                throw new UserMoveException(this, "Check move not valid");
             }
         }
     }

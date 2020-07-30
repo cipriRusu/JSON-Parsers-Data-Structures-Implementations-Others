@@ -262,6 +262,13 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void ChessBoardFailsForCheckedMoveAndUncheckedKing()
+        {
+            Assert.Throws<UserMoveException>(() =>
+            new ChessBoard().UserMoves(new string[] { "Nc3 f5", "e4 fxe4", "Nxe4 Nf6", "Nc3+" }));
+        }
+
+        [Fact]
         public void TurnToMovePropertyReturnsValidOutputForWhiteTurn()
         {
             var board = new ChessBoard();
