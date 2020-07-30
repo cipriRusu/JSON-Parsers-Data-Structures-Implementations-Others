@@ -15,10 +15,11 @@ namespace ChessMoves
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
+        public IChessPiece GetMovablePiece { get; private set; }
 
         internal void UserMoves(IEnumerable<string> userMoves)
         {
-            if(!userMoves.Any() || userMoves.Count() == 0)
+            if (!userMoves.Any() || userMoves.Count() == 0)
             {
                 throw new UserMoveException("No user input provided");
             }
@@ -56,9 +57,16 @@ namespace ChessMoves
             board[destination.Item1, destination.Item2].IsMoved = true;
         }
 
-        public void Promote(IChessPiece piece) => 
+        public void CurrentMove(IUserMove move) => 
+            GetMovablePiece = GetAllPieces().Where(x => 
+            x != null && x.PlayerColour == move.PlayerColor && 
+            x.PieceType == move.PieceType && 
+            x.CanReach(move.MoveIndex, this) && 
+            new ConstraintValidator(x, move).IsValid).Single();
+
+        public void Promote(IChessPiece piece) =>
             board[piece.CurrentPosition.Item1,
-                  piece.CurrentPosition.Item2] = new Queen(string.Concat(piece.File,piece.Rank),
+                  piece.CurrentPosition.Item2] = new Queen(string.Concat(piece.File, piece.Rank),
                                                            piece.PlayerColour);
 
         public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;

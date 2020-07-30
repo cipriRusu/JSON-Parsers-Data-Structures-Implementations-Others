@@ -11,16 +11,9 @@ namespace ChessMoves.Moves
 
         public virtual void GetCurrentState(IBoardState board) 
         {
-            var current = board.GetAllPieces()
-                    .Where(x => x != null
-                                && x.PlayerColour == PlayerColor
-                                && x.PieceType == PieceType
-                                && x.CanReach(MoveIndex, board)
-                                && new ConstraintValidator(x, this).IsValid);
+            board.CurrentMove(this);
 
-            MoveAndPieceExceptions(this, current);
-
-            current.Single().PerformMove(MoveIndex, board);
+            board.PerformMove(board.GetMovablePiece, MoveIndex);
 
             CheckVerification(board);
         }
