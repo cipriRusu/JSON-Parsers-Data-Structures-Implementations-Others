@@ -16,14 +16,14 @@ namespace ChessMoves
         bool IsPassantCapturable { get; }
         Path Moves() { return null; }
         Path Captures() { return null; }
-        void Promote(ChessBoard chessBoard) { }
+        void Promote(IBoardState chessBoard) { }
         void MarkPassant(IChessPiece piece, (int, int) destination) { }
-        bool CanReach((int, int) destination, ChessBoard chessBoard) =>
+        bool CanReach((int, int) destination, IBoardState chessBoard) =>
             Moves().Any(x => x.Last() == destination && chessBoard.IsPathClear(x.Skip(1)));
-        bool CanCapture((int, int) target, ChessBoard chessBoard) =>
+        bool CanCapture((int, int) target, IBoardState chessBoard) =>
             Captures().Any(x => x.Last() == target && chessBoard.IsPathClear(x.Skip(1).SkipLast(1)));
-        virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) { }
-        virtual void PerformCapture((int, int) targetCapture, ChessBoard chessBoard) { }
-        void PerformCastlingMove((int, int) targetMove, ChessBoard chessBoard) => chessBoard.PerformMove(this, targetMove);
+        virtual void PerformMove((int, int) targetMove, IBoardState chessBoard) { }
+        virtual void PerformCapture((int, int) targetCapture, IBoardState chessBoard) { }
+        void PerformCastlingMove((int, int) targetMove, IBoardState chessBoard) => chessBoard.PerformMove(this, targetMove);
     }
 }
