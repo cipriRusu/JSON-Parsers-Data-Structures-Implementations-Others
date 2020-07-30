@@ -11,6 +11,6 @@ namespace ChessMoves
         (int, int) MoveIndex { get; }
         char SourceFile { get; }
         char SourceRank { get; }
-        public virtual void PerformMoveType(ChessBoard board) { }
+        public virtual void GetCurrentState(IBoardState board) { }
     }
 }
