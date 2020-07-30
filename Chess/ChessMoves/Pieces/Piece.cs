@@ -51,7 +51,7 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
-        public void Promote(ChessBoard chessBoard) => chessBoard.Promote(this);
+        public void Promote(IBoardState chessBoard) => chessBoard.Promote(this);
 
         public static Player Opponent(Player player)
         {
@@ -66,7 +66,7 @@ namespace ChessMoves
             }
         }
 
-        public virtual void PerformMove((int, int) targetMove, ChessBoard chessBoard) 
+        public virtual void PerformMove((int, int) targetMove, IBoardState chessBoard) 
         {
             var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
 
@@ -76,7 +76,7 @@ namespace ChessMoves
             }
         }
 
-        public virtual void PerformCapture((int, int) targetCapture, ChessBoard chessBoard)
+        public virtual void PerformCapture((int, int) targetCapture, IBoardState chessBoard)
         {
             var validPath = Captures().Where(x => x.Last() == targetCapture).SelectMany(x => x);
 
