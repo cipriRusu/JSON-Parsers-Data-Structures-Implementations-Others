@@ -8,13 +8,13 @@ namespace ChessMoves
     public class CurrentPlayerStatus
     {
         private readonly Player turnToMove;
-        private readonly ChessBoard chessBoard;
+        private readonly IBoardState chessBoard;
         private IChessPiece _currentKing;
         private IChessPiece King => chessBoard.GetAllPieces().Where(x => x != null
         && x.PieceType == PieceType.King
         && x.PlayerColour == turnToMove).Single();
 
-        public CurrentPlayerStatus(Player turnToMove, ChessBoard chessBoard)
+        public CurrentPlayerStatus(Player turnToMove, IBoardState chessBoard)
         {
             this.turnToMove = turnToMove;
             this.chessBoard = chessBoard;
@@ -61,13 +61,13 @@ namespace ChessMoves
         {
             var legalMoves = King.Moves().Where(x => chessBoard.IsPathClear(x));
 
-            foreach(var move in legalMoves)
+            foreach (var move in legalMoves)
             {
                 var currentBoardState = chessBoard.DeepClone();
 
                 currentBoardState.PerformMove(King, move.Single());
 
-                if(!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
+                if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
                 {
                     return false;
                 }
