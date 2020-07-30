@@ -16,7 +16,7 @@ namespace ChessMoves
 
         public override Path Captures() => new Path(CurrentPosition, new PathType[] { PathType.PawnCapture}, PlayerColour);
 
-        public override void PerformCapture((int, int) targetCapture, ChessBoard chessBoard)
+        public override void PerformCapture((int, int) targetCapture, IBoardState chessBoard)
         {
             var targetPiece = chessBoard[targetCapture];
 
