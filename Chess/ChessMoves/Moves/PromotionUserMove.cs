@@ -11,10 +11,10 @@ namespace ChessMoves
         private int BlackEnd = 7;
         public PromotionUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void PerformMoveType(ChessBoard board)
+        public void GetCurrentState(IBoardState board)
         {
             var internalMove = new MoveType(NotationIndex, PlayerColor).Move;
-            internalMove.PerformMoveType(board);
+            internalMove.GetCurrentState(board);
 
             if (board[MoveIndex] != null && board[MoveIndex].PieceType == PieceType.Pawn)
             {
