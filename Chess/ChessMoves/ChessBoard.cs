@@ -6,7 +6,7 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    public class ChessBoard
+    public class ChessBoard : IBoardState
     {
         private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
         public Piece this[int i, int j] => board[i, j];
