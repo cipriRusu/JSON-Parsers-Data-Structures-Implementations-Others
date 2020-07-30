@@ -133,14 +133,14 @@ namespace ChessMoves
             Assert.Null(testBoard[(6, 4)]);
             Assert.Null(testBoard[(1, 4)]);
 
-            Assert.Equal(testBoard[4, 4],
+            Assert.Equal(testBoard[(4, 4)],
                 new Pawn("e4", Player.White)
                 {
                     CurrentPosition = (4, 4),
                     PieceType = PieceType.Pawn,
                 }, new PieceComparer());
 
-            Assert.Equal(testBoard[3, 4],
+            Assert.Equal(testBoard[(3, 4)],
                 new Pawn("e5", Player.Black)
                 {
                     CurrentPosition = (3, 4),
@@ -155,42 +155,42 @@ namespace ChessMoves
 
             testBoard.UserMoves(new string[] { "e4 e5", "Nf3 Nc6", "Bb5 a6" });
 
-            Assert.Equal(testBoard[4, 4],
+            Assert.Equal(testBoard[(4, 4)],
                 new Pawn("e4", Player.White)
                 {
                     CurrentPosition = (4, 4),
                     PieceType = PieceType.Pawn,
                 }, new PieceComparer());
 
-            Assert.Equal(testBoard[3, 4],
+            Assert.Equal(testBoard[(3, 4)],
                 new Pawn("e5", Player.Black)
                 {
                     CurrentPosition = (3, 4),
                     PieceType = PieceType.Pawn,
                 }, new PieceComparer());
 
-            Assert.Equal(testBoard[5, 5],
+            Assert.Equal(testBoard[(5, 5)],
                 new Knight("f3", Player.White)
                 {
                     CurrentPosition = (5, 5),
                     PieceType = PieceType.Knight,
                 }, new PieceComparer());
 
-            Assert.Equal(testBoard[2, 2],
+            Assert.Equal(testBoard[(2, 2)],
                 new Knight("c6", Player.Black)
                 {
                     CurrentPosition = (2, 2),
                     PieceType = PieceType.Knight,
                 }, new PieceComparer());
 
-            Assert.Equal(testBoard[3, 1],
+            Assert.Equal(testBoard[(3, 1)],
                 new Bishop("b5", Player.White)
                 {
                     CurrentPosition = (3, 1),
                     PieceType = PieceType.Bishop,
                 }, new PieceComparer());
 
-            Assert.Equal(testBoard[2, 0],
+            Assert.Equal(testBoard[(2, 0)],
                 new Pawn("a6", Player.Black)
                 {
                     CurrentPosition = (2, 0),
@@ -211,7 +211,7 @@ namespace ChessMoves
                     CurrentPosition = (4, 4),
                     PieceType = PieceType.Knight
                 },
-                testBoard[4, 4], new PieceComparer());
+                testBoard[(4, 4)], new PieceComparer());
         }
 
         [Fact]
@@ -231,7 +231,7 @@ namespace ChessMoves
                 PieceType = PieceType.Pawn
             },
 
-            testBoard[2, 5], new PieceComparer());
+            testBoard[(2, 5)], new PieceComparer());
 
             Assert.False(testBoard.IsCheck);
         }
@@ -249,7 +249,7 @@ namespace ChessMoves
                 PieceType = PieceType.Queen
             },
 
-            testBoard[3, 7], new PieceComparer());
+            testBoard[(3, 7)], new PieceComparer());
 
             Assert.True(testBoard.IsCheckMate);
         }
@@ -291,7 +291,7 @@ namespace ChessMoves
         {
             var board = new ChessBoard();
 
-            Assert.True(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Pawn, Player.Black));
+            Assert.True(board.IsPiece(board[(1, 0)].CurrentPosition, PieceType.Pawn, Player.Black));
         }
 
         [Fact]
@@ -299,7 +299,7 @@ namespace ChessMoves
         {
             var board = new ChessBoard();
 
-            Assert.False(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Rock, Player.Black));
+            Assert.False(board.IsPiece(board[(1, 0)].CurrentPosition, PieceType.Rock, Player.Black));
         }
 
         [Fact]
@@ -307,7 +307,7 @@ namespace ChessMoves
         {
             var board = new ChessBoard();
 
-            Assert.False(board.IsPiece(board[1, 0].CurrentPosition, PieceType.Pawn, Player.White));
+            Assert.False(board.IsPiece(board[(1, 0)].CurrentPosition, PieceType.Pawn, Player.White));
         }
 
         [Fact]
@@ -317,8 +317,8 @@ namespace ChessMoves
             testBoard.UserMoves(new string[]
             {"d4 Nf6","c4 g6","Nc3 Bg7","e4 d6","Nf3 0-0" });
 
-            Assert.True(testBoard[0, 6].PieceType == PieceType.King);
-            Assert.True(testBoard[0, 5].PieceType == PieceType.Rock);
+            Assert.True(testBoard[(0, 6)].PieceType == PieceType.King);
+            Assert.True(testBoard[(0, 5)].PieceType == PieceType.Rock);
             Assert.True(testBoard.TurnToMove == Player.White);
         }
 
@@ -329,8 +329,8 @@ namespace ChessMoves
             testBoard.UserMoves(new string[]
             {"e4 e5","Nf3 Nc6","Bb5 a6","Ba4 Nf6","0-0 Be7"});
 
-            Assert.True(testBoard[7, 6].PieceType == PieceType.King);
-            Assert.True(testBoard[7, 5].PieceType == PieceType.Rock);
+            Assert.True(testBoard[(7, 6)].PieceType == PieceType.King);
+            Assert.True(testBoard[(7, 5)].PieceType == PieceType.Rock);
             Assert.True(testBoard.TurnToMove == Player.White);
         }
 
@@ -342,8 +342,8 @@ namespace ChessMoves
             testBoard.UserMoves(new string[]
             {"e4 g6", "d4 Bg7", "Nc3 d6", "Be3 c6", "Qd2 b5", "0-0-0 Nd7"});
 
-            Assert.True(testBoard[7, 2].PieceType == PieceType.King);
-            Assert.True(testBoard[7, 3].PieceType == PieceType.Rock);
+            Assert.True(testBoard[(7, 2)].PieceType == PieceType.King);
+            Assert.True(testBoard[(7, 3)].PieceType == PieceType.Rock);
         }
 
         [Fact]
@@ -355,7 +355,7 @@ namespace ChessMoves
                 "e4 Nf6", "Nc3 d5", "e5 d4", "exf6 dxc3",
                 "d4 cxb2", "fxg7 bxa1=Q"});
 
-            Assert.True(testBoard[7, 0].PieceType == PieceType.Queen);
+            Assert.True(testBoard[(7, 0)].PieceType == PieceType.Queen);
         }
 
         [Fact]
@@ -367,7 +367,7 @@ namespace ChessMoves
                 "e4 Nf6", "Nc3 d5", "e5 d4", "exf6 dxc3",
                 "d4 cxb2", "fxg7 bxa1=Q", "gxh8=Q Qxa2"});
 
-            Assert.True(testBoard[0, 7].PieceType == PieceType.Queen);
+            Assert.True(testBoard[(0, 7)].PieceType == PieceType.Queen);
         }
 
         [Fact]
@@ -380,8 +380,8 @@ namespace ChessMoves
              "Nh4 Qe6", "Bd3 g6", "Nc3 b6", "0-0-0 Ba6", "d5 Qd7", "dxc6 Qc8", "c7 Qxc7",
              "Bxa6 Nxa6", "Qd4 0-0-0"});
 
-            Assert.True(testBoard[0, 2].PieceType == PieceType.King);
-            Assert.True(testBoard[0, 3].PieceType == PieceType.Rock);
+            Assert.True(testBoard[(0, 2)].PieceType == PieceType.King);
+            Assert.True(testBoard[(0, 3)].PieceType == PieceType.Rock);
         }
 
         [Fact]
@@ -389,9 +389,9 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
             testBoard.UserMoves(new string[] { "d3 Nh6", "d4 Na6", "Na3 Ng4", "d5 e5", "dxe6e.p." });
-            Assert.True(testBoard[2, 4].PieceType == PieceType.Pawn);
-            Assert.True(testBoard[2, 4].PlayerColour == Player.White);
-            Assert.Null(testBoard[3, 4]);
+            Assert.True(testBoard[(2, 4)].PieceType == PieceType.Pawn);
+            Assert.True(testBoard[(2, 4)].PlayerColour == Player.White);
+            Assert.Null(testBoard[(3, 4)]);
         }
 
         [Fact]
@@ -399,9 +399,9 @@ namespace ChessMoves
         {
             var testBoard = new ChessBoard();
             testBoard.UserMoves(new string[] { "Na3 e5", "Nh3 e4", "d4 exd3e.p." });
-            Assert.True(testBoard[5, 3].PieceType == PieceType.Pawn);
-            Assert.True(testBoard[5, 3].PlayerColour == Player.Black);
-            Assert.Null(testBoard[4, 3]);
+            Assert.True(testBoard[(5, 3)].PieceType == PieceType.Pawn);
+            Assert.True(testBoard[(5, 3)].PlayerColour == Player.Black);
+            Assert.Null(testBoard[(4, 3)]);
         }
 
         [Fact]
