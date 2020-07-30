@@ -9,14 +9,14 @@ namespace ChessMoves.Moves
     {
         public MoveUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void PerformMoveType(ChessBoard board)
+        public virtual void GetCurrentState(IBoardState board) 
         {
             var current = board.GetAllPieces()
-                .Where(x => x != null
-                            && x.PlayerColour == PlayerColor
-                            && x.PieceType == PieceType
-                            && x.CanReach(MoveIndex, board)
-                            && new ConstraintValidator(x, this).IsValid);
+                    .Where(x => x != null
+                                && x.PlayerColour == PlayerColor
+                                && x.PieceType == PieceType
+                                && x.CanReach(MoveIndex, board)
+                                && new ConstraintValidator(x, this).IsValid);
 
             MoveAndPieceExceptions(this, current);
 
