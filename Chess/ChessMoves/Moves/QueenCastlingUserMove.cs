@@ -10,7 +10,7 @@ namespace ChessMoves.Moves
         private int CastlingPathLength = 5;
         public QueenCastlingUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void PerformMoveType(ChessBoard board)
+        public void GetCurrentState(IBoardState board)
         {
             CastlingExceptions(board);
 
@@ -30,7 +30,7 @@ namespace ChessMoves.Moves
             }
         }
 
-        private IChessPiece GetKing(ChessBoard board) =>
+        private IChessPiece GetKing(IBoardState board) =>
             board.GetAllPieces().Where(x =>
                                             x != null &&
                                             x.PieceType == PieceType.King &&
@@ -42,7 +42,7 @@ namespace ChessMoves.Moves
                       .Reverse()
                       .Select(x => (king.CurrentPosition.Item1, x));
 
-        private void CastlingExceptions(ChessBoard board)
+        private void CastlingExceptions(IBoardState board)
         {
             if (GetKing(board).IsMoved)
             {

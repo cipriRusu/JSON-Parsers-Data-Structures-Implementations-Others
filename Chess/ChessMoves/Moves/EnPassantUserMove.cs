@@ -9,7 +9,7 @@ namespace ChessMoves.Moves
     {
         public EnPassantUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void PerformMoveType(ChessBoard board)
+        public void GetCurrentState(IBoardState board)
         {
             var validPiece = board.GetAllPieces()
                 .Where(
@@ -30,7 +30,7 @@ namespace ChessMoves.Moves
             }
         }
 
-        private void PerformPassant(ChessBoard board, IChessPiece validPiece, int opponentOffset)
+        private void PerformPassant(IBoardState board, IChessPiece validPiece, int opponentOffset)
         {
             var opponent = board[(validPiece.CurrentPosition.Item1, validPiece.CurrentPosition.Item2 + opponentOffset)];
 

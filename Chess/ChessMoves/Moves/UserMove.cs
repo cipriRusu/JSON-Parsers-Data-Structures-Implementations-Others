@@ -75,7 +75,7 @@ namespace ChessMoves
             }
         }
 
-        internal void CheckVerification(ChessBoard board)
+        internal void CheckVerification(IBoardState board)
         {
             if (new CurrentPlayerStatus(PlayerColor, board).IsChecked)
             {

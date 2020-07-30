@@ -9,7 +9,7 @@ namespace ChessMoves
     {
         public CaptureUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void PerformMoveType(ChessBoard board)
+        public void GetCurrentState(IBoardState board)
         {
             var current = board.GetAllPieces()
                 .Where(x => x != null
