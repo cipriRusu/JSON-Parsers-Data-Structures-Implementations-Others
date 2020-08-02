@@ -34,25 +34,21 @@ namespace ChessMoves
 
         private bool KingCheckStatus()
         {
-            IEnumerable<IEnumerable<(int, int)>> diagonalAttacks =
+            IEnumerable<IEnumerable<(int, int)>> diagonalAttacks = 
                 GetAttacks(_currentKing,
-                new PathType[] { PathType.Diagonals },
-                new PieceType[] { PieceType.Queen, PieceType.Bishop });
+                new PieceType[] { PieceType.Queen, PieceType.Bishop }, PathType.Diagonals);
 
             IEnumerable<IEnumerable<(int, int)>> verticalHorizontalAttacks =
                 GetAttacks(_currentKing,
-                new PathType[] { PathType.RowsAndColumns },
-                new PieceType[] { PieceType.Queen, PieceType.Rock });
+                new PieceType[] { PieceType.Queen, PieceType.Rock }, PathType.RowsAndColumns);
 
             IEnumerable<IEnumerable<(int, int)>> knightAttacks =
                 GetAttacks(_currentKing,
-                new PathType[] { PathType.Knight },
-                new PieceType[] { PieceType.Knight });
+                new PieceType[] { PieceType.Knight }, PathType.Knight);
 
             IEnumerable<IEnumerable<(int, int)>> pawnAttacks =
                 GetAttacks(_currentKing,
-                new PathType[] { PathType.PawnCapture },
-                new PieceType[] { PieceType.Pawn });
+                new PieceType[] { PieceType.Pawn }, PathType.PawnCapture);
 
             return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any() || pawnAttacks.Any();
         }
@@ -76,7 +72,7 @@ namespace ChessMoves
             return legalMoves.Count() > 0;
         }
 
-        private IEnumerable<IEnumerable<(int, int)>> GetAttacks(IChessPiece currentKing, PathType[] pathTypes, PieceType[] attackers)
+        private IEnumerable<IEnumerable<(int, int)>> GetAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes)
         {
             return new Path(currentKing, pathTypes)
                 .Where(x =>
