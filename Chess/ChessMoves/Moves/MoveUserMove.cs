@@ -13,7 +13,7 @@ namespace ChessMoves.Moves
         {
             board.CurrentMove(this);
 
-            board.PerformMove(board.GetMovablePiece, MoveIndex);
+            board.PerformMove(board.GetMovablePiece, this);
 
             CheckVerification(board);
         }
