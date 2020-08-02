@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class Path : IEnumerable<IEnumerable<(int, int)>>
+    public class Path : IPath
     {
         public Path((int, int) startIndex, IEnumerable<PathType> paths, Player player = Player.White)
         {
