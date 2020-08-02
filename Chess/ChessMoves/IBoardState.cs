@@ -10,17 +10,12 @@ namespace ChessMoves
         IChessPiece this[(int, int) index] { get; }
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
-        IUserMove CurrentMove { set; }
         IChessPiece GetMovablePiece { get; }
-        bool CheckCastling(IUserMove move);
-        bool CheckPassant(IUserMove move, out IChessPiece piece);
-        void PerformPassant(IUserMove move, IChessPiece piece);
-        IChessPiece GetKing(Player player);
-        IEnumerable<IUserMove> GetClearKingMoves(IPath paths);
+        IEnumerable<IChessPiece> GetAllPieces();
         void Remove(IChessPiece target);
-        void PerformCastling(IUserMove move);
+        void CurrentMove(IUserMove move);
         bool IsPathClear(IEnumerable<(int, int)> path);
-        void PerformMove(IChessPiece chessPiece, IUserMove move);
+        void PerformMove(IChessPiece chessPiece, (int, int) targetMove);
         void Promote(IChessPiece piece);
     }
 }

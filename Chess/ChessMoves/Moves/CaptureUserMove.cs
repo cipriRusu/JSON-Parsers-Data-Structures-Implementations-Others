@@ -5,19 +5,24 @@ using System.Text;
 
 namespace ChessMoves
 {
-    [Serializable]
     public class CaptureUserMove : UserMove, IUserMove
     {
         public CaptureUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public virtual void GetCurrentState(IBoardState board)
+        public void GetCurrentState(IBoardState board)
         {
-            board.CurrentMove = this;
-            board.PerformMove(board.GetMovablePiece, this);
+            var current = board.GetAllPieces()
+                .Where(x => x != null
+                            && x.PlayerColour == PlayerColor
+                            && x.PieceType == PieceType
+                            && x.CanCapture(MoveIndex, board)
+                            && new ConstraintValidator(x, this).IsValid);
+
+            MoveAndPieceExceptions(this, current);
+
+            current.Single().PerformCapture(MoveIndex, board);
+
             CheckVerification(board);
         }
-
-        public virtual bool ValidateDestination(IChessPiece piece, IBoardState boardState) =>
-            piece.CanCapture(this, boardState);
     }
 }

@@ -291,8 +291,7 @@ namespace ChessMoves
         {
             var board = new ChessBoard();
 
-            Assert.Equal(PieceType.Pawn, board[(1, 0)].PieceType);
-            Assert.Equal(Player.Black, board[(1, 0)].PlayerColour);
+            Assert.True(board.IsPiece(board[(1, 0)].CurrentPosition, PieceType.Pawn, Player.Black));
         }
 
         [Fact]
@@ -300,8 +299,7 @@ namespace ChessMoves
         {
             var board = new ChessBoard();
 
-            Assert.NotEqual(PieceType.Rock, board[(1, 0)].PieceType);
-            Assert.NotEqual(Player.White, board[(1, 0)].PlayerColour);
+            Assert.False(board.IsPiece(board[(1, 0)].CurrentPosition, PieceType.Rock, Player.Black));
         }
 
         [Fact]
@@ -309,7 +307,7 @@ namespace ChessMoves
         {
             var board = new ChessBoard();
 
-            Assert.NotEqual(Player.White, board[(1, 0)].PlayerColour);
+            Assert.False(board.IsPiece(board[(1, 0)].CurrentPosition, PieceType.Pawn, Player.White));
         }
 
         [Fact]

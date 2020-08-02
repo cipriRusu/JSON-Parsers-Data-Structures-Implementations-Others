@@ -9,31 +9,34 @@ namespace ChessMoves
     {
         private readonly Player turnToMove;
         private readonly IBoardState chessBoard;
-        private readonly IChessPiece _currentKing;
+        private IChessPiece _currentKing;
+        private IChessPiece King => chessBoard.GetAllPieces().Where(x => x != null
+        && x.PieceType == PieceType.King
+        && x.PlayerColour == turnToMove).Single();
 
         public CurrentPlayerStatus(Player turnToMove, IBoardState chessBoard)
         {
             this.turnToMove = turnToMove;
             this.chessBoard = chessBoard;
-            _currentKing = chessBoard.GetKing(turnToMove);
+            _currentKing = King;
         }
 
         public bool IsChecked => KingCheckStatus();
 
         public bool IsCheckMated => KingCheckMateStatus();
 
-        public bool KingPositionCheckStatus(IUserMove move)
+        public bool KingPositionCheckStatus((int, int) position)
         {
             var currentBoardState = chessBoard.DeepClone();
-            currentBoardState.PerformMove(_currentKing, move);
+            currentBoardState.PerformMove(King, position);
             return new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked;
         }
 
         private bool KingCheckStatus()
         {
             IEnumerable<IEnumerable<(int, int)>> diagonalAttacks =
-                GetAttacks(_currentKing, 
-                new PathType[] { PathType.Diagonals }, 
+                GetAttacks(_currentKing,
+                new PathType[] { PathType.Diagonals },
                 new PieceType[] { PieceType.Queen, PieceType.Bishop });
 
             IEnumerable<IEnumerable<(int, int)>> verticalHorizontalAttacks =
@@ -56,13 +59,13 @@ namespace ChessMoves
 
         private bool KingCheckMateStatus()
         {
-            var currentBoardState = chessBoard.DeepClone();
-
-            var legalMoves = chessBoard.GetClearKingMoves(_currentKing.Moves());
+            var legalMoves = King.Moves().Where(x => chessBoard.IsPathClear(x));
 
             foreach (var move in legalMoves)
             {
-                currentBoardState.PerformMove(_currentKing, move);
+                var currentBoardState = chessBoard.DeepClone();
+
+                currentBoardState.PerformMove(King, move.Single());
 
                 if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
                 {
