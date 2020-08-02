@@ -40,8 +40,8 @@ namespace ChessMoves
             }
         }
 
-        public virtual Path Moves() => null;
-        public virtual Path Captures() => null;
+        public virtual IPath Moves() => null;
+        public virtual IPath Captures() => null;
 
         public void Update((int, int) newPosition)
         {

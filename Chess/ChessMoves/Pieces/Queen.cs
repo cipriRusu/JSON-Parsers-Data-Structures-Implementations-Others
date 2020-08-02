@@ -10,8 +10,8 @@ namespace ChessMoves
         public Queen(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Queen;
 
-        public override Path Moves() => new Path(this, new PathType[] { PathType.RowsAndColumns, PathType.Diagonals });
+        public override IPath Moves() => new Path(this, PathType.RowsAndColumns, PathType.Diagonals);
 
-        public override Path Captures() => Moves();
+        public override IPath Captures() => Moves();
     }
 }

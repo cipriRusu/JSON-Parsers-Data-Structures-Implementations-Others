@@ -14,8 +14,8 @@ namespace ChessMoves
         PieceType PieceType { get; }
         bool IsMoved { get; }
         bool IsPassantCapturable { get; }
-        Path Moves() { return null; }
-        Path Captures() { return null; }
+        IPath Moves() { return null; }
+        IPath Captures() { return null; }
         void Promote(IBoardState chessBoard) { }
         void MarkPassant(IChessPiece piece, (int, int) destination) { }
         bool CanReach((int, int) destination, IBoardState chessBoard) =>
