@@ -17,10 +17,10 @@ namespace ChessMoves
 
         public override IPath Moves() => new Path(this, PathType.Knight);
         public override IPath Captures() => Moves();
-        public override void PerformMove((int, int) targetMove, IBoardState chessBoard)
+        public override void PerformMove(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Moves().Where(x => x.Single() == targetMove).SelectMany(x => x);
-            chessBoard.PerformMove(this, targetMove);
+            var validPath = Moves().Where(x => x.Single() == move.MoveIndex).SelectMany(x => x);
+            chessBoard.PerformMove(this, move);
         }
     }
 }

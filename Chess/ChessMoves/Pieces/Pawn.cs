@@ -14,13 +14,13 @@ namespace ChessMoves
 
         public override IPath Moves() => new Path(this, PathType.Pawn);
         public override IPath Captures() => new Path(this, PathType.PawnCapture);
-        public override void PerformCapture((int, int) targetCapture, IBoardState chessBoard)
+        public override void PerformCapture(IUserMove move, IBoardState chessBoard)
         {
-            var targetPiece = chessBoard[targetCapture];
+            var targetPiece = chessBoard[move.MoveIndex];
 
             if(Opponent(PlayerColour) == targetPiece.PlayerColour)
             {
-                chessBoard.PerformMove(this, targetCapture);
+                chessBoard.PerformMove(this, move);
             }
         }
     }
