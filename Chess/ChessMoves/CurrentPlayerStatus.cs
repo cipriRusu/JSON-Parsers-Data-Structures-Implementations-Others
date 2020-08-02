@@ -34,21 +34,25 @@ namespace ChessMoves
 
         private bool KingCheckStatus()
         {
-            IEnumerable<IEnumerable<(int, int)>> diagonalAttacks = 
+            IEnumerable<IEnumerable<(int, int)>> diagonalAttacks =
                 GetAttacks(_currentKing,
-                new PieceType[] { PieceType.Queen, PieceType.Bishop }, PathType.Diagonals);
+                attackers: new PieceType[] { PieceType.Queen, PieceType.Bishop },
+                PathType.Diagonals);
 
             IEnumerable<IEnumerable<(int, int)>> verticalHorizontalAttacks =
                 GetAttacks(_currentKing,
-                new PieceType[] { PieceType.Queen, PieceType.Rock }, PathType.RowsAndColumns);
+                attackers: new PieceType[] { PieceType.Queen, PieceType.Rock },
+                PathType.RowsAndColumns);
 
             IEnumerable<IEnumerable<(int, int)>> knightAttacks =
                 GetAttacks(_currentKing,
-                new PieceType[] { PieceType.Knight }, PathType.Knight);
+                attackers: new PieceType[] { PieceType.Knight },
+                PathType.Knight);
 
             IEnumerable<IEnumerable<(int, int)>> pawnAttacks =
                 GetAttacks(_currentKing,
-                new PieceType[] { PieceType.Pawn }, PathType.PawnCapture);
+                attackers: new PieceType[] { PieceType.Pawn },
+                PathType.PawnCapture);
 
             return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any() || pawnAttacks.Any();
         }
