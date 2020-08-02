@@ -34,24 +34,27 @@ namespace ChessMoves
 
         private bool KingCheckStatus()
         {
-            IEnumerable<IEnumerable<(int, int)>> diagonalAttacks =
-                GetAttacks(_currentKing,
-                attackers: new PieceType[] { PieceType.Queen, PieceType.Bishop },
+            var diagonalAttacks = chessBoard
+                .ValidAttacks(
+                _currentKing,
+                new PieceType[] { PieceType.Queen, PieceType.Bishop }, 
                 PathType.Diagonals);
 
-            IEnumerable<IEnumerable<(int, int)>> verticalHorizontalAttacks =
-                GetAttacks(_currentKing,
-                attackers: new PieceType[] { PieceType.Queen, PieceType.Rock },
+            var verticalHorizontalAttacks = chessBoard
+                .ValidAttacks(
+                _currentKing,
+                new PieceType[] { PieceType.Queen, PieceType.Rock },
                 PathType.RowsAndColumns);
 
-            IEnumerable<IEnumerable<(int, int)>> knightAttacks =
-                GetAttacks(_currentKing,
-                attackers: new PieceType[] { PieceType.Knight },
+            var knightAttacks = chessBoard.
+                ValidAttacks(
+                _currentKing,
+                new PieceType[] { PieceType.Knight },
                 PathType.Knight);
 
-            IEnumerable<IEnumerable<(int, int)>> pawnAttacks =
-                GetAttacks(_currentKing,
-                attackers: new PieceType[] { PieceType.Pawn },
+            var pawnAttacks = chessBoard.
+                ValidAttacks(_currentKing,
+                new PieceType[] { PieceType.Pawn },
                 PathType.PawnCapture);
 
             return diagonalAttacks.Any() || verticalHorizontalAttacks.Any() || knightAttacks.Any() || pawnAttacks.Any();
@@ -74,16 +77,6 @@ namespace ChessMoves
             }
 
             return legalMoves.Count() > 0;
-        }
-
-        private IEnumerable<IEnumerable<(int, int)>> GetAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes)
-        {
-            return new Path(currentKing, pathTypes)
-                .Where(x =>
-                chessBoard[x.Last()] != null
-                && chessBoard.IsPathClear(x.Skip(1).SkipLast(1))
-                && chessBoard[x.Last()].PlayerColour == Piece.Opponent(turnToMove)
-                && attackers.Contains(chessBoard[x.Last()].PieceType));
         }
     }
 }
