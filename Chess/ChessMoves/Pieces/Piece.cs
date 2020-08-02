@@ -43,10 +43,10 @@ namespace ChessMoves
         public virtual IPath Moves() => null;
         public virtual IPath Captures() => null;
 
-        public void Update((int, int) newPosition)
+        public void Update(IUserMove move)
         {
-            var rankAndFile = new RankAndFile(newPosition);
-            CurrentPosition = newPosition;
+            var rankAndFile = new RankAndFile(move.MoveIndex);
+            CurrentPosition = move.MoveIndex;
             File = rankAndFile.File;
             Rank = rankAndFile.Rank;
         }
@@ -66,25 +66,25 @@ namespace ChessMoves
             }
         }
 
-        public virtual void PerformMove((int, int) targetMove, IBoardState chessBoard) 
+        public virtual void PerformMove(IUserMove move, IBoardState chessBoard) 
         {
-            var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
+            var validPath = Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
 
             if(chessBoard.IsPathClear(validPath.Skip(1)))
             {
-                chessBoard.PerformMove(this, targetMove);
+                chessBoard.PerformMove(this, move);
             }
         }
 
-        public virtual void PerformCapture((int, int) targetCapture, IBoardState chessBoard)
+        public virtual void PerformCapture(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Captures().Where(x => x.Last() == targetCapture).SelectMany(x => x);
+            var validPath = Captures().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
 
             var validTarget = chessBoard[validPath.Last()];
 
             if (chessBoard.IsPathClear(validPath.Skip(1).SkipLast(1)) && validTarget.PlayerColour == Opponent(PlayerColour))
             {
-                chessBoard.PerformMove(this, targetCapture);
+                chessBoard.PerformMove(this, move);
             }
         }
     }
