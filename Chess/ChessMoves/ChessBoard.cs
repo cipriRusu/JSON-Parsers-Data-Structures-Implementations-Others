@@ -90,6 +90,13 @@ namespace ChessMoves
             }
         }
 
+        public IEnumerable<(int, int)> ValidAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => new Path(currentKing, pathTypes)
+                .Where(x =>
+                            this[x.Last()] != null &&
+                            IsPathClear(x.Skip(1).SkipLast(1)) &&
+                            this[x.Last()].PlayerColour == Piece.Opponent(currentKing.PlayerColour) &&
+                            attackers.Contains(this[x.Last()].PieceType)).SelectMany(x => x);
+
         public void SwitchTurn()
         {
             switch (TurnToMove)
