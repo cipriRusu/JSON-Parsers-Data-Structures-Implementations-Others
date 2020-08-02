@@ -24,6 +24,7 @@ namespace ChessMoves
             Captures().Any(x => x.Last() == target && chessBoard.IsPathClear(x.Skip(1).SkipLast(1)));
         virtual void PerformMove((int, int) targetMove, IBoardState chessBoard) { }
         virtual void PerformCapture((int, int) targetCapture, IBoardState chessBoard) { }
-        void PerformCastlingMove((int, int) targetMove, IBoardState chessBoard) => chessBoard.PerformMove(this, targetMove);
+        //void PerformCastlingMove((int, int) targetMove, IBoardState chessBoard) => chessBoard.PerformMove(this, targetMove);
+        void Update(IUserMove move);
     }
 }
