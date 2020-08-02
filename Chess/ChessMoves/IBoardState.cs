@@ -17,5 +17,6 @@ namespace ChessMoves
         bool IsPathClear(IEnumerable<(int, int)> path);
         void PerformMove(IChessPiece chessPiece, (int, int) targetMove);
         void Promote(IChessPiece piece);
+        IEnumerable<(int, int)> ValidAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes);
     }
 }
