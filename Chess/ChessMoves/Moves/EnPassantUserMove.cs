@@ -37,7 +37,7 @@ namespace ChessMoves.Moves
             if (opponent != null && opponent.PlayerColour != PlayerColor)
             {
                 board.Remove(opponent);
-                board.PerformMove(validPiece, MoveIndex);
+                board.PerformMove(validPiece, this);
             }
             else
             {
