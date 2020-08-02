@@ -13,7 +13,7 @@ namespace ChessMoves
         public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) => PieceType = PieceType.King;
 
-        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.King });
+        public override Path Moves() => new Path(this, new PathType[] { PathType.King });
 
         public override Path Captures() => Moves();
     }

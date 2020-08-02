@@ -12,9 +12,9 @@ namespace ChessMoves
         public Pawn(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Pawn;
 
-        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Pawn }, PlayerColour);
+        public override Path Moves() => new Path(this, new PathType[] { PathType.Pawn }, PlayerColour);
 
-        public override Path Captures() => new Path(CurrentPosition, new PathType[] { PathType.PawnCapture}, PlayerColour);
+        public override Path Captures() => new Path(this, new PathType[] { PathType.PawnCapture}, PlayerColour);
 
         public override void PerformCapture((int, int) targetCapture, IBoardState chessBoard)
         {

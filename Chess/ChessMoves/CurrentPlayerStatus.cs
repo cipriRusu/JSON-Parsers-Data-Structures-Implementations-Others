@@ -78,7 +78,7 @@ namespace ChessMoves
 
         private IEnumerable<IEnumerable<(int, int)>> GetAttacks(IChessPiece currentKing, PathType[] pathTypes, PieceType[] attackers)
         {
-            return new Path(currentKing.CurrentPosition, pathTypes)
+            return new Path(currentKing, pathTypes)
                 .Where(x =>
                 chessBoard[x.Last()] != null
                 && chessBoard.IsPathClear(x.Skip(1).SkipLast(1))
