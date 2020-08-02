@@ -25,10 +25,10 @@ namespace ChessMoves
 
         public bool IsCheckMated => KingCheckMateStatus();
 
-        public bool KingPositionCheckStatus((int, int) position)
+        public bool KingPositionCheckStatus(IUserMove move)
         {
             var currentBoardState = chessBoard.DeepClone();
-            currentBoardState.PerformMove(King, position);
+            currentBoardState.PerformMove(King, move);
             return new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked;
         }
 
@@ -62,21 +62,25 @@ namespace ChessMoves
 
         private bool KingCheckMateStatus()
         {
-            var legalMoves = King.Moves().Where(x => chessBoard.IsPathClear(x));
+            var legalMoves = King.Moves();
 
-            foreach (var move in legalMoves)
-            {
-                var currentBoardState = chessBoard.DeepClone();
+            //.Where(x => new UserMove(x.Single(), turnToMove));
 
-                currentBoardState.PerformMove(King, move.Single());
+            //foreach (var move in legalMoves)
+            //{
+            //    var currentBoardState = chessBoard.DeepClone();
 
-                if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
-                {
-                    return false;
-                }
-            }
+            //    currentBoardState.PerformMove(King, move.Single());
 
-            return legalMoves.Count() > 0;
+            //    if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
+            //    {
+            //        return false;
+            //    }
+            //}
+
+            //return legalMoves.Count() > 0;
+
+            return false;
         }
     }
 }
