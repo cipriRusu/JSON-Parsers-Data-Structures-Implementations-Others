@@ -8,13 +8,13 @@ namespace ChessMoves
 {
     public class Path : IPath
     {
-        public Path(IChessPiece piece, IEnumerable<PathType> paths, Player player = Player.White)
+        public Path(IChessPiece piece, params PathType[] paths)
         {
-            this.StartIndex = piece.CurrentPosition;
-            this.Paths = paths;
-            this.PlayerColour = player;
+            StartIndex = piece.CurrentPosition;
+            Paths = paths;
+            PlayerColour = piece.PlayerColour;
         }
-        public (int, int) StartIndex { get; private set; }
+        private (int, int) StartIndex;
         public Player PlayerColour { get; set; }
 
         private readonly IEnumerable<PathType> Paths;
