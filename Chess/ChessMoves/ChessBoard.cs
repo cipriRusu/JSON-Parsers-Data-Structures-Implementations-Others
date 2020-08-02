@@ -8,14 +8,38 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
-        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
-        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
+        private IUserMove currentMove;
+        private IChessPiece[,] board = new IChessPiece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        public IChessPiece this[(int, int) index]
+        {
+            get => board[index.Item1, index.Item2];
+            set => board[index.Item1, index.Item2] = value;
+        }
+
         public static readonly int CHESSBOARD_SIZE = 8;
-        public ChessBoard() => InitializeBoard();
+        public ChessBoard() => board = new GameStartup().StartUpBoard;
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
-        public IChessPiece GetMovablePiece { get; private set; }
+
+        public IChessPiece GetKing(Player player) =>
+            GetAllPieces().Where(x => x != null
+            && x.PieceType == PieceType.King
+            && x.PlayerColour == player).Single();
+
+        public IChessPiece GetMovablePiece => GetHandledPiece(currentMove);
+
+        public IUserMove CurrentMove { set => currentMove = value; }
+
+        public IEnumerable<IUserMove> GetClearKingMoves(IPath paths)
+        {
+            var moves = paths.SelectMany(x => x).Where(x => this[x] == null);
+
+            foreach (var move in moves)
+            {
+                yield return new UserMove(move, TurnToMove);
+            }
+        }
 
         internal void UserMoves(IEnumerable<string> userMoves)
         {
@@ -32,44 +56,41 @@ namespace ChessMoves
             }
         }
 
-        public IEnumerable<IChessPiece> GetAllPieces() =>
+        private IEnumerable<IChessPiece> GetAllPieces() =>
             Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
             Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
 
-        public bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
+        public void PerformMove(IChessPiece piece, IUserMove move)
         {
-            return
-                this[currentPosition] != null &&
-                this[currentPosition].CurrentPosition == currentPosition &&
-                this[currentPosition].PieceType == pieceType &&
-                this[currentPosition].PlayerColour == player;
-        }
-
-        public void PerformMove(IChessPiece piece, (int, int) destination)
-        {
-            piece.MarkPassant(piece, destination);
+            piece.MarkPassant(piece, move);
             var formerPosition = piece.CurrentPosition;
 
-            board[destination.Item1, destination.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
-            board[destination.Item1, destination.Item2].Update(destination);
-            board[formerPosition.Item1, formerPosition.Item2] = null;
-
-            board[destination.Item1, destination.Item2].IsMoved = true;
+            this[move.MoveIndex] = piece;
+            this[move.MoveIndex].Update(move);
+            this[formerPosition] = null;
         }
 
-        public void CurrentMove(IUserMove move) => 
-            GetMovablePiece = GetAllPieces().Where(x => 
-            x != null && x.PlayerColour == move.PlayerColor && 
-            x.PieceType == move.PieceType && 
-            x.CanReach(move.MoveIndex, this) && 
-            new ConstraintValidator(x, move).IsValid).Single();
+        private IChessPiece GetHandledPiece(IUserMove move)
+        {
+            var validPiece = GetAllPieces().Where(x =>
+            x != null &&
+            x.PlayerColour == move.PlayerColor &&
+            x.PieceType == move.PieceType &&
+            move.ValidateDestination(x, this) &&
+            new ConstraintValidator(x, move).IsValid);
+
+            MoveAndPieceExceptions(validPiece);
+
+            return validPiece.Single();
+        }
 
         public void Promote(IChessPiece piece) =>
             board[piece.CurrentPosition.Item1,
-                  piece.CurrentPosition.Item2] = new Queen(string.Concat(piece.File, piece.Rank),
-                                                           piece.PlayerColour);
+                piece.CurrentPosition.Item2] = new Queen(
+                      string.Concat(piece.File, piece.Rank),
+                      piece.PlayerColour);
 
-        public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;
+        public void Remove(IChessPiece target) => this[(target.CurrentPosition.Item1, target.CurrentPosition.Item2)] = null;
 
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => this[x] == null);
 
@@ -103,52 +124,156 @@ namespace ChessMoves
             }
         }
 
-        private void InitializeBoard()
+        public bool CheckCastling(IUserMove move)
         {
-            InitializeWhite();
-            InitializeBlack();
+            switch (move)
+            {
+                case KingCastlingUserMove _:
+                    return CheckKingSideCastling(move);
+                case QueenCastlingUserMove _:
+                    return CheckQueenSideCastling(move);
+            }
+
+            throw new UserMoveException("Move type not valid!!");
         }
 
-        private void InitializeBlack()
+        private bool CheckKingSideCastling(IUserMove move)
         {
-            board[0, 0] = new Rock("a8", Player.Black);
-            board[0, 1] = new Knight("b8", Player.Black);
-            board[0, 2] = new Bishop("c8", Player.Black);
-            board[0, 3] = new Queen("d8", Player.Black);
-            board[0, 4] = new King("e8", Player.Black);
-            board[0, 5] = new Bishop("f8", Player.Black);
-            board[0, 6] = new Knight("g8", Player.Black);
-            board[0, 7] = new Rock("h8", Player.Black);
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    return board[7, 4] != null && board[7, 7] != null && !board[7, 4].IsMoved && !board[7, 7].IsMoved;
+                case Player.Black:
+                    return board[0, 4] != null && board[0, 7] != null && !board[0, 4].IsMoved && !board[0, 7].IsMoved;
+                default:
+                    throw new UserMoveException("Castling not valid!");
+            }
 
-            board[1, 0] = new Pawn("a7", Player.Black);
-            board[1, 1] = new Pawn("b7", Player.Black);
-            board[1, 2] = new Pawn("c7", Player.Black);
-            board[1, 3] = new Pawn("d7", Player.Black);
-            board[1, 4] = new Pawn("e7", Player.Black);
-            board[1, 5] = new Pawn("f7", Player.Black);
-            board[1, 6] = new Pawn("g7", Player.Black);
-            board[1, 7] = new Pawn("h7", Player.Black);
+            throw new UserMoveException("Move type not valid!");
         }
 
-        private void InitializeWhite()
+        private bool CheckQueenSideCastling(IUserMove move)
         {
-            board[7, 0] = new Rock("a1", Player.White);
-            board[7, 1] = new Knight("b1", Player.White);
-            board[7, 2] = new Bishop("c1", Player.White);
-            board[7, 3] = new Queen("d1", Player.White);
-            board[7, 4] = new King("e1", Player.White);
-            board[7, 5] = new Bishop("f1", Player.White);
-            board[7, 6] = new Knight("g1", Player.White);
-            board[7, 7] = new Rock("h1", Player.White);
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    return board[7, 4] != null && board[7, 0] != null && !board[7, 4].IsMoved && !board[7, 0].IsMoved;
+                case Player.Black:
+                    return board[0, 4] != null && board[0, 0] != null && !board[0, 4].IsMoved && !board[0, 0].IsMoved;
+                default:
+                    throw new UserMoveException("Castling not valid!");
+            }
 
-            board[6, 0] = new Pawn("a2", Player.White);
-            board[6, 1] = new Pawn("b2", Player.White);
-            board[6, 2] = new Pawn("c2", Player.White);
-            board[6, 3] = new Pawn("d2", Player.White);
-            board[6, 4] = new Pawn("e2", Player.White);
-            board[6, 5] = new Pawn("f2", Player.White);
-            board[6, 6] = new Pawn("g2", Player.White);
-            board[6, 7] = new Pawn("h2", Player.White);
+            throw new UserMoveException("Move type not valid!");
+        }
+
+        public void PerformCastling(IUserMove move)
+        {
+            switch (move)
+            {
+                case KingCastlingUserMove _:
+                    PerformKingSideCastling(move);
+                    break;
+                case QueenCastlingUserMove _:
+                    PerformQueenSideCastling(move);
+                    break;
+            }
+        }
+
+        private void PerformQueenSideCastling(IUserMove move)
+        {
+            if (move.PlayerColor == Player.White)
+            {
+                (this[(7, 2)], this[(7, 4)]) = (this[(7, 4)], this[(7, 2)]);
+                (this[(7, 0)], this[(7, 3)]) = (this[(7, 3)], this[(7, 0)]);
+            }
+            else if (move.PlayerColor == Player.Black)
+            {
+                (this[(0, 2)], this[(0, 4)]) = (this[(0, 4)], this[(0, 2)]);
+                (this[(0, 3)], this[(0, 0)]) = (this[(0, 0)], this[(0, 3)]);
+            }
+        }
+
+        private void PerformKingSideCastling(IUserMove move)
+        {
+            if (move.PlayerColor == Player.White)
+            {
+                (this[(7, 5)], this[(7, 7)]) = (this[(7, 7)], this[(7, 5)]);
+                (this[(7, 6)], this[(7, 4)]) = (this[(7, 4)], this[(7, 6)]);
+            }
+            else if (move.PlayerColor == Player.Black)
+            {
+                (this[(0, 5)], this[(0, 7)]) = (this[(0, 7)], this[(0, 5)]);
+                (this[(0, 6)], this[(0, 4)]) = (this[(0, 4)], this[(0, 6)]);
+            }
+        }
+
+        private static void MoveAndPieceExceptions(IEnumerable<IChessPiece> validPiece)
+        {
+            if (!validPiece.Any())
+            {
+                throw new UserMoveException("Invalid Move!!");
+            }
+            if (validPiece.Count() > 1)
+            {
+                throw new PieceException("Multiple pieces can perform move!!");
+            }
+        }
+
+        private void CheckKingCastlingPath(IUserMove move)
+        {
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    break;
+                case Player.Black:
+                    break;
+            }
+        }
+
+        public bool CheckPassant(IUserMove move, out IChessPiece piece)
+        {
+            piece = GetAllPieces().Where(x =>
+            x != null &&
+            x.PlayerColour == move.PlayerColor &&
+            x.PieceType == PieceType.Pawn &&
+            new ConstraintValidator(x, move).IsValid).Single();
+
+            switch (move.PlayerColor)
+            {
+                case Player.White when
+                board[move.MoveIndex.Item1, move.MoveIndex.Item2] == null &&
+                this[(piece.CurrentPosition.Item1, piece.CurrentPosition.Item2 + 1)] != null &&
+                this[(piece.CurrentPosition.Item1, piece.CurrentPosition.Item2 + 1)].IsPassantCapturable:
+                    return true;
+                case Player.Black when
+                board[move.MoveIndex.Item1, move.MoveIndex.Item2] == null &&
+                this[(piece.CurrentPosition.Item1, piece.CurrentPosition.Item2 - 1)] != null &&
+                this[(piece.CurrentPosition.Item1, piece.CurrentPosition.Item2 - 1)].IsPassantCapturable:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void PerformPassant(IUserMove move, IChessPiece piece)
+        {
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    this[move.MoveIndex] = piece;
+                    this[piece.CurrentPosition] = null;
+                    board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2 + 1] = null;
+                    this[move.MoveIndex].Update(move);
+                    break;
+
+                case Player.Black:
+                    this[move.MoveIndex] = piece;
+                    this[piece.CurrentPosition] = null;
+                    board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2 - 1] = null;
+                    this[move.MoveIndex].Update(move);
+                    break;
+            }
         }
     }
 }

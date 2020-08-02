@@ -21,32 +21,36 @@ namespace ChessMoves
         public char File { get; private set; }
         public char Rank { get; private set; }
         public PieceType PieceType { get; internal set; }
-        public bool IsMoved { get; internal set; }
+        public bool IsMoved { get; set; }
         public bool PassantCapturable { get; private set; }
         public bool IsPassantCapturable { get; private set; }
-        public void MarkPassant(IChessPiece piece, (int, int) destination)
+        public void MarkPassant(IChessPiece piece, IUserMove move)
         {
             if (piece.PieceType == PieceType.Pawn)
             {
                 switch (piece.PlayerColour)
                 {
                     case Player.White:
-                        IsPassantCapturable = destination.Item2 - piece.CurrentPosition.Item2 == 2;
+                        IsPassantCapturable = piece.CurrentPosition.Item1 - move.MoveIndex.Item1 == 2;
                         break;
                     case Player.Black:
-                        IsPassantCapturable = piece.CurrentPosition.Item2 - destination.Item2 == 2;
+                        IsPassantCapturable = move.MoveIndex.Item1 - piece.CurrentPosition.Item1 == 2;
                         break;
                 }
             }
+            else
+            {
+                IsPassantCapturable = false;
+            }
         }
 
-        public virtual Path Moves() => null;
-        public virtual Path Captures() => null;
+        public virtual IPath Moves() => null;
+        public virtual IPath Captures() => null;
 
-        public void Update((int, int) newPosition)
+        public void Update(IUserMove move)
         {
-            var rankAndFile = new RankAndFile(newPosition);
-            CurrentPosition = newPosition;
+            var rankAndFile = new RankAndFile(move.MoveIndex);
+            CurrentPosition = move.MoveIndex;
             File = rankAndFile.File;
             Rank = rankAndFile.Rank;
         }
@@ -66,25 +70,25 @@ namespace ChessMoves
             }
         }
 
-        public virtual void PerformMove((int, int) targetMove, IBoardState chessBoard) 
+        public virtual void PerformMove(IUserMove move, IBoardState chessBoard) 
         {
-            var validPath = Moves().Where(x => x.Last() == targetMove).SelectMany(x => x);
+            var validPath = Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
 
             if(chessBoard.IsPathClear(validPath.Skip(1)))
             {
-                chessBoard.PerformMove(this, targetMove);
+                chessBoard.PerformMove(this, move);
             }
         }
 
-        public virtual void PerformCapture((int, int) targetCapture, IBoardState chessBoard)
+        public virtual void PerformCapture(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Captures().Where(x => x.Last() == targetCapture).SelectMany(x => x);
+            var validPath = Captures().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
 
             var validTarget = chessBoard[validPath.Last()];
 
             if (chessBoard.IsPathClear(validPath.Skip(1).SkipLast(1)) && validTarget.PlayerColour == Opponent(PlayerColour))
             {
-                chessBoard.PerformMove(this, targetCapture);
+                chessBoard.PerformMove(this, move);
             }
         }
     }

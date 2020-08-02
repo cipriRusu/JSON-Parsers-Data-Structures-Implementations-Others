@@ -15,12 +15,12 @@ namespace ChessMoves
         public bool CanCapture((int, int) target, IBoardState board) => Captures().Any(x => x.Single() == target);
         public bool CanReach((int, int) destination, IBoardState board) => Moves().Any(x => x.Single() == destination);
 
-        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
-        public override Path Captures() => Moves();
-        public override void PerformMove((int, int) targetMove, IBoardState chessBoard)
+        public override IPath Moves() => new Path(CurrentPosition, new PathType[] { PathType.Knight });
+        public override IPath Captures() => Moves();
+        public new void PerformMove(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Moves().Where(x => x.Single() == targetMove).SelectMany(x => x);
-            chessBoard.PerformMove(this, targetMove);
+            var validPath = Moves().Where(x => x.Single() == move.MoveIndex).SelectMany(x => x);
+            chessBoard.PerformMove(this, move);
         }
     }
 }

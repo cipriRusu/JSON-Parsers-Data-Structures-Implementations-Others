@@ -11,37 +11,21 @@ namespace ChessMoves.Moves
 
         public void GetCurrentState(IBoardState board)
         {
-            var validPiece = board.GetAllPieces()
-                .Where(
-                x =>
-                x != null &&
-                x.PlayerColour == PlayerColor &&
-                x.PieceType == PieceType.Pawn &&
-                new ConstraintValidator(x, this).IsValid).Single();
-
-            switch(PlayerColor)
+            if (board.CheckPassant(this, out IChessPiece piece))
             {
-                case Player.White:
-                    PerformPassant(board, validPiece, 1);
-                    break;
-                case Player.Black:
-                    PerformPassant(board, validPiece, -1);
-                    break;
-            }
-        }
-
-        private void PerformPassant(IBoardState board, IChessPiece validPiece, int opponentOffset)
-        {
-            var opponent = board[(validPiece.CurrentPosition.Item1, validPiece.CurrentPosition.Item2 + opponentOffset)];
-
-            if (opponent != null && opponent.PlayerColour != PlayerColor)
-            {
-                board.Remove(opponent);
-                board.PerformMove(validPiece, MoveIndex);
+                board.PerformPassant(this, piece);
             }
             else
             {
-                throw new UserMoveException(this, "En passant capture not valid!");
+                throw new UserMoveException("En passant move illegal!");
+            }
+
+            switch (PlayerColor)
+            {
+                case Player.White:
+                    break;
+                case Player.Black:
+                    break;
             }
         }
     }

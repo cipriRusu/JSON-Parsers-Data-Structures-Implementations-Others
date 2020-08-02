@@ -11,8 +11,8 @@ namespace ChessMoves
         public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Rock;
 
-        public override Path Moves() => new Path(CurrentPosition, new PathType[] { PathType.RowsAndColumns });
+        public override IPath Moves() => new Path(CurrentPosition, new PathType[] { PathType.RowsAndColumns });
 
-        public override Path Captures() => Moves();
+        public override IPath Captures() => Moves();
     }
 }

@@ -6,7 +6,8 @@ using System.Linq.Expressions;
 
 namespace ChessMoves
 {
-    public abstract class UserMove
+    [Serializable]
+    public class UserMove : IUserMove
     {
         public PieceType PieceType { get; private set; }
         public (int, int) MoveIndex { get; private set; }
@@ -23,6 +24,14 @@ namespace ChessMoves
             GetPieceType(input);
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
+        }
+
+        public UserMove((int, int) destination, Player playerTurn)
+        {
+            //Custom constructor used only for Checking King Check values;
+            PieceType = PieceType.King;
+            PlayerColor = playerTurn;
+            MoveIndex = destination;
         }
 
         private void GetSource(string source)

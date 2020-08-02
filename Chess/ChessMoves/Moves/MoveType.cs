@@ -21,7 +21,7 @@ namespace ChessMoves.Moves
             {
                 return new KingCastlingUserMove(input, playerTurn);
             }
-            else if(input.Equals("0-0-0"))
+            else if (input.Equals("0-0-0"))
             {
                 return new QueenCastlingUserMove(input, playerTurn);
             }
