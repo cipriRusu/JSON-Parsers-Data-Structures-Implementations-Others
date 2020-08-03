@@ -15,9 +15,7 @@ namespace ChessMoves
             board.PerformMove(board.GetMovablePiece, this);
             CheckVerification(board);
         }
-        public bool ValidateDestination(IChessPiece piece, IBoardState boardState)
-        {
-            return piece.CanCapture(this, boardState);
-        }
+        public bool ValidateDestination(IChessPiece piece, IBoardState boardState) => 
+            piece.CanCapture(this, boardState);
     }
 }
