@@ -29,23 +29,21 @@ namespace ChessMoves
 
         private bool KingCheckMateStatus()
         {
-            var legalMoves = _currentKing.Moves();
+            var legalMoves = chessBoard.GetAllKingMoves(_currentKing.Moves());
 
-            //foreach (var move in legalMoves)
-            //{
-            //    var currentBoardState = chessBoard.DeepClone();
+            var currentBoardState = chessBoard.DeepClone();
 
-            //    currentBoardState.PerformMove(King, move.Single());
+            foreach (var move in legalMoves)
+            {
+                currentBoardState.PerformMove(_currentKing, move);
 
-            //    if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
-            //    {
-            //        return false;
-            //    }
-            //}
+                if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
+                {
+                    return false;
+                }
+            }
 
-            //return legalMoves.Count() > 0;
-
-            return false;
+            return legalMoves.Count() > 0;
         }
     }
 }
