@@ -21,6 +21,19 @@ namespace ChessMoves
         public bool IsCheck { get; set; }
         public IChessPiece GetMovablePiece { get; private set; }
 
+        public bool CanPerformCastling(IUserMove move)
+        {
+            switch (move)
+            {
+                case KingCastlingUserMove _:
+                    return VerifyKingCastling(move);
+                case QueenCastlingUserMove _:
+                    return VerifyQueenCastling(move);
+            }
+
+            return false;
+        }
+
         public void CurrentMove(IUserMove move) =>
         GetMovablePiece = GetAllPieces()
         .Where(x => x != null)
@@ -100,39 +113,6 @@ namespace ChessMoves
             }
         }
 
-        public bool IsKingAttackedStatus(Player player)
-        {
-            var diagonalAttacks =
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Queen, PieceType.Bishop },
-                PathType.Diagonals);
-
-            var verticalHorizontalAttacks =
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Queen, PieceType.Rock },
-                PathType.RowsAndColumns);
-
-            var knightAttacks =
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Knight },
-                PathType.Knight);
-
-            var pawnAttacks =
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Pawn },
-                PathType.PawnCapture);
-
-            return diagonalAttacks || verticalHorizontalAttacks || knightAttacks || pawnAttacks;
-        }
-
-        private bool ValidAttacks(
-            IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => new Path(currentKing, pathTypes)
-                .Where(x => board[x.Last().Item1, x.Last().Item2] != null)
-                .Where(x => IsPathClear(x.Skip(1).SkipLast(1)))
-                .Where(x => board[x.Last().Item1, x.Last().Item2].PlayerColour == Piece.Opponent(currentKing.PlayerColour))
-                .Where(x => attackers.Contains(board[x.Last().Item1, x.Last().Item2].PieceType))
-                .SelectMany(x => x).Any();
-
         public void SwitchTurn()
         {
             switch (TurnToMove)
@@ -142,6 +122,81 @@ namespace ChessMoves
                     break;
                 case Player.Black:
                     TurnToMove = Player.White;
+                    break;
+            }
+        }
+
+        private bool VerifyKingCastling(IUserMove move)
+        {
+            if (move.PlayerColor == Player.White)
+            {
+                return
+                    board[7, 4] != null &&
+                    board[7, 7] != null &&
+                    !board[7, 4].IsMoved &&
+                    !board[7, 7].IsMoved;
+            }
+            else if (move.PlayerColor == Player.Black)
+            {
+                return 
+                    board[0, 4] != null &&
+                    board[0, 7] != null &&
+                    !board[0, 4].IsMoved &&
+                    !board[0, 7].IsMoved;
+            }
+
+            return false;
+        }
+
+        private bool VerifyQueenCastling(IUserMove move)
+        {
+            if (move.PlayerColor == Player.White)
+            {
+                return
+                    board[7, 4] != null &&
+                    board[7, 0] != null &&
+                    !board[7, 4].IsMoved &&
+                    !board[7, 0].IsMoved;
+
+            }
+            else if (move.PlayerColor == Player.Black)
+            {
+                return
+                    board[0, 4] != null &&
+                    board[0, 0] != null &&
+                    !board[0, 4].IsMoved &&
+                    !board[0, 0].IsMoved;
+            }
+
+            return false;
+        }
+
+        public void PerformKingSideCastling(IUserMove move)
+        {
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    (board[7, 7], board[7, 5]) = (board[7, 5], board[7, 7]);
+                    (board[7, 4], board[7, 6]) = (board[7, 6], board[7, 4]);
+                    break;
+                case Player.Black:
+                    (board[0, 7], board[0, 5]) = (board[0, 5], board[0, 7]);
+                    (board[0, 4], board[0, 6]) = (board[0, 6], board[0, 4]);
+                    break;
+            }
+        }
+
+        public void PerformQueenSideCastling(IUserMove move)
+        {
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    (board[7, 0], board[7, 3]) = (board[7, 3], board[7, 0]);
+                    (board[7, 4], board[7, 2]) = (board[7, 2], board[7, 4]);
+                    break;
+                case Player.Black:
+                    (board[0, 0], board[0, 3]) = (board[0, 3], board[0, 0]);
+                    (board[0, 4], board[0, 2]) = (board[0, 2], board[0, 4]);
                     break;
             }
         }
