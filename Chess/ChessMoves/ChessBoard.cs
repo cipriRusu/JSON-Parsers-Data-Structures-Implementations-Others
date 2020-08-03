@@ -128,21 +128,12 @@ namespace ChessMoves
 
         private bool VerifyKingCastling(IUserMove move)
         {
-            if (move.PlayerColor == Player.White)
+            switch (move.PlayerColor)
             {
-                return
-                    board[7, 4] != null &&
-                    board[7, 7] != null &&
-                    !board[7, 4].IsMoved &&
-                    !board[7, 7].IsMoved;
-            }
-            else if (move.PlayerColor == Player.Black)
-            {
-                return 
-                    board[0, 4] != null &&
-                    board[0, 7] != null &&
-                    !board[0, 4].IsMoved &&
-                    !board[0, 7].IsMoved;
+                case Player.White:
+                    return KingSideVerification(7);
+                case Player.Black:
+                    return KingSideVerification(0);
             }
 
             return false;
@@ -150,25 +141,38 @@ namespace ChessMoves
 
         private bool VerifyQueenCastling(IUserMove move)
         {
-            if (move.PlayerColor == Player.White)
+            switch (move.PlayerColor)
             {
-                return
-                    board[7, 4] != null &&
-                    board[7, 0] != null &&
-                    !board[7, 4].IsMoved &&
-                    !board[7, 0].IsMoved;
+                case Player.White:
+                    return QueenSideVerification(7);
+                case Player.Black:
+                    return QueenSideVerification(0);
+                default:
+                    return false;
 
             }
-            else if (move.PlayerColor == Player.Black)
-            {
-                return
-                    board[0, 4] != null &&
-                    board[0, 0] != null &&
-                    !board[0, 4].IsMoved &&
-                    !board[0, 0].IsMoved;
-            }
+        }
 
-            return false;
+        private bool KingSideVerification(int sideIndex)
+        {
+            var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
+
+            return IsPathClear(castlingPath.Skip(1).SkipLast(1))
+                   && board[sideIndex, 4] != null
+                   && board[sideIndex, 7] != null
+                   && !board[sideIndex, 4].IsMoved
+                   && !board[sideIndex, 7].IsMoved;
+        }
+
+        private bool QueenSideVerification(int sideIndex)
+        {
+            var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
+
+            return IsPathClear(castlingPath.Skip(1).SkipLast(1))
+                && board[sideIndex, 4] != null
+                && board[sideIndex, 0] != null
+                && !board[sideIndex, 4].IsMoved
+                && !board[sideIndex, 0].IsMoved;
         }
 
         public void PerformKingSideCastling(IUserMove move)
@@ -176,12 +180,10 @@ namespace ChessMoves
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    (board[7, 7], board[7, 5]) = (board[7, 5], board[7, 7]);
-                    (board[7, 4], board[7, 6]) = (board[7, 6], board[7, 4]);
+                    KingSideSwapper(7);
                     break;
                 case Player.Black:
-                    (board[0, 7], board[0, 5]) = (board[0, 5], board[0, 7]);
-                    (board[0, 4], board[0, 6]) = (board[0, 6], board[0, 4]);
+                    KingSideSwapper(0);
                     break;
             }
         }
@@ -191,14 +193,24 @@ namespace ChessMoves
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    (board[7, 0], board[7, 3]) = (board[7, 3], board[7, 0]);
-                    (board[7, 4], board[7, 2]) = (board[7, 2], board[7, 4]);
+                    QueenSideSwapper(7);
                     break;
                 case Player.Black:
-                    (board[0, 0], board[0, 3]) = (board[0, 3], board[0, 0]);
-                    (board[0, 4], board[0, 2]) = (board[0, 2], board[0, 4]);
+                    QueenSideSwapper(0);
                     break;
             }
+        }
+
+        private void KingSideSwapper(int sideIndex)
+        {
+            (board[sideIndex, 7], board[sideIndex, 5]) = (board[sideIndex, 5], board[sideIndex, 7]);
+            (board[sideIndex, 4], board[sideIndex, 6]) = (board[sideIndex, 6], board[sideIndex, 4]);
+        }
+
+        private void QueenSideSwapper(int sideIndex)
+        {
+            (board[sideIndex, 0], board[sideIndex, 3]) = (board[sideIndex, 3], board[sideIndex, 0]);
+            (board[sideIndex, 4], board[sideIndex, 2]) = (board[sideIndex, 2], board[sideIndex, 4]);
         }
     }
 }
