@@ -18,7 +18,7 @@ namespace ChessMoves
             _currentKing = chessBoard.GetKing(turnToMove);
         }
 
-        public bool IsChecked => chessBoard.IsKingAttackedStatus(turnToMove);
+        public bool IsChecked => new AttackStatus(chessBoard, _currentKing).IsAttacked;
         public bool IsCheckMated => KingCheckMateStatus();
         public bool KingPositionCheckStatus(IUserMove move)
         {
