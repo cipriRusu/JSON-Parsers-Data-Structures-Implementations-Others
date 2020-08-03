@@ -8,11 +8,8 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
-        private Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
-        public IChessPiece this[(int, int) index]
-        {
-            get => board[index.Item1, index.Item2];
-        }
+        private readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
 
         public static readonly int CHESSBOARD_SIZE = 8;
         public ChessBoard() => board = new GameStartup().StartUpBoard;
@@ -34,13 +31,18 @@ namespace ChessMoves
             return false;
         }
 
-        public void CurrentMove(IUserMove move) =>
-        GetMovablePiece = GetAllPieces()
-        .Where(x => x != null)
-        .Where(x => x.PlayerColour == move.PlayerColor)
-        .Where(x => x.PieceType == move.PieceType)
-        .Where(x => move.ValidateDestination(x, this) &&
-        new ConstraintValidator(x, move).IsValid).Single();
+        public void CurrentMove(IUserMove move)
+        {
+            var movablePiece = GetAllPieces()
+            .Where(x => x != null)
+            .Where(x => x.PlayerColour == move.PlayerColor)
+            .Where(x => x.PieceType == move.PieceType)
+            .Where(x => move.ValidateDestination(x, this) &&
+            new ConstraintValidator(x, move).IsValid);
+            MoveAndPieceExceptions(movablePiece);
+
+            GetMovablePiece = movablePiece.Single();
+        }
 
         private IEnumerable<IChessPiece> GetAllPieces() =>
             Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
@@ -131,9 +133,9 @@ namespace ChessMoves
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    return KingSideVerification(7);
+                    return CastlingCriteriaVerification(7, true);
                 case Player.Black:
-                    return KingSideVerification(0);
+                    return CastlingCriteriaVerification(0, true);
             }
 
             return false;
@@ -144,36 +146,36 @@ namespace ChessMoves
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    return QueenSideVerification(7);
+                    return CastlingCriteriaVerification(7, false);
                 case Player.Black:
-                    return QueenSideVerification(0);
+                    return CastlingCriteriaVerification(0, false);
                 default:
                     return false;
 
             }
         }
 
-        private bool KingSideVerification(int sideIndex)
+        private bool CastlingCriteriaVerification(int sideIndex, bool isKingSide)
         {
-            var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
-
-            return IsPathClear(castlingPath.Skip(1).SkipLast(1))
-                   && board[sideIndex, 4] != null
-                   && board[sideIndex, 7] != null
-                   && !board[sideIndex, 4].IsMoved
-                   && !board[sideIndex, 7].IsMoved;
+            if(isKingSide)
+            {
+                var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
+                return IsPathClear(castlingPath.Skip(1).SkipLast(1)) && 
+                    NullAndMoveValidation(sideIndex, 7);
+            }
+            else
+            {
+                var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
+                return IsPathClear(castlingPath.Skip(1).SkipLast(1)) && 
+                    NullAndMoveValidation(sideIndex, 0);
+            }
         }
 
-        private bool QueenSideVerification(int sideIndex)
-        {
-            var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
-
-            return IsPathClear(castlingPath.Skip(1).SkipLast(1))
-                && board[sideIndex, 4] != null
-                && board[sideIndex, 0] != null
-                && !board[sideIndex, 4].IsMoved
-                && !board[sideIndex, 0].IsMoved;
-        }
+        public bool NullAndMoveValidation(int columnIndex, int rowIndex) => 
+            board[columnIndex, 4] != null &&
+            board[columnIndex, rowIndex] != null &&
+            !board[columnIndex, 4].IsMoved &&
+            !board[columnIndex, rowIndex].IsMoved;
 
         public void PerformKingSideCastling(IUserMove move)
         {
@@ -211,6 +213,18 @@ namespace ChessMoves
         {
             (board[sideIndex, 0], board[sideIndex, 3]) = (board[sideIndex, 3], board[sideIndex, 0]);
             (board[sideIndex, 4], board[sideIndex, 2]) = (board[sideIndex, 2], board[sideIndex, 4]);
+        }
+
+        private void MoveAndPieceExceptions(IEnumerable<IChessPiece> movablePiece)
+        {
+            if (!movablePiece.Any())
+            {
+                throw new UserMoveException("No movable piece found");
+            }
+            if (movablePiece.Count() > 1)
+            {
+                throw new PieceException("Multiple pieces found that can handle current move");
+            }
         }
     }
 }
