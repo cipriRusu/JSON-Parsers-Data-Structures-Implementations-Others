@@ -11,18 +11,13 @@ namespace ChessMoves
 
         public void GetCurrentState(IBoardState board)
         {
-            var current = board.GetAllPieces()
-                .Where(x => x != null
-                            && x.PlayerColour == PlayerColor
-                            && x.PieceType == PieceType
-                            && x.CanCapture(MoveIndex, board)
-                            && new ConstraintValidator(x, this).IsValid);
-
-            MoveAndPieceExceptions(this, current);
-
-            current.Single().PerformCapture(MoveIndex, board);
-
+            board.CurrentMove(this);
+            board.PerformMove(board.GetMovablePiece, this);
             CheckVerification(board);
+        }
+        public bool ValidateDestination(IChessPiece piece, IBoardState boardState)
+        {
+            return piece.CanCapture(this, boardState);
         }
     }
 }
