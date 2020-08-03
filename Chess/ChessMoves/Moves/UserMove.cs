@@ -13,9 +13,13 @@ namespace ChessMoves
         public string NotationIndex { get; private set; }
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
+        public void GetCurrentState(IBoardState board) {}
+
+        public bool ValidateDestination(IChessPiece piece, IBoardState boardState) => false;
+
         public Player PlayerColor { get; private set; }
 
-        public UserMove(string input, Player playerTurn)
+        protected UserMove(string input, Player playerTurn)
         {
             NotationIndex = input;
             PlayerColor = playerTurn;
