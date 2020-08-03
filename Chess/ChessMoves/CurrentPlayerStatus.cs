@@ -29,7 +29,7 @@ namespace ChessMoves
 
         private bool KingCheckMateStatus()
         {
-            var legalMoves = chessBoard.GetAllKingMoves(_currentKing.Moves());
+            var legalMoves = chessBoard.GetAllKingMoves(_currentKing);
 
             var currentBoardState = chessBoard.DeepClone();
 
