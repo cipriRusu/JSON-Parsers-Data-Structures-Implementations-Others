@@ -21,6 +21,53 @@ namespace ChessMoves
         public bool IsCheck { get; set; }
         public IChessPiece GetMovablePiece { get; private set; }
 
+        public void CurrentMove(IUserMove move) =>
+        GetMovablePiece = GetAllPieces()
+        .Where(x => x != null)
+        .Where(x => x.PlayerColour == move.PlayerColor)
+        .Where(x => x.PieceType == move.PieceType)
+        .Where(x => move.ValidateDestination(x, this) &&
+        new ConstraintValidator(x, move).IsValid).Single();
+
+        private IEnumerable<IChessPiece> GetAllPieces() =>
+            Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
+            Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
+
+        public IChessPiece GetKing(Player player) => GetAllPieces()
+                .Where(x => x != null)
+                .Where(x => x.PieceType == PieceType.King)
+                .Where(x => x.PlayerColour == player).Single();
+
+        public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
+        {
+            var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
+
+            foreach (var move in allLegalMoves)
+            {
+                yield return new UserMove(move.Single(), currentKing.PlayerColour);
+            }
+        }
+
+        public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
+
+        public void PerformMove(IChessPiece piece, IUserMove move)
+        {
+            piece.MarkPassant(piece, move.MoveIndex);
+            var formerPosition = piece.CurrentPosition;
+
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
+            board[formerPosition.Item1, formerPosition.Item2] = null;
+
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2].IsMoved = true;
+        }
+
+        public void Promote(IChessPiece piece) =>
+            board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] =
+            new Queen(string.Concat(piece.File, piece.Rank), piece.PlayerColour);
+
+        public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;
+
         internal void UserMoves(IEnumerable<string> userMoves)
         {
             if (!userMoves.Any() || userMoves.Count() == 0)
@@ -35,43 +82,6 @@ namespace ChessMoves
                 SwitchTurn();
             }
         }
-
-        private IEnumerable<IChessPiece> GetAllPieces() =>
-            Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
-            Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
-
-        public void PerformMove(IChessPiece piece, IUserMove move)
-        {
-            piece.MarkPassant(piece, move.MoveIndex);
-            var formerPosition = piece.CurrentPosition;
-
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
-            board[formerPosition.Item1, formerPosition.Item2] = null;
-
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].IsMoved = true;
-        }
-
-        public IChessPiece GetKing(Player player) => GetAllPieces()
-                .Where(x => x != null)
-                .Where(x => x.PieceType == PieceType.King)
-                .Where(x => x.PlayerColour == player).Single();
-
-        public void CurrentMove(IUserMove move) =>
-        GetMovablePiece = GetAllPieces()
-        .Where(x => x != null)
-        .Where(x => x.PlayerColour == move.PlayerColor)
-        .Where(x => x.PieceType == move.PieceType)
-        .Where(x => move.ValidateDestination(x, this) &&
-        new ConstraintValidator(x, move).IsValid).Single();
-
-        public void Promote(IChessPiece piece) =>
-            board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] = 
-            new Queen(string.Concat(piece.File, piece.Rank), piece.PlayerColour);
-
-        public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;
-
-        public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
 
         private IEnumerable<IUserMove> GetMoveType(IEnumerable<string> input)
         {
@@ -90,14 +100,29 @@ namespace ChessMoves
             }
         }
 
-        public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
+        public bool IsKingAttackedStatus(Player player)
         {
-            var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
+            var diagonalAttacks =
+                ValidAttacks(GetKing(player),
+                new PieceType[] { PieceType.Queen, PieceType.Bishop },
+                PathType.Diagonals);
 
-            foreach(var move in allLegalMoves)
-            {
-                yield return new UserMove(move.Single(), currentKing.PlayerColour);
-            }
+            var verticalHorizontalAttacks =
+                ValidAttacks(GetKing(player),
+                new PieceType[] { PieceType.Queen, PieceType.Rock },
+                PathType.RowsAndColumns);
+
+            var knightAttacks =
+                ValidAttacks(GetKing(player),
+                new PieceType[] { PieceType.Knight },
+                PathType.Knight);
+
+            var pawnAttacks =
+                ValidAttacks(GetKing(player),
+                new PieceType[] { PieceType.Pawn },
+                PathType.PawnCapture);
+
+            return diagonalAttacks || verticalHorizontalAttacks || knightAttacks || pawnAttacks;
         }
 
         private bool ValidAttacks(
@@ -107,31 +132,6 @@ namespace ChessMoves
                 .Where(x => board[x.Last().Item1, x.Last().Item2].PlayerColour == Piece.Opponent(currentKing.PlayerColour))
                 .Where(x => attackers.Contains(board[x.Last().Item1, x.Last().Item2].PieceType))
                 .SelectMany(x => x).Any();
-
-        public bool IsKingAttackedStatus(Player player)
-        {
-            var diagonalAttacks = 
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Queen, PieceType.Bishop },
-                PathType.Diagonals);
-
-            var verticalHorizontalAttacks = 
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Queen, PieceType.Rock },
-                PathType.RowsAndColumns);
-
-            var knightAttacks = 
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Knight },
-                PathType.Knight);
-
-            var pawnAttacks = 
-                ValidAttacks(GetKing(player),
-                new PieceType[] { PieceType.Pawn },
-                PathType.PawnCapture);
-
-            return diagonalAttacks || verticalHorizontalAttacks || knightAttacks || pawnAttacks;
-        }
 
         public void SwitchTurn()
         {
