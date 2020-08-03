@@ -31,10 +31,10 @@ namespace ChessMoves
         {
             var legalMoves = chessBoard.GetAllKingMoves(_currentKing);
 
-            var currentBoardState = chessBoard.DeepClone();
-
             foreach (var move in legalMoves)
             {
+                var currentBoardState = chessBoard.DeepClone();
+
                 currentBoardState.PerformMove(_currentKing, move);
 
                 if (!new CurrentPlayerStatus(turnToMove, currentBoardState).IsChecked)
