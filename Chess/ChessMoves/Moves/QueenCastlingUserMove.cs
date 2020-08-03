@@ -7,12 +7,18 @@ namespace ChessMoves.Moves
 {
     public class QueenCastlingUserMove : UserMove, IUserMove
     {
-        private int CastlingPathLength = 5;
         public QueenCastlingUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void GetCurrentState(IBoardState board)
+        public new void GetCurrentState(IBoardState board)
         {
-
+            if(board.CanPerformCastling(this))
+            {
+                board.PerformQueenSideCastling(this);
+            }
+            else
+            {
+                throw new UserMoveException("Illegal castling move");
+            }
         }
     }
 }
