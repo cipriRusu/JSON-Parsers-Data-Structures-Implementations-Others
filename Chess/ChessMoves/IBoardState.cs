@@ -12,11 +12,12 @@ namespace ChessMoves
         bool IsCheck { get; set; }
         IChessPiece GetMovablePiece { get; }
         IEnumerable<IChessPiece> GetAllPieces();
+        IChessPiece GetKing(Player player);
+        bool IsKingAttackedStatus(Player player);
         void Remove(IChessPiece target);
         void CurrentMove(IUserMove move);
         bool IsPathClear(IEnumerable<(int, int)> path);
         void PerformMove(IChessPiece chessPiece, IUserMove move);
         void Promote(IChessPiece piece);
-        IEnumerable<(int, int)> ValidAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes);
     }
 }
