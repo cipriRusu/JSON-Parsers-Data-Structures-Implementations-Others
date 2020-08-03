@@ -9,7 +9,8 @@ namespace ChessMoves
     {
         private IBoardState boardState;
         private IChessPiece chessPiece;
-        public bool IsAttacked => IsAttackedStatus();
+        public bool IsAttacked => IsPieceAttackedStatus();
+        public bool IsCheckMated => IsPieceCheckMatedStatus();
 
         public AttackStatus(IBoardState boardState, IChessPiece chessPiece)
         {
@@ -17,7 +18,26 @@ namespace ChessMoves
             this.chessPiece = chessPiece;
         }
 
-        public bool IsAttackedStatus()
+        public bool IsPieceCheckMatedStatus()
+        {
+            var legalMoves = boardState.GetAllKingMoves(chessPiece);
+
+            foreach (var move in legalMoves)
+            {
+                var currentBoardState = boardState.DeepClone();
+
+                currentBoardState.PerformMove(chessPiece, move);
+
+                if (!new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked)
+                {
+                    return false;
+                }
+            }
+
+            return legalMoves.Count() > 0;
+        }
+
+        public bool IsPieceAttackedStatus()
         {
             var diagonalAttacks =
                 ValidAttacks(chessPiece,
