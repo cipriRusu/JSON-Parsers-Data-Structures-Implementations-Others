@@ -8,15 +8,18 @@ namespace ChessMoves
     public interface IBoardState
     {
         IChessPiece this[(int, int) index] { get; }
+        IChessPiece GetMovablePiece { get; }
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
-        IChessPiece GetMovablePiece { get; }
+        bool CanPerformCastling(IUserMove move);
+        void CurrentMove(IUserMove move);
         IChessPiece GetKing(Player player);
         IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing);
-        void Remove(IChessPiece target);
-        void CurrentMove(IUserMove move);
         bool IsPathClear(IEnumerable<(int, int)> path);
+        void PerformKingSideCastling(IUserMove move);
+        void PerformQueenSideCastling(IUserMove move);
         void PerformMove(IChessPiece chessPiece, IUserMove move);
         void Promote(IChessPiece piece);
+        void Remove(IChessPiece target);
     }
 }
