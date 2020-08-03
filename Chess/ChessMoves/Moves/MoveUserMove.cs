@@ -12,10 +12,10 @@ namespace ChessMoves.Moves
         public virtual void GetCurrentState(IBoardState board) 
         {
             board.CurrentMove(this);
-
             board.PerformMove(board.GetMovablePiece, this);
-
             CheckVerification(board);
         }
+
+        public bool ValidateDestination(IChessPiece piece, IBoardState boardState) => piece.CanReach(this, boardState);
     }
 }
