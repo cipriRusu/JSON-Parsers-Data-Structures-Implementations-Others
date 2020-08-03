@@ -40,15 +40,6 @@ namespace ChessMoves
             Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
             Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
 
-        public bool IsPiece((int, int) currentPosition, PieceType pieceType, Player player)
-        {
-            return
-                this[currentPosition] != null &&
-                this[currentPosition].CurrentPosition == currentPosition &&
-                this[currentPosition].PieceType == pieceType &&
-                this[currentPosition].PlayerColour == player;
-        }
-
         public void PerformMove(IChessPiece piece, IUserMove move)
         {
             piece.MarkPassant(piece, move.MoveIndex);
