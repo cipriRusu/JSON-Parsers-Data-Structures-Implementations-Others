@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace ChessMoves
 {
-    public class UserMove
+    public class UserMove : IUserMove
     {
         public PieceType PieceType { get; private set; }
         public (int, int) MoveIndex { get; private set; }
@@ -27,9 +27,10 @@ namespace ChessMoves
 
         public UserMove((int, int) moveIndex, Player playerTurn)
         {
-            //Custom constructor for checking current King Check verification status
+            //Custom constructor for checking king status
             PieceType = PieceType.King;
             PlayerColor = playerTurn;
+            MoveIndex = moveIndex;
         }
 
         private void GetSource(string source)
