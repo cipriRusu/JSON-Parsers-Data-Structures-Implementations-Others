@@ -36,7 +36,7 @@ namespace ChessMoves
             }
         }
 
-        public IEnumerable<IChessPiece> GetAllPieces() =>
+        private IEnumerable<IChessPiece> GetAllPieces() =>
             Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
             Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
 

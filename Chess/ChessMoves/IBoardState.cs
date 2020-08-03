@@ -11,7 +11,6 @@ namespace ChessMoves
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
         IChessPiece GetMovablePiece { get; }
-        IEnumerable<IChessPiece> GetAllPieces();
         IChessPiece GetKing(Player player);
         bool IsKingAttackedStatus(Player player);
         void Remove(IChessPiece target);
