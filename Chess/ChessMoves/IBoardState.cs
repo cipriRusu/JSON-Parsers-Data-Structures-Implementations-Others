@@ -12,6 +12,7 @@ namespace ChessMoves
         bool IsCheck { get; set; }
         IChessPiece GetMovablePiece { get; }
         IChessPiece GetKing(Player player);
+        IEnumerable<IUserMove> GetAllKingMoves(IPath paths);
         bool IsKingAttackedStatus(Player player);
         void Remove(IChessPiece target);
         void CurrentMove(IUserMove move);
