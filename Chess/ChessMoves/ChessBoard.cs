@@ -90,6 +90,16 @@ namespace ChessMoves
             }
         }
 
+        public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
+        {
+            var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
+
+            foreach(var move in allLegalMoves)
+            {
+                yield return new UserMove(move.Single(), currentKing.PlayerColour);
+            }
+        }
+
         private bool ValidAttacks(
             IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => new Path(currentKing, pathTypes)
                 .Where(x => board[x.Last().Item1, x.Last().Item2] != null)
