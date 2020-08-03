@@ -40,6 +40,12 @@ namespace ChessMoves
             }
         }
 
+        public virtual bool CanReach(IUserMove move, IBoardState chessBoard) => 
+            Moves().Any(x => x.Last() == move.MoveIndex && chessBoard.IsPathClear(x.Skip(1)));
+
+        public virtual bool CanCapture(IUserMove move, IBoardState chessBoard) => 
+            Captures().Any(x => x.Last() == move.MoveIndex && chessBoard.IsPathClear(x.Skip(1).SkipLast(1)));
+
         public virtual IPath Moves() => null;
         public virtual IPath Captures() => null;
 
