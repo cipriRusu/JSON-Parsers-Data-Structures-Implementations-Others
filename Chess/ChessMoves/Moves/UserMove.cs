@@ -10,7 +10,7 @@ namespace ChessMoves
     {
         public PieceType PieceType { get; private set; }
         public (int, int) MoveIndex { get; private set; }
-        public string NotationIndex { get; private set; }
+        protected string NotationIndex { get; private set; }
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
         public void GetCurrentState(IBoardState board) {}
