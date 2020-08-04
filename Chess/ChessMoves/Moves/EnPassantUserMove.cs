@@ -11,9 +11,9 @@ namespace ChessMoves.Moves
 
         public new void GetCurrentState(IBoardState board)
         {
-            if(board.CheckPassant(this))
+            if(board.CheckPassant(this, out IChessPiece chessPiece))
             {
-                board.PerformPassant(this);
+                board.PerformPassant(this, chessPiece);
             }
             else
             {
