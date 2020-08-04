@@ -13,10 +13,9 @@ namespace ChessMoves
         Player PlayerColour { get; }
         PieceType PieceType { get; }
         bool IsMoved { get; }
-        bool IsPassantCapturable { get; }
-        IPath Moves() { return null; }
-        IPath Captures() { return null; }
-        void Promote(IBoardState chessBoard) { }
+        IPath Moves();
+        IPath Captures();
+        void Promote(IBoardState chessBoard);
         void MarkPassant(IChessPiece piece, IUserMove move);
         bool CanReach(IUserMove move, IBoardState chessBoard);
         bool CanCapture(IUserMove move, IBoardState chessBoard);
