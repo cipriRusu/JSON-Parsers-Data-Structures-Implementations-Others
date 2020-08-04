@@ -10,13 +10,12 @@ namespace ChessMoves
     {
         private readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
-
         public static readonly int CHESSBOARD_SIZE = 8;
+        public IChessPiece GetMovablePiece { get; private set; }
         public ChessBoard() => board = new GameStartup().StartUpBoard;
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
-        public IChessPiece GetMovablePiece { get; private set; }
 
         public bool CanPerformCastling(IUserMove move)
         {
@@ -67,7 +66,7 @@ namespace ChessMoves
 
         public void PerformMove(IChessPiece piece, IUserMove move)
         {
-            piece.MarkPassant(piece, move.MoveIndex);
+            piece.MarkPassant(piece, move);
             var formerPosition = piece.CurrentPosition;
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
@@ -161,21 +160,25 @@ namespace ChessMoves
             {
                 var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
 
-                bool kingSteps = PassAttacks(castlingPath);
+                bool isPassAttacked = OnPassAttacks(castlingPath);
 
-                return !kingSteps && IsPathClear(castlingPath.Skip(1).SkipLast(1)) && NullAndMoveValidation(sideIndex, 7);
+                return !isPassAttacked
+                       && IsPathClear(castlingPath.Skip(1).SkipLast(1))
+                       && NullAndMoveValidation(sideIndex, 7);
             }
             else
             {
                 var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
 
-                var kingSteps = PassAttacks(castlingPath.Reverse());
+                var isPassAttacked = OnPassAttacks(castlingPath.Reverse());
 
-                return !kingSteps && IsPathClear(castlingPath.Skip(1).SkipLast(1)) && NullAndMoveValidation(sideIndex, 0);
+                return !isPassAttacked
+                    && IsPathClear(castlingPath.Skip(1).SkipLast(1))
+                    && NullAndMoveValidation(sideIndex, 0);
             }
         }
 
-        private bool PassAttacks(IEnumerable<(int, int)> castlingPath) => 
+        private bool OnPassAttacks(IEnumerable<(int, int)> castlingPath) => 
             castlingPath.Skip(1)
                         .Take(2)
                         .Select(x => new UserMove(x, TurnToMove))
@@ -237,14 +240,61 @@ namespace ChessMoves
             }
         }
 
-        public bool CheckPassant(IUserMove move)
+        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece)
         {
-            throw new NotImplementedException();
+            var performerPiece = GetAllPieces()
+            .Where(x => x != null)
+            .Where(x => x.PlayerColour == move.PlayerColor)
+            .Where(x => x.PieceType == move.PieceType)
+            .Where(x => new ConstraintValidator(x, move).IsValid).Single();
+
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    chessPiece = performerPiece;
+
+                    return 
+                        board[
+                            performerPiece.CurrentPosition.Item1,
+                            performerPiece.CurrentPosition.Item2 + 1] != null &&
+
+                        board[performerPiece.CurrentPosition.Item1,
+                              performerPiece.CurrentPosition.Item2 + 1].IsPassantCapturable &&
+
+                        this[move.MoveIndex] == null;
+                case Player.Black:
+                    chessPiece = performerPiece;
+
+                    return
+                        board[performerPiece.CurrentPosition.Item1,
+                              performerPiece.CurrentPosition.Item2 - 1] != null &&
+
+                        board[performerPiece.CurrentPosition.Item1,
+                              performerPiece.CurrentPosition.Item2 - 1].IsPassantCapturable &&
+
+                        this[move.MoveIndex] == null;
+            }
+
+            chessPiece = null;
+            return false;
         }
 
-        public void PerformPassant(IUserMove move)
+        public void PerformPassant(IUserMove move, IChessPiece chessPiece)
         {
-            throw new NotImplementedException();
+            switch (move.PlayerColor)
+            {
+                case Player.White:
+                    board[chessPiece.CurrentPosition.Item1,
+                          chessPiece.CurrentPosition.Item2 + 1] = null;
+                    PerformMove(chessPiece, move);
+                    break;
+
+                case Player.Black:
+                    board[chessPiece.CurrentPosition.Item1,
+                          chessPiece.CurrentPosition.Item2 - 1] = null;
+                    PerformMove(chessPiece, move);
+                    break;
+            }
         }
     }
 }
