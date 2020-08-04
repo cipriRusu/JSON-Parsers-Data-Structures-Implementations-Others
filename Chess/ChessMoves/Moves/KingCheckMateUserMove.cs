@@ -8,7 +8,7 @@ namespace ChessMoves.Moves
     {
         public KingCheckMateUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void GetCurrentState(IBoardState board)
+        public new void GetCurrentState(IBoardState board)
         {
             var internalMove = new MoveType(NotationIndex, PlayerColor).Move;
             internalMove.GetCurrentState(board);
