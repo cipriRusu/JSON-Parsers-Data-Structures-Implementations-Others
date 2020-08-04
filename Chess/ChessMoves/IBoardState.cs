@@ -12,8 +12,8 @@ namespace ChessMoves
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
         bool CanPerformCastling(IUserMove move);
-        bool CheckPassant(IUserMove enPassantUserMove);
-        void PerformPassant(IUserMove enPassantUserMove);
+        bool CheckPassant(IUserMove enPassantUserMove, out IChessPiece chessPiece);
+        void PerformPassant(IUserMove enPassantUserMove, IChessPiece chessPiece);
         void CurrentMove(IUserMove move);
         IChessPiece GetKing(Player player);
         IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing);
