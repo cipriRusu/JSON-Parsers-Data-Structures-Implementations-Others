@@ -17,7 +17,7 @@ namespace ChessMoves
         IPath Moves() { return null; }
         IPath Captures() { return null; }
         void Promote(IBoardState chessBoard) { }
-        void MarkPassant(IChessPiece piece, (int, int) destination);
+        void MarkPassant(IChessPiece piece, IUserMove move);
         bool CanReach(IUserMove move, IBoardState chessBoard);
         bool CanCapture(IUserMove move, IBoardState chessBoard);
         void Update(IUserMove move);
