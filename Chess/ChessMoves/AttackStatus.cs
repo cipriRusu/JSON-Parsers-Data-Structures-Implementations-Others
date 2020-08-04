@@ -9,7 +9,7 @@ namespace ChessMoves
     {
         private IBoardState boardState;
         private IChessPiece chessPiece;
-        public bool IsAttacked => IsPieceAttackedStatus();
+        public bool IsAttacked => IsCurrentPieceAttackedStatus();
         public bool IsCheckMated => IsPieceCheckMatedStatus();
 
         public AttackStatus(IBoardState boardState, IChessPiece chessPiece)
@@ -37,7 +37,7 @@ namespace ChessMoves
             return legalMoves.Count() > 0;
         }
 
-        public bool IsPieceAttackedStatus()
+        public bool IsCurrentPieceAttackedStatus()
         {
             var diagonalAttacks =
                 ValidAttacks(chessPiece,
@@ -60,6 +60,15 @@ namespace ChessMoves
                 PathType.PawnCapture);
 
             return diagonalAttacks || verticalHorizontalAttacks || knightAttacks || pawnAttacks;
+        }
+
+        public bool IsCurrentMoveAttacked(IUserMove move)
+        {
+            var currentBoardState = boardState.DeepClone();
+
+            currentBoardState.PerformMove(chessPiece, move);
+
+            return new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked;
         }
 
         private bool ValidAttacks(
