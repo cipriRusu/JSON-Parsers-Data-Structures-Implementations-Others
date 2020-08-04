@@ -24,17 +24,17 @@ namespace ChessMoves
         public bool IsMoved { get; internal set; }
         public bool PassantCapturable { get; private set; }
         public bool IsPassantCapturable { get; private set; }
-        public void MarkPassant(IChessPiece piece, (int, int) destination)
+        public void MarkPassant(IChessPiece piece, IUserMove move)
         {
             if (piece.PieceType == PieceType.Pawn)
             {
                 switch (piece.PlayerColour)
                 {
                     case Player.White:
-                        IsPassantCapturable = destination.Item2 - piece.CurrentPosition.Item2 == 2;
+                        IsPassantCapturable = piece.CurrentPosition.Item1 - move.MoveIndex.Item1 == 2;
                         break;
                     case Player.Black:
-                        IsPassantCapturable = piece.CurrentPosition.Item2 - destination.Item2 == 2;
+                        IsPassantCapturable = move.MoveIndex.Item1 - piece.CurrentPosition.Item1 == 2;
                         break;
                 }
             }
