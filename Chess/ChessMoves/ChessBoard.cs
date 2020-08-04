@@ -157,21 +157,31 @@ namespace ChessMoves
 
         private bool CastlingCriteriaVerification(int sideIndex, bool isKingSide)
         {
-            if(isKingSide)
+            if (isKingSide)
             {
                 var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
-                return IsPathClear(castlingPath.Skip(1).SkipLast(1)) && 
-                    NullAndMoveValidation(sideIndex, 7);
+
+                bool kingSteps = PassAttacks(castlingPath);
+
+                return !kingSteps && IsPathClear(castlingPath.Skip(1).SkipLast(1)) && NullAndMoveValidation(sideIndex, 7);
             }
             else
             {
                 var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
-                return IsPathClear(castlingPath.Skip(1).SkipLast(1)) && 
-                    NullAndMoveValidation(sideIndex, 0);
+
+                var kingSteps = PassAttacks(castlingPath.Reverse());
+
+                return !kingSteps && IsPathClear(castlingPath.Skip(1).SkipLast(1)) && NullAndMoveValidation(sideIndex, 0);
             }
         }
 
-        public bool NullAndMoveValidation(int columnIndex, int rowIndex) => 
+        private bool PassAttacks(IEnumerable<(int, int)> castlingPath) => 
+            castlingPath.Skip(1)
+                        .Take(2)
+                        .Select(x => new UserMove(x, TurnToMove))
+            .Any(x => new AttackStatus(this, GetKing(TurnToMove)).IsCurrentMoveAttacked(x));
+
+        public bool NullAndMoveValidation(int columnIndex, int rowIndex) =>
             board[columnIndex, 4] != null &&
             board[columnIndex, rowIndex] != null &&
             !board[columnIndex, 4].IsMoved &&
@@ -225,6 +235,16 @@ namespace ChessMoves
             {
                 throw new PieceException("Multiple pieces found that can handle current move");
             }
+        }
+
+        public bool CheckPassant(IUserMove move)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PerformPassant(IUserMove move)
+        {
+            throw new NotImplementedException();
         }
     }
 }
