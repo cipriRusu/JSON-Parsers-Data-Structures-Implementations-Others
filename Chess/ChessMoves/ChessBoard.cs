@@ -12,7 +12,7 @@ namespace ChessMoves
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
         private const int ChessboardSize = 8;
         public IChessPiece GetMovablePiece { get; private set; }
-        public ChessBoard() => board = new GameStartup().StartUpBoard;
+        public ChessBoard() => board = new Game().StartUpBoard;
         public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }

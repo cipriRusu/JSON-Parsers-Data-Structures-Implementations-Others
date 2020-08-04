@@ -4,11 +4,11 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class GameStartup
+    public class Game
     {
         private Piece[,] board = new Piece[8, 8];
         public Piece[,] StartUpBoard => board;
-        public GameStartup()
+        public Game()
         {
             InitializeWhite();
             InitializeBlack();
