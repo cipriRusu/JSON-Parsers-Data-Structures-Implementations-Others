@@ -9,9 +9,16 @@ namespace ChessMoves.Moves
     {
         public EnPassantUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public void GetCurrentState(IBoardState board)
+        public new void GetCurrentState(IBoardState board)
         {
-
+            if(board.CheckPassant(this))
+            {
+                board.PerformPassant(this);
+            }
+            else
+            {
+                throw new UserMoveException("Illegal EnPassant move!!");
+            }
         }
     }
 }
