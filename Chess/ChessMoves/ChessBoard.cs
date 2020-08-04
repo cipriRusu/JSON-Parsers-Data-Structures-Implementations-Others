@@ -8,9 +8,9 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
-        private readonly Piece[,] board = new Piece[CHESSBOARD_SIZE, CHESSBOARD_SIZE];
+        private readonly Piece[,] board;
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
-        public static readonly int CHESSBOARD_SIZE = 8;
+        private const int ChessboardSize = 8;
         public IChessPiece GetMovablePiece { get; private set; }
         public ChessBoard() => board = new GameStartup().StartUpBoard;
         public Player TurnToMove { get; private set; } = Player.White;
@@ -33,45 +33,43 @@ namespace ChessMoves
         public void CurrentMove(IUserMove move)
         {
             var movablePiece = GetAllPieces()
-            .Where(x => x != null)
-            .Where(x => x.PlayerColour == move.PlayerColor)
-            .Where(x => x.PieceType == move.PieceType)
-            .Where(x => move.ValidateDestination(x, this) &&
-            new ConstraintValidator(x, move).IsValid);
+                .Where(x => x != null)
+                .Where(x => x.PlayerColour == move.PlayerColor)
+                .Where(x => x.PieceType == move.PieceType)
+                .Where(x => move.ValidateDestination(x, this) && new ConstraintValidator(x, move).IsValid);
             MoveAndPieceExceptions(movablePiece);
 
             GetMovablePiece = movablePiece.Single();
         }
 
         private IEnumerable<IChessPiece> GetAllPieces() =>
-            Enumerable.Range(0, CHESSBOARD_SIZE).SelectMany(i =>
-            Enumerable.Range(0, CHESSBOARD_SIZE).Select(j => board[i, j]));
+            Enumerable.Range(0, ChessboardSize).SelectMany(i =>
+            Enumerable.Range(0, ChessboardSize).Select(j => board[i, j]));
 
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
-                .Where(x => x.PieceType == PieceType.King)
-                .Where(x => x.PlayerColour == player).Single();
+                .Where(x => x.PieceType == PieceType.King).Single(x => x.PlayerColour == player);
 
         public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
         {
             var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
-
+            
             foreach (var move in allLegalMoves)
-            {
                 yield return new UserMove(move.Single(), currentKing.PlayerColour);
-            }
         }
-
+        
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
-
+        
         public void PerformMove(IChessPiece piece, IUserMove move)
         {
             piece.MarkPassant(piece, move);
-            var formerPosition = piece.CurrentPosition;
+            var (firstIndex, secondIndex) = piece.CurrentPosition;
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
+            board[move.MoveIndex.Item1,
+                move.MoveIndex.Item2] = board[piece.CurrentPosition.Item1,
+                piece.CurrentPosition.Item2];
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
-            board[formerPosition.Item1, formerPosition.Item2] = null;
+            board[firstIndex, secondIndex] = null;
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].IsMoved = true;
         }
@@ -80,7 +78,9 @@ namespace ChessMoves
             board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] =
             new Queen(string.Concat(piece.File, piece.Rank), piece.PlayerColour);
 
-        public void Remove(IChessPiece target) => board[target.CurrentPosition.Item1, target.CurrentPosition.Item2] = null;
+        public void Remove(IChessPiece target) =>
+            board[target.CurrentPosition.Item1,
+                target.CurrentPosition.Item2] = null;
 
         internal void UserMoves(IEnumerable<string> userMoves)
         {
@@ -101,7 +101,7 @@ namespace ChessMoves
         {
             foreach (var move in input.Select(x => x.Split(' ')))
             {
-                switch (move.Count())
+                switch (move.Length)
                 {
                     case 1:
                         yield return new MoveType(move.Single(), Player.White).Move;
@@ -114,7 +114,7 @@ namespace ChessMoves
             }
         }
 
-        public void SwitchTurn()
+        private void SwitchTurn()
         {
             switch (TurnToMove)
             {
@@ -124,6 +124,8 @@ namespace ChessMoves
                 case Player.Black:
                     TurnToMove = Player.White;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -135,9 +137,9 @@ namespace ChessMoves
                     return CastlingCriteriaVerification(7, true);
                 case Player.Black:
                     return CastlingCriteriaVerification(0, true);
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-
-            return false;
         }
 
         private bool VerifyQueenCastling(IUserMove move)
@@ -184,7 +186,7 @@ namespace ChessMoves
                         .Select(x => new UserMove(x, TurnToMove))
             .Any(x => new AttackStatus(this, GetKing(TurnToMove)).IsCurrentMoveAttacked(x));
 
-        public bool NullAndMoveValidation(int columnIndex, int rowIndex) =>
+        private bool NullAndMoveValidation(int columnIndex, int rowIndex) =>
             board[columnIndex, 4] != null &&
             board[columnIndex, rowIndex] != null &&
             !board[columnIndex, 4].IsMoved &&
@@ -213,6 +215,8 @@ namespace ChessMoves
                 case Player.Black:
                     QueenSideSwapper(0);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -245,8 +249,7 @@ namespace ChessMoves
             var performerPiece = GetAllPieces()
             .Where(x => x != null)
             .Where(x => x.PlayerColour == move.PlayerColor)
-            .Where(x => x.PieceType == move.PieceType)
-            .Where(x => new ConstraintValidator(x, move).IsValid).Single();
+            .Where(x => x.PieceType == move.PieceType).Single(x => new ConstraintValidator(x, move).IsValid);
 
             switch (move.PlayerColor)
             {
