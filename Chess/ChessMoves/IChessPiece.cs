@@ -13,6 +13,8 @@ namespace ChessMoves
         Player PlayerColour { get; }
         PieceType PieceType { get; }
         bool IsMoved { get; }
+        bool IsPassantCapturable { get; }
+
         IPath Moves();
         IPath Captures();
         void Promote(IBoardState chessBoard);
@@ -20,5 +22,6 @@ namespace ChessMoves
         bool CanReach(IUserMove move, IBoardState chessBoard);
         bool CanCapture(IUserMove move, IBoardState chessBoard);
         void Update(IUserMove move);
+        void MarkMoved(bool isMoved);
     }
 }
