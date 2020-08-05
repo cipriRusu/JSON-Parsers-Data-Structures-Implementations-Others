@@ -8,8 +8,13 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
-        private readonly Piece[,] board;
-        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
+        private readonly IChessPiece[,] board;
+        public IChessPiece this[(int, int) index]
+        {
+            get => board[index.Item1, index.Item2];
+            set => this[(index.Item1, index.Item2)] = value;
+        }
+
         private const int ChessboardSize = 8;
         public IChessPiece GetMovablePiece { get; private set; }
         public ChessBoard() => board = new Game().StartUpBoard;
@@ -71,7 +76,7 @@ namespace ChessMoves
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
             board[firstIndex, secondIndex] = null;
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].IsMoved = true;
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2].MarkMoved(true);
         }
 
         public void Promote(IChessPiece piece) =>
