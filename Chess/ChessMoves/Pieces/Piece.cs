@@ -92,5 +92,7 @@ namespace ChessMoves
                 chessBoard.PerformMove(this, move);
             }
         }
+
+        public void MarkMoved(bool isMoved) => IsMoved = isMoved;
     }
 }
