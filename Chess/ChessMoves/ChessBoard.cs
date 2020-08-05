@@ -23,23 +23,16 @@ namespace ChessMoves
             set => board[first, second] = value;
         }
 
-        public IChessPiece this[IChessPiece piece]
-        {
-            get => piece;
-            set => board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] = value;
-        }
         public IChessPiece GetMovablePiece { get; private set; }
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
         public ChessBoard() => new Game(this);
         public Player TurnToMove { get; private set; } = Player.White;
-
         public void SetBoardLayout(IChessPiece[,] pieces) => board = pieces;
-        public bool IsCastlingValid(IUserMove move) => new ValidateCastling(this).IsValid(move);
-
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
-                .Where(x => x.PieceType == PieceType.King).Single(x => x.PlayerColour == player);
+                .Where(x => x.PieceType == PieceType.King)
+                .Single(x => x.PlayerColour == player);
 
         public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
         {
@@ -49,20 +42,19 @@ namespace ChessMoves
                 yield return new UserMove(move.Single(), currentKing.PlayerColour);
         }
 
-        public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
+        public bool IsPathClear(IEnumerable<(int, int)> input) => 
+            input.All(x => board[x.Item1, x.Item2] == null);
 
         public void PerformMove(IChessPiece piece, IUserMove move)
         {
             piece.MarkPassant(piece, move);
             var (firstIndex, secondIndex) = piece.CurrentPosition;
 
-            board[move.MoveIndex.Item1, 
-                  move.MoveIndex.Item2] = 
-            board[
-                piece.CurrentPosition.Item1,
-                piece.CurrentPosition.Item2];
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = 
+            board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
+
             board[firstIndex, secondIndex] = null;
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].FlagAsMoved(true);
@@ -91,7 +83,7 @@ namespace ChessMoves
             }
         }
 
-        public void SetCurrentMove(IUserMove move)
+        public void SetMove(IUserMove move)
         {
             var movablePiece = GetAllPieces()
                 .Where(x => x != null)
@@ -111,11 +103,14 @@ namespace ChessMoves
             .Where(x => x.PieceType == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
 
+        public bool CheckCastling(IUserMove move) => 
+            new CastlingMoveValidator(this).IsValid(move);
+
         public void PerformCastling(IUserMove move) => 
             new PerformCastling(this).Perform(move);
 
         public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) => 
-            new ValidatePassant(this).CheckPassant(move, out chessPiece);
+            new PassantMoveValidator(this).IsValid(move, out chessPiece);
 
         public void PerformPassant(IUserMove move, IChessPiece chessPiece) => 
             new PerformPassant(this).Perform(move, chessPiece);
