@@ -19,7 +19,7 @@ namespace ChessMoves
 
         public Player PlayerColor { get; private set; }
 
-        protected UserMove(string input, Player playerTurn)
+        internal UserMove(string input, Player playerTurn)
         {
             NotationIndex = input;
             PlayerColor = playerTurn;
