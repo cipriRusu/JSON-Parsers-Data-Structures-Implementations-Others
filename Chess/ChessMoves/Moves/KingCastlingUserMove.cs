@@ -13,7 +13,7 @@ namespace ChessMoves.Moves
         {
             if (board.IsCastlingValid(this))
             {
-                board.PerformKingSideCastling(this);
+                board.PerformCastling(this);
             }
             else
             {
