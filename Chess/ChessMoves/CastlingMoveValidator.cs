@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class ValidateCastling
+    public class CastlingMoveValidator
     {
         private IBoardState chessBoard;
 
-        public ValidateCastling(IBoardState chessBoard) => this.chessBoard = chessBoard;
+        public CastlingMoveValidator(IBoardState chessBoard) => this.chessBoard = chessBoard;
 
         public bool IsValid(IUserMove move)
         {
@@ -43,7 +43,7 @@ namespace ChessMoves
             return false;
         }
 
-        public bool ValidateKingSide(int sideIndex)
+        private bool ValidateKingSide(int sideIndex)
         {
             var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
 
@@ -54,7 +54,7 @@ namespace ChessMoves
                    && NullAndMoveValidation(sideIndex, 7);
         }
 
-        public bool ValidateQueenSide(int sideIndex)
+        private bool ValidateQueenSide(int sideIndex)
         {
             var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
 

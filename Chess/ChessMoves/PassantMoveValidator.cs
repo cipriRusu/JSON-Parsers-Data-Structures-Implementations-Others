@@ -5,13 +5,13 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class ValidatePassant
+    public class PassantMoveValidator
     {
         private IBoardState chessBoard;
 
-        public ValidatePassant(IBoardState chessBoard) => this.chessBoard = chessBoard;
+        public PassantMoveValidator(IBoardState chessBoard) => this.chessBoard = chessBoard;
 
-        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece)
+        public bool IsValid(IUserMove move, out IChessPiece chessPiece)
         {
             var performerPiece = chessBoard.GetPiece(move);
 
@@ -19,18 +19,18 @@ namespace ChessMoves
             {
                 case Player.White:
                     chessPiece = performerPiece;
-                    return PieceValidator(move, chessPiece, 1);
+                    return IsClearAndMarkedForCapture(move, chessPiece, 1);
 
                 case Player.Black:
                     chessPiece = performerPiece;
-                    return PieceValidator(move, chessPiece, -1);
+                    return IsClearAndMarkedForCapture(move, chessPiece, -1);
             }
 
             chessPiece = null;
             return false;
         }
 
-        private bool PieceValidator(IUserMove move, IChessPiece performerPiece, int neighbouringIndex)
+        private bool IsClearAndMarkedForCapture(IUserMove move, IChessPiece performerPiece, int neighbouringIndex)
         {
             return 
                 chessBoard[performerPiece.CurrentPosition.Item1, performerPiece.CurrentPosition.Item2 + neighbouringIndex] != null &&
