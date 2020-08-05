@@ -8,21 +8,17 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
-        private readonly IChessPiece[,] board;
-        public IChessPiece this[(int, int) index]
-        {
-            get => board[index.Item1, index.Item2];
-            set => this[(index.Item1, index.Item2)] = value;
-        }
-
+        private IChessPiece[,] board;
         private const int ChessboardSize = 8;
+
+        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
         public IChessPiece GetMovablePiece { get; private set; }
-        public ChessBoard() => board = new Game().StartUpBoard;
-        public Player TurnToMove { get; private set; } = Player.White;
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
-
-        public bool CanPerformCastling(IUserMove move)
+        public ChessBoard() => new Game(this);
+        public Player TurnToMove { get; private set; } = Player.White;
+        public void SetBoardLayout(IChessPiece[,] pieces) => board = pieces;
+        public bool IsCastlingValid(IUserMove move)
         {
             switch (move)
             {
@@ -34,22 +30,6 @@ namespace ChessMoves
 
             return false;
         }
-
-        public void CurrentMove(IUserMove move)
-        {
-            var movablePiece = GetAllPieces()
-                .Where(x => x != null)
-                .Where(x => x.PlayerColour == move.PlayerColor)
-                .Where(x => x.PieceType == move.PieceType)
-                .Where(x => move.ValidateDestination(x, this) && new ConstraintValidator(x, move).IsValid);
-            MoveAndPieceExceptions(movablePiece);
-
-            GetMovablePiece = movablePiece.Single();
-        }
-
-        private IEnumerable<IChessPiece> GetAllPieces() =>
-            Enumerable.Range(0, ChessboardSize).SelectMany(i =>
-            Enumerable.Range(0, ChessboardSize).Select(j => board[i, j]));
 
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
@@ -76,7 +56,7 @@ namespace ChessMoves
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
             board[firstIndex, secondIndex] = null;
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].MarkMoved(true);
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2].FlagAsMoved(true);
         }
 
         public void Promote(IChessPiece piece) =>
@@ -102,36 +82,16 @@ namespace ChessMoves
             }
         }
 
-        private IEnumerable<IUserMove> GetMoveType(IEnumerable<string> input)
+        public void SetCurrentMove(IUserMove move)
         {
-            foreach (var move in input.Select(x => x.Split(' ')))
-            {
-                switch (move.Length)
-                {
-                    case 1:
-                        yield return new MoveType(move.Single(), Player.White).Move;
-                        break;
-                    case 2:
-                        yield return new MoveType(move.First(), Player.White).Move;
-                        yield return new MoveType(move.Last(), Player.Black).Move;
-                        break;
-                }
-            }
-        }
+            var movablePiece = GetAllPieces()
+                .Where(x => x != null)
+                .Where(x => x.PlayerColour == move.PlayerColor)
+                .Where(x => x.PieceType == move.PieceType)
+                .Where(x => move.ValidateDestination(x, this) && new ConstraintValidator(x, move).IsValid);
+            MoveAndPieceExceptions(movablePiece);
 
-        private void SwitchTurn()
-        {
-            switch (TurnToMove)
-            {
-                case Player.White:
-                    TurnToMove = Player.Black;
-                    break;
-                case Player.Black:
-                    TurnToMove = Player.White;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            GetMovablePiece = movablePiece.Single();
         }
 
         private bool VerifyKingCastling(IUserMove move)
@@ -225,30 +185,6 @@ namespace ChessMoves
             }
         }
 
-        private void KingSideSwapper(int sideIndex)
-        {
-            (board[sideIndex, 7], board[sideIndex, 5]) = (board[sideIndex, 5], board[sideIndex, 7]);
-            (board[sideIndex, 4], board[sideIndex, 6]) = (board[sideIndex, 6], board[sideIndex, 4]);
-        }
-
-        private void QueenSideSwapper(int sideIndex)
-        {
-            (board[sideIndex, 0], board[sideIndex, 3]) = (board[sideIndex, 3], board[sideIndex, 0]);
-            (board[sideIndex, 4], board[sideIndex, 2]) = (board[sideIndex, 2], board[sideIndex, 4]);
-        }
-
-        private void MoveAndPieceExceptions(IEnumerable<IChessPiece> movablePiece)
-        {
-            if (!movablePiece.Any())
-            {
-                throw new UserMoveException("No movable piece found");
-            }
-            if (movablePiece.Count() > 1)
-            {
-                throw new PieceException("Multiple pieces found that can handle current move");
-            }
-        }
-
         public bool CheckPassant(IUserMove move, out IChessPiece chessPiece)
         {
             var performerPiece = GetAllPieces()
@@ -303,6 +239,66 @@ namespace ChessMoves
                     PerformMove(chessPiece, move);
                     break;
             }
+        }
+
+        private IEnumerable<IChessPiece> GetAllPieces() =>
+            Enumerable.Range(0, ChessboardSize).SelectMany(i =>
+            Enumerable.Range(0, ChessboardSize).Select(j => board[i, j]));
+
+        private IEnumerable<IUserMove> GetMoveType(IEnumerable<string> input)
+        {
+            foreach (var move in input.Select(x => x.Split(' ')))
+            {
+                switch (move.Length)
+                {
+                    case 1:
+                        yield return new MoveType(move.Single(), Player.White).Move;
+                        break;
+                    case 2:
+                        yield return new MoveType(move.First(), Player.White).Move;
+                        yield return new MoveType(move.Last(), Player.Black).Move;
+                        break;
+                }
+            }
+        }
+
+        private void MoveAndPieceExceptions(IEnumerable<IChessPiece> movablePiece)
+        {
+            if (!movablePiece.Any())
+            {
+                throw new UserMoveException("No movable piece found");
+            }
+            if (movablePiece.Count() > 1)
+            {
+                throw new PieceException("Multiple pieces found that can handle current move");
+            }
+        }
+
+        private void SwitchTurn()
+        {
+            switch (TurnToMove)
+            {
+                case Player.White:
+                    TurnToMove = Player.Black;
+                    break;
+                case Player.Black:
+                    TurnToMove = Player.White;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void KingSideSwapper(int sideIndex)
+        {
+            (board[sideIndex, 7], board[sideIndex, 5]) = (board[sideIndex, 5], board[sideIndex, 7]);
+            (board[sideIndex, 4], board[sideIndex, 6]) = (board[sideIndex, 6], board[sideIndex, 4]);
+        }
+
+        private void QueenSideSwapper(int sideIndex)
+        {
+            (board[sideIndex, 0], board[sideIndex, 3]) = (board[sideIndex, 3], board[sideIndex, 0]);
+            (board[sideIndex, 4], board[sideIndex, 2]) = (board[sideIndex, 2], board[sideIndex, 4]);
         }
     }
 }
