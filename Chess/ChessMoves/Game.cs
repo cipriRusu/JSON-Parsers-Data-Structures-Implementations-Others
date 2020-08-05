@@ -6,14 +6,14 @@ namespace ChessMoves
 {
     public class Game
     {
-        private IChessPiece[,] board = new Piece[8, 8];
+        private IChessPiece[,] board = new IChessPiece[8, 8];
 
-        public Game(ChessBoard chessBoard)
+        public Game(IBoardState currentState)
         {
             InitializeBlack();
             InitializeWhite();
 
-            chessBoard.SetBoardLayout(board);
+            currentState.SetBoardLayout(board);
         }
 
         private void InitializeBlack()
