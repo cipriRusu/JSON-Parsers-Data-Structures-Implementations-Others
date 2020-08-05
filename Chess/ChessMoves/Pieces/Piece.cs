@@ -22,7 +22,6 @@ namespace ChessMoves
         public char Rank { get; private set; }
         public PieceType PieceType { get; internal set; }
         public bool IsMoved { get; internal set; }
-        public bool PassantCapturable { get; private set; }
         public bool IsPassantCapturable { get; private set; }
         public void MarkPassant(IChessPiece piece, IUserMove move)
         {
