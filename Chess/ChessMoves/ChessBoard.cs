@@ -11,8 +11,23 @@ namespace ChessMoves
         private IChessPiece[,] board;
         private const int ChessboardSize = 8;
 
-        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
-        public IChessPiece this[int first, int second] => board[first, second];
+        public IChessPiece this[(int, int) index]
+        {
+            get => board[index.Item1, index.Item2];
+            set => board[index.Item1, index.Item2] = value;
+        }
+
+        public IChessPiece this[int first, int second]
+        {
+            get => board[first, second];
+            set => board[first, second] = value;
+        }
+
+        public IChessPiece this[IChessPiece piece]
+        {
+            get => piece;
+            set => board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] = value;
+        }
         public IChessPiece GetMovablePiece { get; private set; }
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
@@ -29,13 +44,13 @@ namespace ChessMoves
         public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
         {
             var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
-            
+
             foreach (var move in allLegalMoves)
                 yield return new UserMove(move.Single(), currentKing.PlayerColour);
         }
-        
+
         public bool IsPathClear(IEnumerable<(int, int)> input) => input.All(x => board[x.Item1, x.Item2] == null);
-        
+
         public void PerformMove(IChessPiece piece, IUserMove move)
         {
             piece.MarkPassant(piece, move);
@@ -82,64 +97,32 @@ namespace ChessMoves
                 .Where(x => move.ValidateDestination(x, this) &&
                 new ConstraintValidator(x, move).IsValid);
 
-
-
             MoveAndPieceExceptions(movablePiece);
 
             GetMovablePiece = movablePiece.Single();
         }
 
-        public IChessPiece GetPiece(IUserMove move)
-        {
-            return GetAllPieces()
+        public IChessPiece GetPiece(IUserMove move) => GetAllPieces()
             .Where(x => x != null)
             .Where(x => x.PlayerColour == move.PlayerColor)
             .Where(x => x.PieceType == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
-        }
 
-        public void PerformKingSideCastling(IUserMove move)
-        {
-            switch (move.PlayerColor)
-            {
-                case Player.White:
-                    KingSideSwapper(7);
-                    break;
-                case Player.Black:
-                    KingSideSwapper(0);
-                    break;
-            }
-        }
+        public void PerformCastling(IUserMove move) => new PerformCastling(this).Perform(move);
 
-        public void PerformQueenSideCastling(IUserMove move)
-        {
-            switch (move.PlayerColor)
-            {
-                case Player.White:
-                    QueenSideSwapper(7);
-                    break;
-                case Player.Black:
-                    QueenSideSwapper(0);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) => 
-            new ValidatePassant(this).CheckPassant(move, out chessPiece);
+        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) =>new ValidatePassant(this).CheckPassant(move, out chessPiece);
 
         public void PerformPassant(IUserMove move, IChessPiece chessPiece)
         {
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    board[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 + 1] = null;
+                    this[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 + 1] = null;
                     PerformMove(chessPiece, move);
                     break;
 
                 case Player.Black:
-                    board[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 - 1] = null;
+                    this[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 - 1] = null;
                     PerformMove(chessPiece, move);
                     break;
             }
@@ -191,18 +174,6 @@ namespace ChessMoves
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private void KingSideSwapper(int sideIndex)
-        {
-            (board[sideIndex, 7], board[sideIndex, 5]) = (board[sideIndex, 5], board[sideIndex, 7]);
-            (board[sideIndex, 4], board[sideIndex, 6]) = (board[sideIndex, 6], board[sideIndex, 4]);
-        }
-
-        private void QueenSideSwapper(int sideIndex)
-        {
-            (board[sideIndex, 0], board[sideIndex, 3]) = (board[sideIndex, 3], board[sideIndex, 0]);
-            (board[sideIndex, 4], board[sideIndex, 2]) = (board[sideIndex, 2], board[sideIndex, 4]);
         }
     }
 }
