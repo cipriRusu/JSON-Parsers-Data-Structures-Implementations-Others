@@ -21,8 +21,7 @@ namespace ChessMoves
         IChessPiece GetKing(Player player);
         IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing);
         bool IsPathClear(IEnumerable<(int, int)> path);
-        void PerformKingSideCastling(IUserMove move);
-        void PerformQueenSideCastling(IUserMove move);
+        void PerformCastling(IUserMove move);
         void PerformMove(IChessPiece chessPiece, IUserMove move);
         void Promote(IChessPiece piece);
         void Remove(IChessPiece target);
