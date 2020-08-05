@@ -56,9 +56,12 @@ namespace ChessMoves
             piece.MarkPassant(piece, move);
             var (firstIndex, secondIndex) = piece.CurrentPosition;
 
-            board[move.MoveIndex.Item1,
-                move.MoveIndex.Item2] = board[piece.CurrentPosition.Item1,
+            board[move.MoveIndex.Item1, 
+                  move.MoveIndex.Item2] = 
+            board[
+                piece.CurrentPosition.Item1,
                 piece.CurrentPosition.Item2];
+
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
             board[firstIndex, secondIndex] = null;
 
@@ -108,25 +111,14 @@ namespace ChessMoves
             .Where(x => x.PieceType == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
 
-        public void PerformCastling(IUserMove move) => new PerformCastling(this).Perform(move);
+        public void PerformCastling(IUserMove move) => 
+            new PerformCastling(this).Perform(move);
 
-        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) =>new ValidatePassant(this).CheckPassant(move, out chessPiece);
+        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) => 
+            new ValidatePassant(this).CheckPassant(move, out chessPiece);
 
-        public void PerformPassant(IUserMove move, IChessPiece chessPiece)
-        {
-            switch (move.PlayerColor)
-            {
-                case Player.White:
-                    this[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 + 1] = null;
-                    PerformMove(chessPiece, move);
-                    break;
-
-                case Player.Black:
-                    this[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 - 1] = null;
-                    PerformMove(chessPiece, move);
-                    break;
-            }
-        }
+        public void PerformPassant(IUserMove move, IChessPiece chessPiece) => 
+            new PerformPassant(this).Perform(move, chessPiece);
 
         private IEnumerable<IChessPiece> GetAllPieces() =>
             Enumerable.Range(0, ChessboardSize).SelectMany(i =>
