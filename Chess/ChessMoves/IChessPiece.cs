@@ -22,6 +22,6 @@ namespace ChessMoves
         bool CanReach(IUserMove move, IBoardState chessBoard);
         bool CanCapture(IUserMove move, IBoardState chessBoard);
         void Update(IUserMove move);
-        void MarkMoved(bool isMoved);
+        void FlagAsMoved(bool isMoved);
     }
 }
