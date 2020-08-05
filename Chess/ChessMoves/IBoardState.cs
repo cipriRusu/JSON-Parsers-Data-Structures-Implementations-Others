@@ -7,8 +7,9 @@ namespace ChessMoves
 {
     public interface IBoardState
     {
+        public IChessPiece[,] Board { get; set; }
         IChessPiece this[(int, int) index] { get; }
-        IChessPiece this[int first, int second] { get; }
+        IChessPiece this[int first, int second] { get; set; }
         IChessPiece GetMovablePiece { get; }
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
@@ -25,6 +26,5 @@ namespace ChessMoves
         void PerformMove(IChessPiece chessPiece, IUserMove move);
         void Promote(IChessPiece piece);
         void Remove(IChessPiece target);
-        void SetBoardLayout(IChessPiece[,] pieces);
     }
 }
