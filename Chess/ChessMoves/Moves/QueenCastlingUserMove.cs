@@ -11,7 +11,7 @@ namespace ChessMoves.Moves
 
         public new void GetCurrentState(IBoardState board)
         {
-            if(board.IsCastlingValid(this))
+            if(board.CheckCastling(this))
             {
                 board.PerformCastling(this);
             }
