@@ -12,24 +12,15 @@ namespace ChessMoves
         private const int ChessboardSize = 8;
 
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
+        public IChessPiece this[int first, int second] => board[first, second];
         public IChessPiece GetMovablePiece { get; private set; }
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
         public ChessBoard() => new Game(this);
         public Player TurnToMove { get; private set; } = Player.White;
-        public void SetBoardLayout(IChessPiece[,] pieces) => board = pieces;
-        public bool IsCastlingValid(IUserMove move)
-        {
-            switch (move)
-            {
-                case KingCastlingUserMove _:
-                    return VerifyKingCastling(move);
-                case QueenCastlingUserMove _:
-                    return VerifyQueenCastling(move);
-            }
 
-            return false;
-        }
+        public void SetBoardLayout(IChessPiece[,] pieces) => board = pieces;
+        public bool IsCastlingValid(IUserMove move) => new ValidateCastling(this).IsValid(move);
 
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
@@ -88,74 +79,24 @@ namespace ChessMoves
                 .Where(x => x != null)
                 .Where(x => x.PlayerColour == move.PlayerColor)
                 .Where(x => x.PieceType == move.PieceType)
-                .Where(x => move.ValidateDestination(x, this) && new ConstraintValidator(x, move).IsValid);
+                .Where(x => move.ValidateDestination(x, this) &&
+                new ConstraintValidator(x, move).IsValid);
+
+
+
             MoveAndPieceExceptions(movablePiece);
 
             GetMovablePiece = movablePiece.Single();
         }
 
-        private bool VerifyKingCastling(IUserMove move)
+        public IChessPiece GetPiece(IUserMove move)
         {
-            switch (move.PlayerColor)
-            {
-                case Player.White:
-                    return CastlingCriteriaVerification(7, true);
-                case Player.Black:
-                    return CastlingCriteriaVerification(0, true);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return GetAllPieces()
+            .Where(x => x != null)
+            .Where(x => x.PlayerColour == move.PlayerColor)
+            .Where(x => x.PieceType == move.PieceType)
+            .Single(x => new ConstraintValidator(x, move).IsValid);
         }
-
-        private bool VerifyQueenCastling(IUserMove move)
-        {
-            switch (move.PlayerColor)
-            {
-                case Player.White:
-                    return CastlingCriteriaVerification(7, false);
-                case Player.Black:
-                    return CastlingCriteriaVerification(0, false);
-                default:
-                    return false;
-
-            }
-        }
-
-        private bool CastlingCriteriaVerification(int sideIndex, bool isKingSide)
-        {
-            if (isKingSide)
-            {
-                var castlingPath = Enumerable.Range(4, 4).Select(x => (sideIndex, x));
-
-                bool isPassAttacked = OnPassAttacks(castlingPath);
-
-                return !isPassAttacked
-                       && IsPathClear(castlingPath.Skip(1).SkipLast(1))
-                       && NullAndMoveValidation(sideIndex, 7);
-            }
-            else
-            {
-                var castlingPath = Enumerable.Range(0, 5).Select(x => (sideIndex, x));
-
-                var isPassAttacked = OnPassAttacks(castlingPath.Reverse());
-
-                return !isPassAttacked
-                    && IsPathClear(castlingPath.Skip(1).SkipLast(1))
-                    && NullAndMoveValidation(sideIndex, 0);
-            }
-        }
-
-        private bool OnPassAttacks(IEnumerable<(int, int)> castlingPath) => 
-            castlingPath.Skip(1)
-                        .Take(2)
-                        .Select(x => new UserMove(x, TurnToMove))
-            .Any(x => new AttackStatus(this, GetKing(TurnToMove)).IsCurrentMoveAttacked(x));
-
-        private bool NullAndMoveValidation(int columnIndex, int rowIndex) =>
-            board[columnIndex, 4] != null &&
-            board[columnIndex, rowIndex] != null &&
-            !board[columnIndex, 4].IsMoved &&
-            !board[columnIndex, rowIndex].IsMoved;
 
         public void PerformKingSideCastling(IUserMove move)
         {
@@ -185,57 +126,20 @@ namespace ChessMoves
             }
         }
 
-        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece)
-        {
-            var performerPiece = GetAllPieces()
-            .Where(x => x != null)
-            .Where(x => x.PlayerColour == move.PlayerColor)
-            .Where(x => x.PieceType == move.PieceType).Single(x => new ConstraintValidator(x, move).IsValid);
-
-            switch (move.PlayerColor)
-            {
-                case Player.White:
-                    chessPiece = performerPiece;
-
-                    return 
-                        board[
-                            performerPiece.CurrentPosition.Item1,
-                            performerPiece.CurrentPosition.Item2 + 1] != null &&
-
-                        board[performerPiece.CurrentPosition.Item1,
-                              performerPiece.CurrentPosition.Item2 + 1].IsPassantCapturable &&
-
-                        this[move.MoveIndex] == null;
-                case Player.Black:
-                    chessPiece = performerPiece;
-
-                    return
-                        board[performerPiece.CurrentPosition.Item1,
-                              performerPiece.CurrentPosition.Item2 - 1] != null &&
-
-                        board[performerPiece.CurrentPosition.Item1,
-                              performerPiece.CurrentPosition.Item2 - 1].IsPassantCapturable &&
-
-                        this[move.MoveIndex] == null;
-            }
-
-            chessPiece = null;
-            return false;
-        }
+        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) => 
+            new ValidatePassant(this).CheckPassant(move, out chessPiece);
 
         public void PerformPassant(IUserMove move, IChessPiece chessPiece)
         {
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    board[chessPiece.CurrentPosition.Item1,
-                          chessPiece.CurrentPosition.Item2 + 1] = null;
+                    board[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 + 1] = null;
                     PerformMove(chessPiece, move);
                     break;
 
                 case Player.Black:
-                    board[chessPiece.CurrentPosition.Item1,
-                          chessPiece.CurrentPosition.Item2 - 1] = null;
+                    board[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 - 1] = null;
                     PerformMove(chessPiece, move);
                     break;
             }
