@@ -93,6 +93,6 @@ namespace ChessMoves
             }
         }
 
-        public void MarkMoved(bool isMoved) => IsMoved = isMoved;
+        public void FlagAsMoved(bool isMoved) => IsMoved = isMoved;
     }
 }
