@@ -8,7 +8,7 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
-        private IChessPiece[,] board;
+        private IChessPiece[,] board = new IChessPiece[ChessboardSize, ChessboardSize];
         private const int ChessboardSize = 8;
 
         public IChessPiece this[(int, int) index]
@@ -28,7 +28,7 @@ namespace ChessMoves
         public bool IsCheck { get; set; }
         public ChessBoard() => new Game(this);
         public Player TurnToMove { get; private set; } = Player.White;
-        public void SetBoardLayout(IChessPiece[,] pieces) => board = pieces;
+        public IChessPiece[,] Board { get => board; set => board = value; }
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PieceType == PieceType.King)
