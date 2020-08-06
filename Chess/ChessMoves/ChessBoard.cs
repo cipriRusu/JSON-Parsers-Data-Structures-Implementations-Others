@@ -17,29 +17,18 @@ namespace ChessMoves
         private IChessPiece[,] board = new IChessPiece[ChessboardSize, ChessboardSize];
         private const int ChessboardSize = 8;
 
-        public IChessPiece this[(int, int) index]
-        {
-            get => board[index.Item1, index.Item2];
-            set => board[index.Item1, index.Item2] = value;
-        }
-
-        public IChessPiece this[int first, int second]
-        {
-            get => board[first, second];
-            set => board[first, second] = value;
-        }
-
-        public IChessPiece GetMovablePiece { get; private set; }
+        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
+        public IChessPiece this[int first, int second] => board[first, second];
+        public IChessPiece PieceToMove { get; private set; }
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
-        public Player TurnToMove { get; private set; } = Player.White;
-        public IChessPiece[,] Board { get => board; set => board = value; }
+        public Player TurnToMove { get; set; } = Player.White;
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PieceType == PieceType.King)
                 .Single(x => x.PlayerColour == player);
 
-        public IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing)
+        public IEnumerable<IUserMove> AllKingMoves(IChessPiece currentKing)
         {
             var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
 
@@ -73,21 +62,6 @@ namespace ChessMoves
             board[target.CurrentPosition.Item1,
                 target.CurrentPosition.Item2] = null;
 
-        public void UserMoves(IEnumerable<string> userMoves)
-        {
-            if (!userMoves.Any() || userMoves.Count() == 0)
-            {
-                throw new UserMoveException("No user input provided");
-            }
-
-            foreach (var userMove in GetMoveType(userMoves))
-            {
-                userMove.GetCurrentState(this);
-
-                SwitchTurn();
-            }
-        }
-
         public void SetMove(IUserMove move)
         {
             var movablePiece = GetAllPieces()
@@ -99,7 +73,7 @@ namespace ChessMoves
 
             MoveAndPieceExceptions(movablePiece);
 
-            GetMovablePiece = movablePiece.Single();
+            PieceToMove = movablePiece.Single();
         }
 
         public IChessPiece GetPiece(IUserMove move) => GetAllPieces()
@@ -107,6 +81,8 @@ namespace ChessMoves
             .Where(x => x.PlayerColour == move.PlayerColor)
             .Where(x => x.PieceType == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
+
+        public void GetAndPerform(IUserMove move) => move.GetCurrentState(this);
 
         public bool CheckCastling(IUserMove move) =>
             new CastlingMoveValidator(this).IsValid(move);
@@ -138,8 +114,6 @@ namespace ChessMoves
                 throw new PieceException("Multiple pieces found that can handle current move");
             }
         }
-
-        private void SwitchTurn() => TurnToMove = new PlayerTurn(TurnToMove).NextTurn;
 
         private void InitializeBlack()
         {
