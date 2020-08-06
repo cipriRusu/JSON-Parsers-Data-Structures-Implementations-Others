@@ -20,7 +20,7 @@ namespace ChessMoves
 
         public bool IsCurrentCheckMate()
         {
-            var legalMoves = boardState.GetAllKingMoves(chessPiece);
+            var legalMoves = boardState.AllKingMoves(chessPiece);
 
             foreach (var move in legalMoves)
             {
