@@ -12,7 +12,7 @@ namespace ChessMoves
         public new void GetCurrentState(IBoardState board)
         {
             board.SetMove(this);
-            board.PerformMove(board.GetMovablePiece, this);
+            board.PerformMove(board.PieceToMove, this);
             CheckVerification(board);
         }
         public new bool ValidateDestination(IChessPiece piece, IBoardState boardState) => 
