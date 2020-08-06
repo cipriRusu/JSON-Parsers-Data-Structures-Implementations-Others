@@ -12,7 +12,7 @@ namespace ChessMoves.Moves
         public new virtual void GetCurrentState(IBoardState board) 
         {
             board.SetMove(this);
-            board.PerformMove(board.GetMovablePiece, this);
+            board.PerformMove(board.PieceToMove, this);
             CheckVerification(board);
         }
 
