@@ -9,14 +9,11 @@ namespace ChessMoves.Moves
     {
         public IEnumerable<string> InputToParse { get; private set; }
         public IEnumerable<IUserMove> AllMoves => GetMoveType(InputToParse);
-        public MovementParser(IEnumerable<string> input)
-        {
-            InputToParse = input;
-        }
+        public MovementParser(IEnumerable<string> input) => InputToParse = input;
 
         private IEnumerable<IUserMove> GetMoveType(IEnumerable<string> input)
         {
-            foreach (var move in input.Select(x => x.Split(' ')))
+            foreach (var move in input.Select(x => x.Trim(' ').Split(' ')))
             {
                 switch (move.Length)
                 {
