@@ -7,20 +7,20 @@ namespace ChessMoves
 {
     public interface IBoardState
     {
-        public IChessPiece[,] Board { get; set; }
         IChessPiece this[(int, int) index] { get; }
-        IChessPiece this[int first, int second] { get; set; }
-        IChessPiece GetMovablePiece { get; }
+        IChessPiece this[int first, int second] { get; }
+        IChessPiece PieceToMove { get; }
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
-        Player TurnToMove { get; }
+        Player TurnToMove { get; set; }
         bool CheckCastling(IUserMove move);
         bool CheckPassant(IUserMove enPassantUserMove, out IChessPiece chessPiece);
         IChessPiece GetPiece(IUserMove move);
+        void GetAndPerform(IUserMove move);
         void PerformPassant(IUserMove enPassantUserMove, IChessPiece chessPiece);
         void SetMove(IUserMove move);
         IChessPiece GetKing(Player player);
-        IEnumerable<IUserMove> GetAllKingMoves(IChessPiece currentKing);
+        IEnumerable<IUserMove> AllKingMoves(IChessPiece currentKing);
         bool IsPathClear(IEnumerable<(int, int)> path);
         void PerformCastling(IUserMove move);
         void PerformMove(IChessPiece chessPiece, IUserMove move);
