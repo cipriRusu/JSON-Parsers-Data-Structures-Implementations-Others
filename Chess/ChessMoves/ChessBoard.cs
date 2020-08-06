@@ -8,6 +8,12 @@ namespace ChessMoves
     [Serializable]
     public class ChessBoard : IBoardState
     {
+        public ChessBoard()
+        {
+            InitializeWhite();
+            InitializeBlack();
+        }
+
         private IChessPiece[,] board = new IChessPiece[ChessboardSize, ChessboardSize];
         private const int ChessboardSize = 8;
 
@@ -26,7 +32,6 @@ namespace ChessMoves
         public IChessPiece GetMovablePiece { get; private set; }
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
-        public ChessBoard() => new Game(this);
         public Player TurnToMove { get; private set; } = Player.White;
         public IChessPiece[,] Board { get => board; set => board = value; }
         public IChessPiece GetKing(Player player) => GetAllPieces()
@@ -42,7 +47,7 @@ namespace ChessMoves
                 yield return new UserMove(move.Single(), currentKing.PlayerColour);
         }
 
-        public bool IsPathClear(IEnumerable<(int, int)> input) => 
+        public bool IsPathClear(IEnumerable<(int, int)> input) =>
             input.All(x => board[x.Item1, x.Item2] == null);
 
         public void PerformMove(IChessPiece piece, IUserMove move)
@@ -50,7 +55,7 @@ namespace ChessMoves
             piece.MarkPassant(piece, move);
             var (firstIndex, secondIndex) = piece.CurrentPosition;
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2] = 
+            board[move.MoveIndex.Item1, move.MoveIndex.Item2] =
             board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
@@ -68,7 +73,7 @@ namespace ChessMoves
             board[target.CurrentPosition.Item1,
                 target.CurrentPosition.Item2] = null;
 
-        internal void UserMoves(IEnumerable<string> userMoves)
+        public void UserMoves(IEnumerable<string> userMoves)
         {
             if (!userMoves.Any() || userMoves.Count() == 0)
             {
@@ -103,38 +108,24 @@ namespace ChessMoves
             .Where(x => x.PieceType == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
 
-        public bool CheckCastling(IUserMove move) => 
+        public bool CheckCastling(IUserMove move) =>
             new CastlingMoveValidator(this).IsValid(move);
 
-        public void PerformCastling(IUserMove move) => 
+        public void PerformCastling(IUserMove move) =>
             new PerformCastling(this).Perform(move);
 
-        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) => 
+        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) =>
             new PassantMoveValidator(this).IsValid(move, out chessPiece);
 
-        public void PerformPassant(IUserMove move, IChessPiece chessPiece) => 
+        public void PerformPassant(IUserMove move, IChessPiece chessPiece) =>
             new PerformPassant(this).Perform(move, chessPiece);
 
         private IEnumerable<IChessPiece> GetAllPieces() =>
             Enumerable.Range(0, ChessboardSize).SelectMany(i =>
             Enumerable.Range(0, ChessboardSize).Select(j => board[i, j]));
 
-        private IEnumerable<IUserMove> GetMoveType(IEnumerable<string> input)
-        {
-            foreach (var move in input.Select(x => x.Split(' ')))
-            {
-                switch (move.Length)
-                {
-                    case 1:
-                        yield return new MoveType(move.Single(), Player.White).Move;
-                        break;
-                    case 2:
-                        yield return new MoveType(move.First(), Player.White).Move;
-                        yield return new MoveType(move.Last(), Player.Black).Move;
-                        break;
-                }
-            }
-        }
+        private IEnumerable<IUserMove> GetMoveType(IEnumerable<string> input) => 
+            new MovementParser(input).AllMoves;
 
         private void MoveAndPieceExceptions(IEnumerable<IChessPiece> movablePiece)
         {
@@ -148,19 +139,48 @@ namespace ChessMoves
             }
         }
 
-        private void SwitchTurn()
+        private void SwitchTurn() => TurnToMove = new PlayerTurn(TurnToMove).NextTurn;
+
+        private void InitializeBlack()
         {
-            switch (TurnToMove)
-            {
-                case Player.White:
-                    TurnToMove = Player.Black;
-                    break;
-                case Player.Black:
-                    TurnToMove = Player.White;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            board[0, 0] = new Rock("a8", Player.Black);
+            board[0, 1] = new Knight("b8", Player.Black);
+            board[0, 2] = new Bishop("c8", Player.Black);
+            board[0, 3] = new Queen("d8", Player.Black);
+            board[0, 4] = new King("e8", Player.Black);
+            board[0, 5] = new Bishop("f8", Player.Black);
+            board[0, 6] = new Knight("g8", Player.Black);
+            board[0, 7] = new Rock("h8", Player.Black);
+
+            board[1, 0] = new Pawn("a7", Player.Black);
+            board[1, 1] = new Pawn("b7", Player.Black);
+            board[1, 2] = new Pawn("c7", Player.Black);
+            board[1, 3] = new Pawn("d7", Player.Black);
+            board[1, 4] = new Pawn("e7", Player.Black);
+            board[1, 5] = new Pawn("f7", Player.Black);
+            board[1, 6] = new Pawn("g7", Player.Black);
+            board[1, 7] = new Pawn("h7", Player.Black);
+        }
+
+        private void InitializeWhite()
+        {
+            board[7, 0] = new Rock("a1", Player.White);
+            board[7, 1] = new Knight("b1", Player.White);
+            board[7, 2] = new Bishop("c1", Player.White);
+            board[7, 3] = new Queen("d1", Player.White);
+            board[7, 4] = new King("e1", Player.White);
+            board[7, 5] = new Bishop("f1", Player.White);
+            board[7, 6] = new Knight("g1", Player.White);
+            board[7, 7] = new Rock("h1", Player.White);
+
+            board[6, 0] = new Pawn("a2", Player.White);
+            board[6, 1] = new Pawn("b2", Player.White);
+            board[6, 2] = new Pawn("c2", Player.White);
+            board[6, 3] = new Pawn("d2", Player.White);
+            board[6, 4] = new Pawn("e2", Player.White);
+            board[6, 5] = new Pawn("f2", Player.White);
+            board[6, 6] = new Pawn("g2", Player.White);
+            board[6, 7] = new Pawn("h2", Player.White);
         }
     }
 }
