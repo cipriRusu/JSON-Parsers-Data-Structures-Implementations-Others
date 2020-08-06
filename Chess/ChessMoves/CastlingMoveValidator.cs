@@ -22,8 +22,8 @@ namespace ChessMoves
                     bool isPassAttacked = OnPassAttacks(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)));
 
                     return 
-                        !isPassAttacked 
-                        && chessBoard.IsPathClear(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)).Skip(1).SkipLast(1)) 
+                        !isPassAttacked
+                        && chessBoard.IsPathClear(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)).Skip(1).SkipLast(1))
                         && NullAndMoveValidation(PlayerIndex, 7);
 
                 case QueenCastlingUserMove _:
