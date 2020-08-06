@@ -6,8 +6,8 @@ namespace ChessMoves
 {
     public class PlayerTurn
     {
-        private Player CurrentTurn;
-        public PlayerTurn(Player currentPlayer) => CurrentTurn = currentPlayer;
-        public Player NextTurn => CurrentTurn == Player.White ? Player.Black : Player.White;
+        private IBoardState BoardState;
+        public PlayerTurn(IBoardState boardState) => BoardState = boardState;
+        internal void NextPlayer() => BoardState.TurnToMove = BoardState.TurnToMove == Player.White ? Player.Black : Player.White;
     }
 }
