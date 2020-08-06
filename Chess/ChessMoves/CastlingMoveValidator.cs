@@ -14,43 +14,30 @@ namespace ChessMoves
 
         public bool IsValid(IUserMove move)
         {
+            int PlayerIndex = move.PlayerColor == Player.White ? 7 : 0;
+
             switch (move)
             {
                 case KingCastlingUserMove _:
-                    return ValidateKingSide(move);
+                    bool isPassAttacked = OnPassAttacks(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)));
+
+                    return 
+                        !isPassAttacked 
+                        && chessBoard.IsPathClear(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)).Skip(1).SkipLast(1)) 
+                        && NullAndMoveValidation(PlayerIndex, 7);
+
                 case QueenCastlingUserMove _:
-                    return ValidateQueenSide(move);
+                    isPassAttacked = OnPassAttacks(Enumerable.Range(0, 5).Select(x => (PlayerIndex, x)).Reverse());
+
+                    return 
+                        !isPassAttacked
+                        && chessBoard.IsPathClear(Enumerable.Range(0, 5).Select(x => (PlayerIndex, x)).Skip(1).SkipLast(1))
+                        && NullAndMoveValidation(PlayerIndex, 0);
                 default:
                     break;
             }
 
             return false;
-        }
-
-        private bool ValidateKingSide(IUserMove move)
-        {
-            int PlayerIndex = move.PlayerColor == Player.White ? 7 : 0;
-
-            var castlingPath = Enumerable.Range(4, 4).Select(x => (PlayerIndex, x));
-
-            bool isPassAttacked = OnPassAttacks(castlingPath);
-
-            return !isPassAttacked && 
-                chessBoard.IsPathClear(castlingPath.Skip(1).SkipLast(1)) && 
-                NullAndMoveValidation(PlayerIndex, 7);
-        }
-
-        private bool ValidateQueenSide(IUserMove move)
-        {
-            int PlayerIndex = move.PlayerColor == Player.White ? 7 : 0;
-
-            var castlingPath = Enumerable.Range(0, 5).Select(x => (PlayerIndex, x));
-
-            var isPassAttacked = OnPassAttacks(castlingPath.Reverse());
-
-            return !isPassAttacked
-                && chessBoard.IsPathClear(castlingPath.Skip(1).SkipLast(1))
-                && NullAndMoveValidation(PlayerIndex, 0);
         }
 
         private bool OnPassAttacks(IEnumerable<(int, int)> castlingPath) =>
