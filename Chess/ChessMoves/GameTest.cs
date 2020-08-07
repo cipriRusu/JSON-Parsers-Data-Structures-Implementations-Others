@@ -108,6 +108,15 @@ namespace ChessMoves
         }
 
         [Fact]
+        public void GameThrowsUserMoveExceptionForMoveAfterCheckMate()
+        {
+            Assert.Throws<UserMoveException>(() => new Game()
+            .Input("g3 d5, Bh3 Bxh3, Nxh3 e5,Na3 Qd7, Ng1 Nf6, " +
+            "h4 Bxa3, bxa3 c5, d3 Nc6, Bd2 0-0, Nf3 e4, " +
+            "dxe4 dxe4, Nh2 Qh3, Nf3 Qxh1+, Ng1 Qxg1#, Rb1"));
+        }
+
+        [Fact]
         public void GameReturnsValidValuesForSimpleTwoMoveGame()
         {
             var game = new Game();
