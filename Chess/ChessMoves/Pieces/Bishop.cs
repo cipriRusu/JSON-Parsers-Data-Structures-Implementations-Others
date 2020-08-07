@@ -8,7 +8,7 @@ using System.Reflection.Metadata.Ecma335;
 namespace ChessMoves
 {
     [Serializable]
-    internal class Bishop : Piece, IChessPiece
+    public class Bishop : Piece, IChessPiece
     {
         public Bishop(string matrixPosition, Player playerColour) : 
             base(matrixPosition, playerColour) => PieceType = PieceType.Bishop;

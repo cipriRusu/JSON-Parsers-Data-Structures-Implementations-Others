@@ -5,7 +5,7 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    internal class Queen : Piece, IChessPiece
+    public class Queen : Piece, IChessPiece
     {
         public Queen(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Queen;

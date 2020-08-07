@@ -6,7 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 namespace ChessMoves
 {
     [Serializable]
-    internal class Rock : Piece, IChessPiece
+    public class Rock : Piece, IChessPiece
     {
         public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Rock;

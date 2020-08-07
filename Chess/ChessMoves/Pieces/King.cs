@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 namespace ChessMoves
 {
     [Serializable]
-    internal class King : Piece, IChessPiece
+    public class King : Piece, IChessPiece
     {
         public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) => PieceType = PieceType.King;
