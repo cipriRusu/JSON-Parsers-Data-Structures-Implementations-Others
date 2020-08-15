@@ -71,12 +71,12 @@ namespace ChessMoves
             return new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked;
         }
 
-        private bool ValidAttacks(
-            IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => new Path(currentKing, pathTypes)
-                .Where(x => boardState[x.Last()] != null)
-                .Where(x => boardState.IsPathClear(x.Skip(1).SkipLast(1)))
-                .Where(x => boardState[x.Last()].PlayerColour == Piece.Opponent(currentKing.PlayerColour))
-                .Where(x => attackers.Contains(boardState[x.Last()].PieceType))
-                .SelectMany(x => x).Any();
+
+        private bool ValidAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => 
+            new PathGenerator(currentKing, pathTypes).GetEnumerator()
+                .Where(x => boardState[x.End] != null)
+                .Where(x => boardState.IsCapturePathClear(x))
+                .Where(x => boardState[x.End].PlayerColour == Piece.Opponent(currentKing.PlayerColour))
+                .Where(x => attackers.Contains(boardState[x.End].PieceType)).Any();
     }
 }
