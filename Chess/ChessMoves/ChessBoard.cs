@@ -1,4 +1,5 @@
 ﻿using ChessMoves.Moves;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,14 +27,14 @@ namespace ChessMoves
 
         public IEnumerable<IUserMove> AllKingMoves(IChessPiece currentKing)
         {
-            var allLegalMoves = currentKing.Moves().Where(x => board[x.Single().Item1, x.Single().Item2] == null);
+            var allLegalMoves = currentKing.Moves().Where(x => board[x.End.Item1, x.End.Item2] == null);
 
             foreach (var move in allLegalMoves)
-                yield return new UserMove(move.Single(), currentKing.PlayerColour);
+                yield return new UserMove(move.End, currentKing.PlayerColour);
         }
 
-        public bool IsPathClear(IEnumerable<(int, int)> input) =>
-            input.All(x => board[x.Item1, x.Item2] == null);
+        public bool IsMovePathClear(IPath input) => input.Path.Skip(1).All(x => board[x.Item1, x.Item2] == null);
+        public bool IsCapturePathClear(IPath input) => input.Path.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null);
 
         public void PerformMove(IChessPiece piece, IUserMove move)
         {
@@ -80,8 +81,7 @@ namespace ChessMoves
 
         public void GetAndPerform(IUserMove move) => move.GetCurrentState(this);
 
-        public bool CheckCastling(IUserMove move) =>
-            new CastlingMoveValidator(this).IsValid(move);
+        public bool CheckCastling(IUserMove move) => new CastlingMoveValidator(this).IsValid(move);
 
         public void PerformCastling(IUserMove move) =>
             new PerformCastling(this).Perform(move);
