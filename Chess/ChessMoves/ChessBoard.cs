@@ -81,7 +81,8 @@ namespace ChessMoves
 
         public void GetAndPerform(IUserMove move) => move.GetCurrentState(this);
 
-        public bool CheckCastling(IUserMove move) => new CastlingMoveValidator(this).IsValid(move);
+        public bool CheckCastling(IUserMove move) => 
+            new CastlingMoveValidator(this).IsValid(move);
 
         public void PerformCastling(IUserMove move) =>
             new PerformCastling(this).Perform(move);

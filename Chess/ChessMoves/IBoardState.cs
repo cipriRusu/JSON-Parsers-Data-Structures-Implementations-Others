@@ -1,4 +1,5 @@
 ﻿using ChessMoves.Moves;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,10 +22,11 @@ namespace ChessMoves
         void SetMove(IUserMove move);
         IChessPiece GetKing(Player player);
         IEnumerable<IUserMove> AllKingMoves(IChessPiece currentKing);
-        bool IsPathClear(IEnumerable<(int, int)> path);
+        bool IsMovePathClear(IPath input);
         void PerformCastling(IUserMove move);
         void PerformMove(IChessPiece chessPiece, IUserMove move);
         void Promote(IChessPiece piece);
         void Remove(IChessPiece target);
+        bool IsCapturePathClear(IPath path);
     }
 }
