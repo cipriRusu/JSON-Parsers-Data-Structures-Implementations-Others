@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,8 @@ namespace ChessMoves
         PieceType PieceType { get; }
         bool IsMoved { get; }
         bool IsPassantCapturable { get; }
-
-        IPath Moves();
-        IPath Captures();
+        IEnumerable<IPath> Moves();
+        IEnumerable<IPath> Captures();
         void Promote(IBoardState chessBoard);
         void MarkPassant(IChessPiece piece, IUserMove move);
         bool CanReach(IUserMove move, IBoardState chessBoard);
