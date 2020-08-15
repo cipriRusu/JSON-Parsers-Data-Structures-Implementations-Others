@@ -29,12 +29,12 @@ namespace ChessMoves
             GetOrigin(input[0..^2]);
         }
 
-        public UserMove((int, int) moveIndex, Player playerTurn)
+        public UserMove((int, int) movementLocation, Player playerTurn)
         {
             //Custom constructor for checking king status
             PieceType = PieceType.King;
             PlayerColor = playerTurn;
-            MoveIndex = moveIndex;
+            MoveIndex = movementLocation;
         }
 
         private void GetSource(string source)
