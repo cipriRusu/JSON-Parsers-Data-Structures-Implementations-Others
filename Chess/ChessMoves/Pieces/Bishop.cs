@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -13,7 +14,7 @@ namespace ChessMoves
         public Bishop(string matrixPosition, Player playerColour) : 
             base(matrixPosition, playerColour) => PieceType = PieceType.Bishop;
 
-        public override IPath Moves() => new Path(this, PathType.Diagonals);
-        public override IPath Captures() => Moves();
+        public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.Diagonals).GetEnumerator();
+        public override IEnumerable<IPath> Captures() => Moves();
     }
 }

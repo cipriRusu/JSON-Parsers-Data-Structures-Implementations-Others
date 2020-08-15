@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -13,8 +14,8 @@ namespace ChessMoves
         public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) => PieceType = PieceType.King;
 
-        public override IPath Moves() => new Path(this, PathType.King);
+        public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.King).GetEnumerator();
 
-        public override IPath Captures() => Moves();
+        public override IEnumerable<IPath> Captures() => Moves();
     }
 }

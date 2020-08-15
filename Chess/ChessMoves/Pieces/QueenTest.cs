@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,172 +14,176 @@ namespace ChessMoves
         public void BlackQueenReturnsAllLegalMovesDownwardTable()
         {
             var queen = new Queen("d8", Player.Black);
-            var expected = new List<IEnumerable<(int, int)>>()
+
+            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>() {(0, 3), (0, 4) },
-                new List<(int, int)>() {(0, 3), (0, 4), (0, 5) },
-                new List<(int, int)>() {(0, 3), (0, 4), (0, 5), (0, 6) },
-                new List<(int, int)>() {(0, 3), (0, 4), (0, 5), (0, 6), (0, 7) },
+                new Path(new List<(int, int)>() {(0, 3), (0, 4) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (0, 4), (0, 5) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (0, 4), (0, 5), (0, 6) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (0, 4), (0, 5), (0, 6), (0, 7) }, (0, 3)),
 
-                new List<(int, int)>() {(0, 3), (1, 3) },
-                new List<(int, int)>() {(0, 3), (1, 3), (2, 3) },
-                new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3) },
-                new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3) },
-                new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3) },
-                new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3) },
-                new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3), (7, 3) },
+                new Path(new List<(int, int)>() {(0, 3), (1, 3) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 3), (2, 3) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3) },(0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3) },(0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3), (7, 3) }, (0, 3)),
 
-                new List<(int, int)>() {(0, 3), (0, 2) },
-                new List<(int, int)>() {(0, 3), (0, 2), (0, 1) },
-                new List<(int, int)>() {(0, 3), (0, 2), (0, 1), (0, 0)},
+                new Path(new List<(int, int)>() {(0, 3), (0, 2) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (0, 2), (0, 1) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (0, 2), (0, 1), (0, 0)}, (0, 3)),
 
-                new List<(int, int)>() {(0, 3), (1, 2) },
-                new List<(int, int)>() {(0, 3), (1, 2), (2, 1) },
-                new List<(int, int)>() {(0, 3), (1, 2), (2, 1), (3, 0)},
+                new Path(new List<(int, int)>() {(0, 3), (1, 2) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 2), (2, 1) }, (0, 3)),
+                new Path(new List<(int, int)>() {(0, 3), (1, 2), (2, 1), (3, 0)}, (0, 3)),
 
-                new List<(int, int)>(){(0, 3), (1, 4) },
-                new List<(int, int)>(){(0, 3), (1, 4), (2, 5) },
-                new List<(int, int)>(){(0, 3), (1, 4), (2, 5), (3, 6) },
-                new List<(int, int)>(){(0, 3), (1, 4), (2, 5), (3, 6), (4, 7) },
+                new Path(new List<(int, int)>(){(0, 3), (1, 4) }, (0, 3)),
+                new Path(new List<(int, int)>(){(0, 3), (1, 4), (2, 5) }, (0, 3)),
+                new Path(new List<(int, int)>(){(0, 3), (1, 4), (2, 5), (3, 6) }, (0, 3)),
+                new Path(new List<(int, int)>(){(0, 3), (1, 4), (2, 5), (3, 6), (4, 7) }, (0, 3)),
             };
 
-            var actual = queen.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
 
         [Fact]
         public void WhiteQueenReturnsAllLegalMovesUpwardTable()
         {
             var queen = new Queen("d1", Player.Black);
-            var expected = new List<IEnumerable<(int, int)>>()
+
+            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>() {(7, 3), (6, 3) },
-                new List<(int, int)>() {(7, 3), (6, 3), (5, 3) },
-                new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3) },
-                new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3) },
-                new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3) },
-                new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3), (1, 3) },
-                new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3), (1, 3), (0, 3)},
+                new Path(new List<(int, int)>() {(7, 3), (6, 3) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 3), (5, 3) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3), (1, 3) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3), (1, 3), (0, 3)}, (7, 3)),
 
-                new List<(int, int)>() {(7, 3), (7, 4) },
-                new List<(int, int)>() {(7, 3), (7, 4), (7, 5) },
-                new List<(int, int)>() {(7, 3), (7, 4), (7, 5), (7, 6) },
-                new List<(int, int)>() {(7, 3), (7, 4), (7, 5), (7, 6), (7, 7)},
+                new Path(new List<(int, int)>() {(7, 3), (7, 4) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (7, 4), (7, 5) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (7, 4), (7, 5), (7, 6) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (7, 4), (7, 5), (7, 6), (7, 7)}, (7, 3)),
 
-                new List<(int, int)>() {(7, 3), (7, 2) },
-                new List<(int, int)>() {(7, 3), (7, 2), (7, 1) },
-                new List<(int, int)>() {(7, 3), (7, 2), (7, 1), (7, 0)},
+                new Path(new List<(int, int)>() {(7, 3), (7, 2) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (7, 2), (7, 1) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (7, 2), (7, 1), (7, 0)}, (7, 3)),
 
-                new List<(int, int)>() {(7, 3), (6, 2) },
-                new List<(int, int)>() {(7, 3), (6, 2), (5, 1) },
-                new List<(int, int)>() {(7, 3), (6, 2), (5, 1), (4, 0)},
+                new Path(new List<(int, int)>() {(7, 3), (6, 2) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 2), (5, 1) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 2), (5, 1), (4, 0)}, (7, 3)),
 
-                new List<(int, int)>() {(7, 3), (6, 4) },
-                new List<(int, int)>() {(7, 3), (6, 4), (5, 5) },
-                new List<(int, int)>() {(7, 3), (6, 4), (5, 5), (4, 6) },
-                new List<(int, int)>() {(7, 3), (6, 4), (5, 5), (4, 6), (3, 7)},
+                new Path(new List<(int, int)>() {(7, 3), (6, 4) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 4), (5, 5) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 4), (5, 5), (4, 6) }, (7, 3)),
+                new Path(new List<(int, int)>() {(7, 3), (6, 4), (5, 5), (4, 6), (3, 7)}, (7, 3)),
             };
 
-            var actual = queen.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
 
         [Fact]
         public void BlackQueenReturnsAllLegalMovesMiddleTable()
         {
             var queen = new Queen("e5", Player.Black);
-            var expected = new List<IEnumerable<(int, int)>>()
+
+            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>() {(3, 4), (2, 4) },
-                new List<(int, int)>() {(3, 4), (2, 4), (1, 4) },
-                new List<(int, int)>() {(3, 4), (2, 4), (1, 4), (0, 4) },
+                new Path(new List<(int, int)>() {(3, 4), (2, 4) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (2, 4), (1, 4) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (2, 4), (1, 4), (0, 4) }, (3, 4)),
 
-                new List<(int, int)>() {(3, 4), (3, 5) },
-                new List<(int, int)>() {(3, 4), (3, 5), (3, 6) },
-                new List<(int, int)>() {(3, 4), (3, 5), (3, 6), (3, 7) },
-
-
-                new List<(int, int)>() {(3, 4), (4, 4) },
-                new List<(int, int)>() {(3, 4), (4, 4), (5, 4) },
-                new List<(int, int)>() {(3, 4), (4, 4), (5, 4), (6, 4) },
-                new List<(int, int)>() {(3, 4), (4, 4), (5, 4), (6, 4), (7, 4) },
+                new Path(new List<(int, int)>() {(3, 4), (3, 5) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (3, 5), (3, 6) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (3, 5), (3, 6), (3, 7) }, (3, 4)),
 
 
-                new List<(int, int)>() {(3, 4), (3, 3) },
-                new List<(int, int)>() {(3, 4), (3, 3), (3, 2) },
-                new List<(int, int)>() {(3, 4), (3, 3), (3, 2), (3, 1) },
-                new List<(int, int)>() {(3, 4), (3, 3), (3, 2), (3, 1), (3, 0) },
-
-                new List<(int, int)>() {(3, 4), (2, 3) },
-                new List<(int, int)>() {(3, 4), (2, 3), (1, 2) },
-                new List<(int, int)>() {(3, 4), (2, 3), (1, 2), (0, 1) },
-
-                new List<(int, int)>() {(3, 4), (2, 5) },
-                new List<(int, int)>() {(3, 4), (2, 5), (1, 6) },
-                new List<(int, int)>() {(3, 4), (2, 5), (1, 6), (0, 7) },
+                new Path(new List<(int, int)>() {(3, 4), (4, 4) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 4), (5, 4) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 4), (5, 4), (6, 4) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 4), (5, 4), (6, 4), (7, 4) }, (3, 4)),
 
 
-                new List<(int, int)>() {(3, 4), (4, 3) },
-                new List<(int, int)>() {(3, 4), (4, 3), (5, 2) },
-                new List<(int, int)>() {(3, 4), (4, 3), (5, 2), (6, 1) },
-                new List<(int, int)>() {(3, 4), (4, 3), (5, 2), (6, 1), (7, 0) },
+                new Path(new List<(int, int)>() {(3, 4), (3, 3) }, (3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (3, 3), (3, 2) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (3, 3), (3, 2), (3, 1) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (3, 3), (3, 2), (3, 1), (3, 0) },(3, 4)),
 
-                new List<(int, int)>() {(3, 4), (4, 5) },
-                new List<(int, int)>() {(3, 4), (4, 5), (5, 6) },
-                new List<(int, int)>() {(3, 4), (4, 5), (5, 6), (6, 7), },
+                new Path(new List<(int, int)>() {(3, 4), (2, 3) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (2, 3), (1, 2) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (2, 3), (1, 2), (0, 1) },(3, 4)),
+
+                new Path(new List<(int, int)>() {(3, 4), (2, 5) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (2, 5), (1, 6) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (2, 5), (1, 6), (0, 7) },(3, 4)),
+
+
+                new Path(new List<(int, int)>() {(3, 4), (4, 3) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 3), (5, 2) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 3), (5, 2), (6, 1) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 3), (5, 2), (6, 1), (7, 0) },(3, 4)),
+
+                new Path(new List<(int, int)>() {(3, 4), (4, 5) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 5), (5, 6) },(3, 4)),
+                new Path(new List<(int, int)>() {(3, 4), (4, 5), (5, 6), (6, 7), },(3, 4)),
 
             };
 
-            var actual = queen.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
 
         [Fact]
         public void WhiteQueenReturnsAllLegalMovesMiddleTable()
         {
             var queen = new Queen("d3", Player.Black);
-            var expected = new List<IEnumerable<(int, int)>>()
+
+            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>() {(5, 3), (4, 3) },
-                new List<(int, int)>() {(5, 3), (4, 3), (3, 3) },
-                new List<(int, int)>() {(5, 3), (4, 3), (3, 3), (2, 3) },
-                new List<(int, int)>() {(5, 3), (4, 3), (3, 3), (2, 3), (1, 3) },
-                new List<(int, int)>() {(5, 3), (4, 3), (3, 3), (2, 3), (1, 3), (0, 3)},
+                new Path(new List<(int, int)>() {(5, 3), (4, 3) }, (5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 3), (3, 3) }, (5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 3), (3, 3), (2, 3) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 3), (3, 3), (2, 3), (1, 3) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 3), (3, 3), (2, 3), (1, 3), (0, 3)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (5, 4) },
-                new List<(int, int)>() {(5, 3), (5, 4), (5, 5) },
-                new List<(int, int)>() {(5, 3), (5, 4), (5, 5), (5, 6) },
-                new List<(int, int)>() {(5, 3), (5, 4), (5, 5), (5, 6), (5, 7)},
+                new Path(new List<(int, int)>() {(5, 3), (5, 4) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (5, 4), (5, 5) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (5, 4), (5, 5), (5, 6) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (5, 4), (5, 5), (5, 6), (5, 7)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (6, 3) },
-                new List<(int, int)>() {(5, 3), (6, 3), (7, 3)},
+                new Path(new List<(int, int)>() {(5, 3), (6, 3) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (6, 3), (7, 3)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (5, 2) },
-                new List<(int, int)>() {(5, 3), (5, 2), (5, 1) },
-                new List<(int, int)>() {(5, 3), (5, 2), (5, 1), (5, 0)},
+                new Path(new List<(int, int)>() {(5, 3), (5, 2) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (5, 2), (5, 1) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (5, 2), (5, 1), (5, 0)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (4, 2) },
-                new List<(int, int)>() {(5, 3), (4, 2), (3, 1) },
-                new List<(int, int)>() {(5, 3), (4, 2), (3, 1), (2, 0)},
+                new Path(new List<(int, int)>() {(5, 3), (4, 2) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 2), (3, 1) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 2), (3, 1), (2, 0)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (4, 4) },
-                new List<(int, int)>() {(5, 3), (4, 4), (3, 5) },
-                new List<(int, int)>() {(5, 3), (4, 4), (3, 5), (2, 6) },
-                new List<(int, int)>() {(5, 3), (4, 4), (3, 5), (2, 6), (1, 7)},
+                new Path(new List<(int, int)>() {(5, 3), (4, 4) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 4), (3, 5) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 4), (3, 5), (2, 6) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (4, 4), (3, 5), (2, 6), (1, 7)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (6, 2) },
-                new List<(int, int)>() {(5, 3), (6, 2), (7, 1)},
+                new Path(new List<(int, int)>() {(5, 3), (6, 2) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (6, 2), (7, 1)},(5, 3)),
 
-                new List<(int, int)>() {(5, 3), (6, 4) },
-                new List<(int, int)>() {(5, 3), (6, 4), (7, 5)},
+                new Path(new List<(int, int)>() {(5, 3), (6, 4) },(5, 3)),
+                new Path(new List<(int, int)>() {(5, 3), (6, 4), (7, 5)},(5, 3)),
             };
 
-            var actual = queen.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
     }
 }

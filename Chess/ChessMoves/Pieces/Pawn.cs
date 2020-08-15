@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -12,13 +13,13 @@ namespace ChessMoves
         public Pawn(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Pawn;
 
-        public override IPath Moves() => new Path(this, PathType.Pawn);
-        public override IPath Captures() => new Path(this, PathType.PawnCapture);
+        public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.Pawn).GetEnumerator();
+        public override IEnumerable<IPath> Captures() => new PathGenerator(this, PathType.PawnCapture).GetEnumerator();
         public override void PerformCapture(IUserMove move, IBoardState chessBoard)
         {
             var targetPiece = chessBoard[move.MoveIndex];
 
-            if(Opponent(PlayerColour) == targetPiece.PlayerColour)
+            if (Opponent(PlayerColour) == targetPiece.PlayerColour)
             {
                 chessBoard.PerformMove(this, move);
             }

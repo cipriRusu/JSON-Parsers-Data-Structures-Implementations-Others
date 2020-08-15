@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -12,14 +13,14 @@ namespace ChessMoves
             base(chessBoardIndex, playerColour) =>
             PieceType = PieceType.Knight;
 
-        public bool CanCapture((int, int) target, IBoardState board) => Captures().Any(x => x.Single() == target);
-        public bool CanReach((int, int) destination, IBoardState board) => Moves().Any(x => x.Single() == destination);
+        public bool CanCapture((int, int) target, IBoardState board) => Captures().Any(x => x.End == target);
+        public bool CanReach((int, int) destination, IBoardState board) => Moves().Any(x => x.End == destination);
 
-        public override IPath Moves() => new Path(this, PathType.Knight);
-        public override IPath Captures() => Moves();
+        public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.Knight).GetEnumerator();
+        public override IEnumerable<IPath> Captures() => Moves();
         public override void PerformMove(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Moves().Where(x => x.Single() == move.MoveIndex).SelectMany(x => x);
+            var validPath = Moves().Where(x => x.End == move.MoveIndex);
             chessBoard.PerformMove(this, move);
         }
     }

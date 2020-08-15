@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ChessMoves
@@ -40,13 +42,13 @@ namespace ChessMoves
         }
 
         public virtual bool CanReach(IUserMove move, IBoardState chessBoard) => 
-            Moves().Any(x => x.Last() == move.MoveIndex && chessBoard.IsPathClear(x.Skip(1)));
+            Moves().Any(x => x.ReachesTarget(move) && chessBoard.IsMovePathClear(x));
 
-        public virtual bool CanCapture(IUserMove move, IBoardState chessBoard) => 
-            Captures().Any(x => x.Last() == move.MoveIndex && chessBoard.IsPathClear(x.Skip(1).SkipLast(1)));
+        public virtual bool CanCapture(IUserMove move, IBoardState chessBoard) =>
+            Captures().Any(x => x.ReachesTarget(move) && chessBoard.IsCapturePathClear(x));
 
-        public virtual IPath Moves() => null;
-        public virtual IPath Captures() => null;
+        public virtual IEnumerable<IPath> Moves() => null;
+        public virtual IEnumerable<IPath> Captures() => null;
 
         public void Update(IUserMove move)
         {
@@ -71,26 +73,14 @@ namespace ChessMoves
             }
         }
 
-        public virtual void PerformMove(IUserMove move, IBoardState chessBoard) 
+        public virtual void PerformMove(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Moves().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
-
-            if(chessBoard.IsPathClear(validPath.Skip(1)))
-            {
-                chessBoard.PerformMove(this, move);
-            }
+            var validPath = Moves().Where(x => x.ReachesTarget(move) && chessBoard.IsMovePathClear(x));
         }
 
         public virtual void PerformCapture(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Captures().Where(x => x.Last() == move.MoveIndex).SelectMany(x => x);
-
-            var validTarget = chessBoard[validPath.Last()];
-
-            if (chessBoard.IsPathClear(validPath.Skip(1).SkipLast(1)) && validTarget.PlayerColour == Opponent(PlayerColour))
-            {
-                chessBoard.PerformMove(this, move);
-            }
+            var validPath = Captures().Where(x => x.ReachesTarget(move) && chessBoard.IsCapturePathClear(x));
         }
 
         public void FlagAsMoved(bool isMoved) => IsMoved = isMoved;

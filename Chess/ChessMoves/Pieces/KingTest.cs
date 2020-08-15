@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -13,78 +14,82 @@ namespace ChessMoves
         public void BlackKingReturnsAllLegalMovesStartPosition()
         {
             var king = new King("e8", Player.Black);
-            var expected = new List<List<(int, int)>>()
+
+            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+
+            var expected = new List<IPath>
             {
-                new List<(int, int)>{(0, 5)},
-                new List<(int, int)>{(0, 3)},
-                new List<(int, int)>{(1, 3)},
-                new List<(int, int)>{(1, 4)},
-                new List<(int, int)>{(1, 5)},
+                new Path(new List<(int, int)>{(0, 5)}, (0, 4)),
+                new Path(new List<(int, int)>{(0, 3)}, (0, 4)),
+                new Path(new List<(int, int)>{(1, 3)}, (0, 4)),
+                new Path(new List<(int, int)>{(1, 4)}, (0, 4)),
+                new Path(new List<(int, int)>{(1, 5)}, (0, 4)),
             };
 
-            var actual = king.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
 
         [Fact]
         public void WhiteKingReturnsAllLegalMovesStartPosition()
         {
             var king = new King("e1", Player.White);
-            var expected = new List<List<(int, int)>>()
+
+            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>{(7, 5)},
-                new List<(int, int)>{(6, 5)},
-                new List<(int, int)>{(6, 4)},
-                new List<(int, int)>{(6, 3)},
-                new List<(int, int)>{(7, 3)},
+                new Path(new List<(int, int)>{(7, 5)}, (7, 4)),
+                new Path(new List<(int, int)>{(6, 5)}, (7, 4)),
+                new Path(new List<(int, int)>{(6, 4)}, (7, 4)),
+                new Path(new List<(int, int)>{(6, 3)}, (7, 4)),
+                new Path(new List<(int, int)>{(7, 3)}, (7, 4)),
             };
 
-            var actual = king.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
 
         [Fact]
         public void BlackKingReturnsAllLegalMovesDownwardTable()
         {
             var king = new King("d6", Player.Black);
-            var expected = new List<List<(int, int)>>()
+
+            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>{(2, 4)},
-                new List<(int, int)>{(1, 4)},
-                new List<(int, int)>{(1, 3)},
-                new List<(int, int)>{(1, 2)},
-                new List<(int, int)>{(2, 2)},
-                new List<(int, int)>{(3, 2)},
-                new List<(int, int)>{(3, 3)},
-                new List<(int, int)>{(3, 4)},
+                new Path(new List<(int, int)>{(2, 4)}, (2, 3)),
+                new Path(new List<(int, int)>{(1, 4)}, (2, 3)),
+                 new Path(new List<(int, int)>{(1, 3)}, (2, 3)),
+                 new Path(new List<(int, int)>{(1, 2)}, (2, 3)),
+                 new Path(new List<(int, int)>{(2, 2)}, (2, 3)),
+                 new Path(new List<(int, int)>{(3, 2)}, (2, 3)),
+                 new Path(new List<(int, int)>{(3, 3)}, (2, 3)),
+                 new Path(new List<(int, int)>{(3, 4)}, (2, 3)),
             };
 
-            var actual = king.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
 
         [Fact]
         public void WhiteKingReturnsAllLegalMovesUpwardTable()
         {
             var king = new King("g3", Player.White);
-            var expected = new List<List<(int, int)>>()
+
+            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+
+            var expected = new List<IPath>()
             {
-                new List<(int, int)>{(5, 7)},
-                new List<(int, int)>{(4, 7)},
-                new List<(int, int)>{(4, 6)},
-                new List<(int, int)>{(4, 5)},
-                new List<(int, int)>{(5, 5)},
-                new List<(int, int)>{(6, 5)},
-                new List<(int, int)>{(6, 6)},
-                new List<(int, int)>{(6, 7)},
+                 new Path(new List<(int, int)>{(5, 7)}, (5, 6)),
+                 new Path(new List<(int, int)>{(4, 7)}, (5, 6)),
+                 new Path(new List<(int, int)>{(4, 6)}, (5, 6)),
+                 new Path(new List<(int, int)>{(4, 5)}, (5, 6)),
+                 new Path(new List<(int, int)>{(5, 5)}, (5, 6)),
+                 new Path(new List<(int, int)>{(6, 5)}, (5, 6)),
+                 new Path(new List<(int, int)>{(6, 6)}, (5, 6)),
+                 new Path(new List<(int, int)>{(6, 7)}, (5, 6)),
             };
 
-            var actual = king.Moves();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, new PathComparer());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -10,9 +11,7 @@ namespace ChessMoves
     {
         public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Rock;
-
-        public override IPath Moves() => new Path(this, PathType.RowsAndColumns);
-
-        public override IPath Captures() => Moves();
+        public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.RowsAndColumns).GetEnumerator();
+        public override IEnumerable<IPath> Captures() => Moves();
     }
 }
