@@ -1,4 +1,5 @@
 ﻿using ChessMoves.Moves;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,19 +20,21 @@ namespace ChessMoves
             switch (move)
             {
                 case KingCastlingUserMove _:
-                    bool isPassAttacked = OnPassAttacks(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)));
+                    var completePath = Enumerable.Range(4, 4).Select(x => (PlayerIndex, x));
+                    bool isPassAttacked = OnPassAttacks(completePath);
 
-                    return 
+                    return
                         !isPassAttacked
-                        && chessBoard.IsPathClear(Enumerable.Range(4, 4).Select(x => (PlayerIndex, x)).Skip(1).SkipLast(1))
+                        && chessBoard.IsCapturePathClear(new Path(completePath, completePath.First()))
                         && NullAndMoveValidation(PlayerIndex, 7);
 
                 case QueenCastlingUserMove _:
-                    isPassAttacked = OnPassAttacks(Enumerable.Range(0, 5).Select(x => (PlayerIndex, x)).Reverse());
+                    completePath = Enumerable.Range(0, 5).Select(x => (PlayerIndex, x)).Reverse();
+                    isPassAttacked = OnPassAttacks(completePath);
 
-                    return 
+                    return
                         !isPassAttacked
-                        && chessBoard.IsPathClear(Enumerable.Range(0, 5).Select(x => (PlayerIndex, x)).Skip(1).SkipLast(1))
+                        && chessBoard.IsCapturePathClear(new Path(completePath, completePath.First()))
                         && NullAndMoveValidation(PlayerIndex, 0);
                 default:
                     break;
