@@ -13,14 +13,13 @@ namespace ChessMoves
 
         private IChessPiece[,] board = new IChessPiece[ChessboardSize, ChessboardSize];
         private const int ChessboardSize = 8;
-
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
         public IChessPiece this[int first, int second] => board[first, second];
-        public IChessPiece PieceToMove { get; private set; }
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PieceType == PieceType.King)
                 .Single(x => x.PlayerColour == player);
+        private IChessPiece CurrentMovablePiece { get; set; }
 
         public IEnumerable<IUserMove> AllKingMoves(IChessPiece currentKing)
         {
@@ -33,13 +32,15 @@ namespace ChessMoves
         public bool IsMovePathClear(IPath input) => input.Path.Skip(1).All(x => board[x.Item1, x.Item2] == null);
         public bool IsCapturePathClear(IPath input) => input.Path.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null);
 
-        public void PerformMove(IChessPiece piece, IUserMove move)
+        public void PerformMove(IUserMove move)
         {
-            piece.MarkPassant(piece, move);
-            var (firstIndex, secondIndex) = piece.CurrentPosition;
+            CurrentMovablePiece = GetMovablePiece(move);
+
+            CurrentMovablePiece.MarkPassant(CurrentMovablePiece, move);
+            var (firstIndex, secondIndex) = CurrentMovablePiece.CurrentPosition;
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2] =
-            board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2];
+            board[CurrentMovablePiece.CurrentPosition.Item1, CurrentMovablePiece.CurrentPosition.Item2];
 
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
 
@@ -56,7 +57,7 @@ namespace ChessMoves
             board[target.CurrentPosition.Item1,
                 target.CurrentPosition.Item2] = null;
 
-        public void SetMove(IUserMove move)
+        private IChessPiece GetMovablePiece(IUserMove move)
         {
             var movablePiece = GetAllPieces()
                 .Where(x => x != null)
@@ -67,7 +68,7 @@ namespace ChessMoves
 
             MoveAndPieceExceptions(movablePiece);
 
-            PieceToMove = movablePiece.Single();
+            return movablePiece.Single();
         }
 
         public IChessPiece GetPiece(IUserMove move) => GetAllPieces()
