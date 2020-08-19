@@ -21,7 +21,7 @@ namespace ChessMoves
 
             if (Opponent(PlayerColour) == targetPiece.PlayerColour)
             {
-                chessBoard.PerformMove(this, move);
+                chessBoard.PerformMove(move);
             }
         }
     }
