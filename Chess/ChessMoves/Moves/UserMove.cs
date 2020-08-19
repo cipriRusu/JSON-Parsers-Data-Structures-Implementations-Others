@@ -95,7 +95,7 @@ namespace ChessMoves
             }
             else
             {
-                board.IsCheck = false;
+
             }
         }
 

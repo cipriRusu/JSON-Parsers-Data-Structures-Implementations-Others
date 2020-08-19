@@ -15,7 +15,7 @@ namespace ChessMoves.Moves
 
             if (new CurrentPlayerStatus(Piece.Opponent(PlayerColor), board).IsCheckMated)
             {
-                board.IsCheckMate = true;
+
             }
             else
             {
