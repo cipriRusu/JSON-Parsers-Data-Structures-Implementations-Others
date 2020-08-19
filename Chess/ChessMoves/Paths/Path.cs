@@ -27,6 +27,5 @@ namespace ChessMoves.Paths
         public (int, int) Start { get; }
         public (int, int) End { get; }
         IEnumerable<(int, int)> IPath.Path => FullPath;
-        public bool ReachesTarget(IUserMove move) => move.MoveIndex == End;
     }
 }
