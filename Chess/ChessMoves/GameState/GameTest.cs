@@ -122,7 +122,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("e4 e5, Nf3 Nc6, Bb5");
 
-            Assert.Equal(Player.Black, game.PlayerTurn);
+            Assert.Equal(Player.Black, game.TurnToMove);
             Assert.False(game.IsCheck);
             Assert.False(game.IsCheckMate);
         }
@@ -133,7 +133,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("e4");
 
-            Assert.Equal(Player.Black, game.PlayerTurn);
+            Assert.Equal(Player.Black, game.TurnToMove);
             Assert.False(game.IsCheck);
             Assert.False(game.IsCheckMate);
         }
@@ -144,7 +144,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("e4 e5");
 
-            Assert.Equal(Player.White, game.PlayerTurn);
+            Assert.Equal(Player.White, game.TurnToMove);
             Assert.False(game.IsCheck);
             Assert.False(game.IsCheckMate);
         }
@@ -155,7 +155,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("e4 e5, Nf3 Nc6, Bb5 a6");
 
-            Assert.Equal(Player.White, game.PlayerTurn);
+            Assert.Equal(Player.White, game.TurnToMove);
             Assert.False(game.IsCheck);
             Assert.False(game.IsCheckMate);
         }
@@ -207,7 +207,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("Nc3 f5");
 
-            Assert.Equal(Player.White, game.PlayerTurn);
+            Assert.Equal(Player.White, game.TurnToMove);
         }
 
         [Fact]
@@ -216,7 +216,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("Nc3 f5, e4");
 
-            Assert.Equal(Player.Black, game.PlayerTurn);
+            Assert.Equal(Player.Black, game.TurnToMove);
         }
 
         [Fact]
@@ -252,7 +252,7 @@ namespace ChessMoves
 
             Assert.True(game[0, 6].PieceType == PieceType.King);
             Assert.True(game[0, 5].PieceType == PieceType.Rock);
-            Assert.True(game.PlayerTurn == Player.White);
+            Assert.True(game.TurnToMove == Player.White);
         }
 
         [Fact]
@@ -263,7 +263,7 @@ namespace ChessMoves
 
             Assert.True(game[7, 6].PieceType == PieceType.King);
             Assert.True(game[7, 5].PieceType == PieceType.Rock);
-            Assert.True(game.PlayerTurn == Player.White);
+            Assert.True(game.TurnToMove == Player.White);
         }
 
         [Fact]

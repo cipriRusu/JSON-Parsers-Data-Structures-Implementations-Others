@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class Game
+    public class Game : IGame
     {
         private readonly IChessPiece[,] board = new Piece[8, 8];
         private readonly IBoardState boardState;
@@ -19,17 +19,18 @@ namespace ChessMoves
 
         public bool IsCheckMate => boardState.IsCheckMate;
         public bool IsCheck => boardState.IsCheck;
-        public Player PlayerTurn => boardState.TurnToMove;
+        public Player TurnToMove { get; set; }
+
         public IChessPiece this[int i, int j] => boardState[i, j];
 
         public void Input(string input)
         {
             var moves = new MovementParser(input.Split(',')).AllMoves;
 
-            foreach(var move in moves)
+            foreach (var move in moves)
             {
                 boardState.GetAndPerform(move);
-                new PlayerTurn(boardState).NextPlayer();
+                new PlayerTurn(this).SwitchToNextPlayer();
             }
         }
 
