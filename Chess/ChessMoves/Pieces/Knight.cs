@@ -21,7 +21,7 @@ namespace ChessMoves
         public override void PerformMove(IUserMove move, IBoardState chessBoard)
         {
             var validPath = Moves().Where(x => x.End == move.MoveIndex);
-            chessBoard.PerformMove(this, move);
+            chessBoard.PerformMove(move);
         }
     }
 }
