@@ -9,6 +9,5 @@ namespace ChessMoves.Paths
         (int, int) Start { get; }
         (int, int) End { get; }
         IEnumerable<(int, int)> Path { get; }
-        bool ReachesTarget(IUserMove move);
     }
 }
