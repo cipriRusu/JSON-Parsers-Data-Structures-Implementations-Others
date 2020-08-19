@@ -26,7 +26,7 @@ namespace ChessMoves
             {
                 var currentBoardState = boardState.DeepClone();
 
-                currentBoardState.PerformMove(chessPiece, move);
+                currentBoardState.PerformMove(move);
 
                 if (!new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked)
                 {
@@ -66,7 +66,7 @@ namespace ChessMoves
         {
             var currentBoardState = boardState.DeepClone();
 
-            currentBoardState.PerformMove(chessPiece, move);
+            //currentBoardState.PerformMove(chessPiece, move);
 
             return new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked;
         }
