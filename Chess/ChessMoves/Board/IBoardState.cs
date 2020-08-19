@@ -11,8 +11,6 @@ namespace ChessMoves
         IChessPiece this[(int, int) index] { get; }
         IChessPiece this[int first, int second] { get; }
         IChessPiece PieceToMove { get; }
-        bool IsCheckMate { get; set; }
-        bool IsCheck { get; set; }
         bool CheckCastling(IUserMove move);
         bool CheckPassant(IUserMove enPassantUserMove, out IChessPiece chessPiece);
         IChessPiece GetPiece(IUserMove move);
