@@ -15,13 +15,13 @@ namespace ChessMoves
             switch (move.PlayerColor)
             {
                 case Player.White:
-                    chessBoard.Remove(chessBoard[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 + 1]);
-                    chessBoard.PerformMove(chessPiece, move);
+                    //chessBoard.Remove(chessBoard[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 + 1]);
+                    //chessBoard.PerformMove(chessPiece, move);
                     break;
 
                 case Player.Black:
-                    chessBoard.Remove(chessBoard[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 - 1]);
-                    chessBoard.PerformMove(chessPiece, move);
+                    //chessBoard.Remove(chessBoard[chessPiece.CurrentPosition.Item1, chessPiece.CurrentPosition.Item2 - 1]);
+                    //chessBoard.PerformMove(chessPiece, move);
                     break;
             }
         }
