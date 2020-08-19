@@ -17,8 +17,6 @@ namespace ChessMoves
         public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
         public IChessPiece this[int first, int second] => board[first, second];
         public IChessPiece PieceToMove { get; private set; }
-        public bool IsCheckMate { get; set; }
-        public bool IsCheck { get; set; }
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PieceType == PieceType.King)
