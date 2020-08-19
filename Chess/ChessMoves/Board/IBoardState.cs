@@ -13,7 +13,6 @@ namespace ChessMoves
         IChessPiece PieceToMove { get; }
         bool IsCheckMate { get; set; }
         bool IsCheck { get; set; }
-        Player TurnToMove { get; set; }
         bool CheckCastling(IUserMove move);
         bool CheckPassant(IUserMove enPassantUserMove, out IChessPiece chessPiece);
         IChessPiece GetPiece(IUserMove move);

@@ -19,7 +19,6 @@ namespace ChessMoves
         public IChessPiece PieceToMove { get; private set; }
         public bool IsCheckMate { get; set; }
         public bool IsCheck { get; set; }
-        public Player TurnToMove { get; set; } = Player.White;
         public IChessPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PieceType == PieceType.King)
