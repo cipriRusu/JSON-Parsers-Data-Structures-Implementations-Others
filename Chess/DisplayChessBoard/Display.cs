@@ -102,15 +102,15 @@ namespace DisplayChessBoard
 
             if (game.IsCheckMate == true)
             {
-                Console.WriteLine($"{game.PlayerTurn} King in CheckMate");
+                Console.WriteLine($"{game.TurnToMove} King in CheckMate");
             }
             else if (game.IsCheck == true)
             {
-                Console.WriteLine($"{game.PlayerTurn} King in Check");
+                Console.WriteLine($"{game.TurnToMove} King in Check");
             }
             else
             {
-                Console.WriteLine($"Turn to move : {game.PlayerTurn}");
+                Console.WriteLine($"Turn to move : {game.TurnToMove}");
             }
         }
     }
