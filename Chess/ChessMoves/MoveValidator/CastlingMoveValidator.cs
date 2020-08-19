@@ -43,11 +43,9 @@ namespace ChessMoves
             return false;
         }
 
-        private bool OnPassAttacks(IEnumerable<(int, int)> castlingPath) =>
-            castlingPath.Skip(1)
-                        .Take(2)
-                        .Select(x => new UserMove(x, chessBoard.TurnToMove))
-            .Any(x => new AttackStatus(chessBoard, chessBoard.GetKing(chessBoard.TurnToMove)).IsCurrentMoveAttacked(x));
+        private bool OnPassAttacks(IEnumerable<(int, int)> castlingPath) => false;
+        //castlingPath.Skip(1).Take(2).Select(x => new UserMove(x, chessBoard.TurnToMove))
+            //.Any(x => new AttackStatus(chessBoard, chessBoard.GetKing(chessBoard.TurnToMove)).IsCurrentMoveAttacked(x));
 
         private bool NullAndMoveValidation(int columnIndex, int rowIndex) =>
             chessBoard[(columnIndex, 4)] != null &&
