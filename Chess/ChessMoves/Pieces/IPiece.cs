@@ -9,7 +9,6 @@ namespace ChessMoves
     public interface IPiece : ILocation, IMovable
     {
         Player PlayerColour { get; }
-        PieceType PieceType { get; }
         bool IsMoved { get; }
         bool IsPassantCapturable { get; }
         void Promote(IBoard chessBoard);

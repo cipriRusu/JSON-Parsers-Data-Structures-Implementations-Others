@@ -7,7 +7,7 @@ namespace ChessMoves
         public bool Equals([AllowNull] IPiece x, [AllowNull] IPiece y)
         {
             return x.PlayerColour == y.PlayerColour &&
-                x.PieceType == y.PieceType &&
+                x.GetType() == y.GetType() &&
                 x.Index == y.Index &&
                 x.File == y.File &&
                 x.Rank == y.Rank;

@@ -9,8 +9,8 @@ namespace ChessMoves
     [Serializable]
     public class Rock : Piece, IPiece
     {
-        public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
-            PieceType = PieceType.Rock;
+        public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) =>
+            PieceType = typeof(Rock);
         public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.RowsAndColumns).GetEnumerator();
         public override IEnumerable<IPath> Captures() => Moves();
     }

@@ -11,7 +11,7 @@ namespace ChessMoves
     {
         public Knight(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) =>
-            PieceType = PieceType.Knight;
+            PieceType = typeof(Knight);
 
         public bool CanCapture((int, int) target, IBoard board) => Captures().Any(x => x.End == target);
         public bool CanReach((int, int) destination, IBoard board) => Moves().Any(x => x.End == destination);

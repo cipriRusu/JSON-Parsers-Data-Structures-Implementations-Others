@@ -11,8 +11,8 @@ namespace ChessMoves
     [Serializable]
     public class Bishop : Piece, IPiece
     {
-        public Bishop(string matrixPosition, Player playerColour) : 
-            base(matrixPosition, playerColour) => PieceType = PieceType.Bishop;
+        public Bishop(string matrixPosition, Player playerColour) :
+            base(matrixPosition, playerColour) => PieceType = typeof(Bishop);
 
         public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.Diagonals).GetEnumerator();
         public override IEnumerable<IPath> Captures() => Moves();

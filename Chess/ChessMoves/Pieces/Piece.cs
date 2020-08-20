@@ -22,12 +22,12 @@ namespace ChessMoves
         public Player PlayerColour { get; internal set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
-        public PieceType PieceType { get; internal set; }
+        public Type PieceType { get; internal set; }
         public bool IsMoved { get; internal set; }
         public bool IsPassantCapturable { get; private set; }
         public void MarkPassant(IPiece piece, IUserMove move)
         {
-            if (piece.PieceType == PieceType.Pawn)
+            if (piece.GetType() == typeof(Pawn))
             {
                 switch (piece.PlayerColour)
                 {

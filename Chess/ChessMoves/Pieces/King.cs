@@ -12,7 +12,7 @@ namespace ChessMoves
     public class King : Piece, IPiece
     {
         public King(string chessBoardIndex, Player playerColour) :
-            base(chessBoardIndex, playerColour) => PieceType = PieceType.King;
+            base(chessBoardIndex, playerColour) => PieceType = typeof(King);
 
         public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.King).GetEnumerator();
 

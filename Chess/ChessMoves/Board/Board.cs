@@ -17,7 +17,7 @@ namespace ChessMoves
         public IPiece this[int first, int second] => board[first, second];
         public IPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
-                .Where(x => x.PieceType == PieceType.King)
+                .Where(x => x.GetType() == typeof(King))
                 .Single(x => x.PlayerColour == player);
         private IPiece CurrentMovablePiece { get; set; }
 
