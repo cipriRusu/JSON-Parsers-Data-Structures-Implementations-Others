@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChessMoves
 {
-    interface IMovable
+    public interface IMovable
     {
         IEnumerable<IPath> Moves();
         IEnumerable<IPath> Captures();

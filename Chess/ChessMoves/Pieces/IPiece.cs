@@ -6,14 +6,12 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IPiece : ILocation
+    public interface IPiece : ILocation, IMovable
     {
         Player PlayerColour { get; }
         PieceType PieceType { get; }
         bool IsMoved { get; }
         bool IsPassantCapturable { get; }
-        IEnumerable<IPath> Moves();
-        IEnumerable<IPath> Captures();
         void Promote(IBoard chessBoard);
         void MarkPassant(IPiece piece, IUserMove move);
         bool CanReach(IUserMove move, IBoard chessBoard);
