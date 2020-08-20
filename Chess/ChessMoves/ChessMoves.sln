@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessMoves", "ChessMoves.csproj", "{8E5F4F46-1768-4BD9-AE8E-7156CF489A1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessGame", "ChessGame.csproj", "{8E5F4F46-1768-4BD9-AE8E-7156CF489A1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayChessBoard", "..\DisplayChessBoard\DisplayChessBoard.csproj", "{2AC7BD55-7D86-488E-B4D8-5FC59E4093C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisplayChessBoard", "..\DisplayChessBoard\DisplayChessBoard.csproj", "{2AC7BD55-7D86-488E-B4D8-5FC59E4093C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
