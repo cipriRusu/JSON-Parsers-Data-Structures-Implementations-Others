@@ -11,7 +11,7 @@ namespace ChessMoves
 
         public PassantMoveValidator(IBoard chessBoard) => this.chessBoard = chessBoard;
 
-        public bool IsValid(IUserMove move, out IChessPiece chessPiece)
+        public bool IsValid(IUserMove move, out IPiece chessPiece)
         {
             var performerPiece = chessBoard.GetPiece(move);
 
@@ -30,7 +30,7 @@ namespace ChessMoves
             return false;
         }
 
-        private bool IsClearAndMarkedForCapture(IUserMove move, IChessPiece performerPiece, int neighbouringIndex)
+        private bool IsClearAndMarkedForCapture(IUserMove move, IPiece performerPiece, int neighbouringIndex)
         {
             return 
                 chessBoard[performerPiece.CurrentPosition.Item1, performerPiece.CurrentPosition.Item2 + neighbouringIndex] != null &&

@@ -6,7 +6,7 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    public class Queen : Piece, IChessPiece
+    public class Queen : Piece, IPiece
     {
         public Queen(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Queen;

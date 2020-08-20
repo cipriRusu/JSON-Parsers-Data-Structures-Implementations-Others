@@ -8,11 +8,11 @@ namespace ChessMoves
     public class AttackStatus
     {
         private IBoard boardState;
-        private IChessPiece chessPiece;
+        private IPiece chessPiece;
         public bool IsAttacked => IsCurrentAttacked();
         public bool IsCheckMated => IsCurrentCheckMate();
 
-        public AttackStatus(IBoard boardState, IChessPiece chessPiece)
+        public AttackStatus(IBoard boardState, IPiece chessPiece)
         {
             this.boardState = boardState;
             this.chessPiece = chessPiece;
@@ -72,7 +72,7 @@ namespace ChessMoves
         }
 
 
-        private bool ValidAttacks(IChessPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => 
+        private bool ValidAttacks(IPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => 
             new PathGenerator(currentKing, pathTypes).GetEnumerator()
                 .Where(x => boardState[x.End] != null)
                 .Where(x => boardState.IsCapturePathClear(x))

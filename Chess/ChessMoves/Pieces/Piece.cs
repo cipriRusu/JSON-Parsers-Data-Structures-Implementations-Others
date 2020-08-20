@@ -6,7 +6,7 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    public abstract class Piece : IChessPiece
+    public abstract class Piece : IPiece
     {
         private readonly Index matrixIndexConvertor = new Index();
 
@@ -25,7 +25,7 @@ namespace ChessMoves
         public PieceType PieceType { get; internal set; }
         public bool IsMoved { get; internal set; }
         public bool IsPassantCapturable { get; private set; }
-        public void MarkPassant(IChessPiece piece, IUserMove move)
+        public void MarkPassant(IPiece piece, IUserMove move)
         {
             if (piece.PieceType == PieceType.Pawn)
             {

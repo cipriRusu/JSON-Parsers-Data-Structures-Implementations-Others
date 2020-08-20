@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IChessPiece
+    public interface IPiece
     {
         char File { get; }
         char Rank { get; }
@@ -18,7 +18,7 @@ namespace ChessMoves
         IEnumerable<IPath> Moves();
         IEnumerable<IPath> Captures();
         void Promote(IBoard chessBoard);
-        void MarkPassant(IChessPiece piece, IUserMove move);
+        void MarkPassant(IPiece piece, IUserMove move);
         bool CanReach(IUserMove move, IBoard chessBoard);
         bool CanCapture(IUserMove move, IBoard chessBoard);
         void Update(IUserMove move);

@@ -10,7 +10,7 @@ namespace ChessMoves
 {
     public class PathGenerator
     {
-        public PathGenerator(IChessPiece piece, params PathType[] paths)
+        public PathGenerator(IPiece piece, params PathType[] paths)
         {
             StartIndex = piece.CurrentPosition;
             PathTypes = paths;

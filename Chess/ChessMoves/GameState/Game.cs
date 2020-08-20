@@ -7,7 +7,7 @@ namespace ChessMoves
 {
     public class Game : IGame
     {
-        private readonly IChessPiece[,] board = new Piece[8, 8];
+        private readonly IPiece[,] board = new Piece[8, 8];
         private readonly IBoard boardState;
 
         public Game()
@@ -21,7 +21,7 @@ namespace ChessMoves
         public bool IsCheck { get; private set; }
         public Player TurnToMove { get; set; }
 
-        public IChessPiece this[int i, int j] => boardState[i, j];
+        public IPiece this[int i, int j] => boardState[i, j];
 
         public void Input(string input)
         {

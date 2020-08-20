@@ -12,6 +12,6 @@ namespace ChessMoves
         char SourceFile { get; }
         char SourceRank { get; }
         void GetCurrentState(IBoard board);
-        bool ValidateDestination(IChessPiece piece, IBoard boardState);
+        bool ValidateDestination(IPiece piece, IBoard boardState);
     }
 }

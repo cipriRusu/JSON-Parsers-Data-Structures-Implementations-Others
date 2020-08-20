@@ -9,7 +9,7 @@ namespace ChessMoves
     {
         private readonly Player turnToMove;
         private readonly IBoard chessBoard;
-        private IChessPiece _currentKing;
+        private IPiece _currentKing;
 
         public CurrentPlayerStatus(Player turnToMove, IBoard chessBoard)
         {

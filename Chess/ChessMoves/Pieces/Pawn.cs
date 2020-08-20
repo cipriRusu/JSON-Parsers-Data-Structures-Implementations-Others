@@ -8,7 +8,7 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    public class Pawn : Piece, IChessPiece
+    public class Pawn : Piece, IPiece
     {
         public Pawn(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = PieceType.Pawn;

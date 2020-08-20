@@ -10,7 +10,7 @@ namespace ChessMoves
         public CaptureUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
         
         public new virtual void GetCurrentState(IBoard board) => board.PerformMove(this);
-        public new bool ValidateDestination(IChessPiece piece, IBoard boardState) => 
+        public new bool ValidateDestination(IPiece piece, IBoard boardState) => 
             piece.CanCapture(this, boardState);
     }
 }

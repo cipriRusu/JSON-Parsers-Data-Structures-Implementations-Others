@@ -10,7 +10,7 @@ namespace ChessMoves
 
         public PerformPassant(Board chessBoard) => this.chessBoard = chessBoard;
 
-        internal void Perform(IUserMove move, IChessPiece chessPiece)
+        internal void Perform(IUserMove move, IPiece chessPiece)
         {
             switch (move.PlayerColor)
             {

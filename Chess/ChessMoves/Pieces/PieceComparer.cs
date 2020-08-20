@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 namespace ChessMoves
 {
-    public class PieceComparer : IEqualityComparer<IChessPiece>
+    public class PieceComparer : IEqualityComparer<IPiece>
     {
-        public bool Equals([AllowNull] IChessPiece x, [AllowNull] IChessPiece y)
+        public bool Equals([AllowNull] IPiece x, [AllowNull] IPiece y)
         {
             return x.PlayerColour == y.PlayerColour &&
                 x.PieceType == y.PieceType &&
@@ -13,7 +13,7 @@ namespace ChessMoves
                 x.Rank == y.Rank;
         }
 
-        public int GetHashCode([DisallowNull] IChessPiece input)
+        public int GetHashCode([DisallowNull] IPiece input)
         {
             return input.GetHashCode();
         }

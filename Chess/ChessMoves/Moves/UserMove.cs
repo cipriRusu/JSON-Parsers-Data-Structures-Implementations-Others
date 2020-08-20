@@ -15,7 +15,7 @@ namespace ChessMoves
         public char SourceRank { get; private set; }
         public void GetCurrentState(IBoard board) {}
 
-        public bool ValidateDestination(IChessPiece piece, IBoard boardState) => false;
+        public bool ValidateDestination(IPiece piece, IBoard boardState) => false;
 
         public Player PlayerColor { get; private set; }
 
@@ -99,7 +99,7 @@ namespace ChessMoves
             }
         }
 
-        public void MoveAndPieceExceptions(IUserMove move, IEnumerable<IChessPiece> pieces)
+        public void MoveAndPieceExceptions(IUserMove move, IEnumerable<IPiece> pieces)
         {
             if (!pieces.Any())
             {

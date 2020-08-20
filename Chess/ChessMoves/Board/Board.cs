@@ -9,19 +9,19 @@ namespace ChessMoves
     [Serializable]
     public class Board : IBoard
     {
-        public Board(IChessPiece[,] board) => this.board = board;
+        public Board(IPiece[,] board) => this.board = board;
 
-        private IChessPiece[,] board = new IChessPiece[ChessboardSize, ChessboardSize];
+        private IPiece[,] board = new IPiece[ChessboardSize, ChessboardSize];
         private const int ChessboardSize = 8;
-        public IChessPiece this[(int, int) index] => board[index.Item1, index.Item2];
-        public IChessPiece this[int first, int second] => board[first, second];
-        public IChessPiece GetKing(Player player) => GetAllPieces()
+        public IPiece this[(int, int) index] => board[index.Item1, index.Item2];
+        public IPiece this[int first, int second] => board[first, second];
+        public IPiece GetKing(Player player) => GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PieceType == PieceType.King)
                 .Single(x => x.PlayerColour == player);
-        private IChessPiece CurrentMovablePiece { get; set; }
+        private IPiece CurrentMovablePiece { get; set; }
 
-        public IEnumerable<IUserMove> AllKingMoves(IChessPiece currentKing)
+        public IEnumerable<IUserMove> AllKingMoves(IPiece currentKing)
         {
             var allLegalMoves = currentKing.Moves().Where(x => board[x.End.Item1, x.End.Item2] == null);
 
@@ -49,15 +49,15 @@ namespace ChessMoves
             board[move.MoveIndex.Item1, move.MoveIndex.Item2].FlagAsMoved(true);
         }
 
-        public void Promote(IChessPiece piece) =>
+        public void Promote(IPiece piece) =>
             board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] =
             new Queen(string.Concat(piece.File, piece.Rank), piece.PlayerColour);
 
-        public void Remove(IChessPiece target) =>
+        public void Remove(IPiece target) =>
             board[target.CurrentPosition.Item1,
                 target.CurrentPosition.Item2] = null;
 
-        private IChessPiece GetMovablePiece(IUserMove move)
+        private IPiece GetMovablePiece(IUserMove move)
         {
             var movablePiece = GetAllPieces()
                 .Where(x => x != null)
@@ -71,7 +71,7 @@ namespace ChessMoves
             return movablePiece.Single();
         }
 
-        public IChessPiece GetPiece(IUserMove move) => GetAllPieces()
+        public IPiece GetPiece(IUserMove move) => GetAllPieces()
             .Where(x => x != null)
             .Where(x => x.PlayerColour == move.PlayerColor)
             .Where(x => x.PieceType == move.PieceType)
@@ -85,17 +85,17 @@ namespace ChessMoves
         public void PerformCastling(IUserMove move) =>
             new PerformCastling(this).Perform(move);
 
-        public bool CheckPassant(IUserMove move, out IChessPiece chessPiece) =>
+        public bool CheckPassant(IUserMove move, out IPiece chessPiece) =>
             new PassantMoveValidator(this).IsValid(move, out chessPiece);
 
-        public void PerformPassant(IUserMove move, IChessPiece chessPiece) =>
+        public void PerformPassant(IUserMove move, IPiece chessPiece) =>
             new PerformPassant(this).Perform(move, chessPiece);
 
-        private IEnumerable<IChessPiece> GetAllPieces() =>
+        private IEnumerable<IPiece> GetAllPieces() =>
             Enumerable.Range(0, ChessboardSize).SelectMany(i =>
             Enumerable.Range(0, ChessboardSize).Select(j => board[i, j]));
 
-        private void MoveAndPieceExceptions(IEnumerable<IChessPiece> movablePiece)
+        private void MoveAndPieceExceptions(IEnumerable<IPiece> movablePiece)
         {
             if (!movablePiece.Any())
             {
