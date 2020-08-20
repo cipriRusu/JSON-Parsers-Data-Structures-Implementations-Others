@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +9,5 @@ namespace ChessMoves
     {
         Type PieceType { get; }
         Player PlayerColor { get; }
-        void GetCurrentState(IBoard board);
-        bool ValidateDestination(IPiece piece, IBoard boardState);
     }
 }
