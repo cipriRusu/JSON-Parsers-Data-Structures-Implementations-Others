@@ -13,7 +13,7 @@ namespace ChessMoves
         bool CheckCastling(IUserMove move);
         bool CheckPassant(IUserMove enPassantUserMove, out IPiece chessPiece);
         IPiece GetPiece(IUserMove move);
-        void GetAndPerform(IUserMove move);
+        void Perform(IUserMove move);
         void PerformPassant(IUserMove enPassantUserMove, IPiece chessPiece);
         void PerformMove(IUserMove move);
         IPiece GetKing(Player player);

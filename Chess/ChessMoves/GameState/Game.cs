@@ -29,7 +29,7 @@ namespace ChessMoves
 
             foreach (var move in moves)
             {
-                boardState.GetAndPerform(move);
+                boardState.Perform(move);
                 new PlayerTurn(this).SwitchToNextPlayer();
             }
         }

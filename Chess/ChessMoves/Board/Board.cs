@@ -77,7 +77,7 @@ namespace ChessMoves
             .Where(x => x.GetType() == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
 
-        public void GetAndPerform(IUserMove move) => move.GetCurrentState(this);
+        public void Perform(IUserMove move) => move.GetCurrentState(this);
 
         public bool CheckCastling(IUserMove move) => 
             new CastlingMoveValidator(this).IsValid(move);
