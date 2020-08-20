@@ -6,7 +6,7 @@ namespace ChessMoves
 {
     public interface IUserMove : ILocation
     {
-        PieceType PieceType { get; }
+        Type PieceType { get; }
         Player PlayerColor { get; }
         void GetCurrentState(IBoard board);
         bool ValidateDestination(IPiece piece, IBoard boardState);

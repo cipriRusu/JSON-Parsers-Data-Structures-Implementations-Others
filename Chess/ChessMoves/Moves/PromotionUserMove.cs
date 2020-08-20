@@ -16,7 +16,7 @@ namespace ChessMoves
             var internalMove = new MoveType(NotationIndex, PlayerColor).Move;
             internalMove.GetCurrentState(board);
 
-            if (board[Index] != null && board[Index].PieceType == PieceType.Pawn)
+            if (board[Index] != null && board[Index].GetType() == typeof(Pawn))
             {
                 switch (PlayerColor)
                 {

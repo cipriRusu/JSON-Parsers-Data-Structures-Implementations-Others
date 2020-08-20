@@ -62,7 +62,7 @@ namespace ChessMoves
             var movablePiece = GetAllPieces()
                 .Where(x => x != null)
                 .Where(x => x.PlayerColour == move.PlayerColor)
-                .Where(x => x.PieceType == move.PieceType)
+                .Where(x => x.GetType() == move.PieceType)
                 .Where(x => move.ValidateDestination(x, this) &&
                 new ConstraintValidator(x, move).IsValid);
 
@@ -74,7 +74,7 @@ namespace ChessMoves
         public IPiece GetPiece(IUserMove move) => GetAllPieces()
             .Where(x => x != null)
             .Where(x => x.PlayerColour == move.PlayerColor)
-            .Where(x => x.PieceType == move.PieceType)
+            .Where(x => x.GetType() == move.PieceType)
             .Single(x => new ConstraintValidator(x, move).IsValid);
 
         public void GetAndPerform(IUserMove move) => move.GetCurrentState(this);

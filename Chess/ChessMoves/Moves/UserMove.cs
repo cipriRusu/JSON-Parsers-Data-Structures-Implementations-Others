@@ -8,7 +8,7 @@ namespace ChessMoves
 {
     public class UserMove : IUserMove
     {
-        public PieceType PieceType { get; private set; }
+        public Type PieceType { get; private set; }
         public (int, int) Index { get; private set; }
         protected string NotationIndex { get; private set; }
         public char File { get; private set; }
@@ -32,7 +32,7 @@ namespace ChessMoves
         public UserMove((int, int) movementLocation, Player playerTurn)
         {
             //Custom constructor for checking king status
-            PieceType = PieceType.King;
+            PieceType = typeof(King);
             PlayerColor = playerTurn;
             Index = movementLocation;
         }
@@ -60,22 +60,22 @@ namespace ChessMoves
             switch (input.First())
             {
                 case 'K':
-                    PieceType = PieceType.King;
+                    PieceType = typeof(King);
                     break;
                 case 'Q':
-                    PieceType = PieceType.Queen;
+                    PieceType = typeof(Queen);
                     break;
                 case 'R':
-                    PieceType = PieceType.Rock;
+                    PieceType = typeof(Rock);
                     break;
                 case 'B':
-                    PieceType = PieceType.Bishop;
+                    PieceType = typeof(Bishop);
                     break;
                 case 'N':
-                    PieceType = PieceType.Knight;
+                    PieceType = typeof(Knight);
                     break;
                 default:
-                    PieceType = PieceType.Pawn;
+                    PieceType = typeof(Pawn);
                     break;
             }
         }
