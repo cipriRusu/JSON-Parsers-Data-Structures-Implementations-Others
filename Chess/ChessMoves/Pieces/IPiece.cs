@@ -14,8 +14,8 @@ namespace ChessMoves
         bool IsPassantCapturable { get; }
         void Promote(IBoard chessBoard);
         void MarkPassant(IPiece piece, IUserMove move);
-        bool CanReach(IUserMove move, IBoard chessBoard);
-        bool CanCapture(IUserMove move, IBoard chessBoard);
+        bool CanReach(IUserMove move);
+        bool CanCapture(IUserMove move);
         void Update(IUserMove move);
         void FlagAsMoved(bool isMoved);
     }

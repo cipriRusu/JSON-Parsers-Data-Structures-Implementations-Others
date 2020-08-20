@@ -63,8 +63,8 @@ namespace ChessMoves
                 .Where(x => x != null)
                 .Where(x => x.PlayerColour == move.PlayerColor)
                 .Where(x => x.GetType() == move.PieceType)
-                .Where(x => move.ValidateDestination(x, this) &&
-                new ConstraintValidator(x, move).IsValid);
+                .Where(x => x.CanReach(move));
+                //.Where(x => move.ValidateDestination(x, this) && new ConstraintValidator(x, move).IsValid);
 
             MoveAndPieceExceptions(movablePiece);
 
