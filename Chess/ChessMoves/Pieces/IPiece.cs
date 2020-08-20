@@ -6,11 +6,8 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IPiece
+    public interface IPiece : ILocation
     {
-        char File { get; }
-        char Rank { get; }
-        (int, int) Index { get; }
         Player PlayerColour { get; }
         PieceType PieceType { get; }
         bool IsMoved { get; }

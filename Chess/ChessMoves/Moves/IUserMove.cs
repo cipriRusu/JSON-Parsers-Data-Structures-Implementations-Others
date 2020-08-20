@@ -4,13 +4,10 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IUserMove
+    public interface IUserMove : ILocation
     {
         PieceType PieceType { get; }
         Player PlayerColor { get; }
-        (int, int) Index { get; }
-        char File { get; }
-        char Rank { get; }
         void GetCurrentState(IBoard board);
         bool ValidateDestination(IPiece piece, IBoard boardState);
     }
