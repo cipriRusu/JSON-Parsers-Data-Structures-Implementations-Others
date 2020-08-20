@@ -42,10 +42,10 @@ namespace ChessMoves
         }
 
         public virtual bool CanReach(IUserMove move, IBoardState chessBoard) => 
-            Moves().Any(x => x.ReachesTarget(move) && chessBoard.IsMovePathClear(x));
+            Moves().Any(x => x.End == move.MoveIndex && chessBoard.IsMovePathClear(x));
 
         public virtual bool CanCapture(IUserMove move, IBoardState chessBoard) =>
-            Captures().Any(x => x.ReachesTarget(move) && chessBoard.IsCapturePathClear(x));
+            Captures().Any(x => x.End == move.MoveIndex && chessBoard.IsCapturePathClear(x));
 
         public virtual IEnumerable<IPath> Moves() => null;
         public virtual IEnumerable<IPath> Captures() => null;
@@ -75,12 +75,12 @@ namespace ChessMoves
 
         public virtual void PerformMove(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Moves().Where(x => x.ReachesTarget(move) && chessBoard.IsMovePathClear(x));
+            var validPath = Moves().Where(x => x.End == move.MoveIndex && chessBoard.IsMovePathClear(x));
         }
 
         public virtual void PerformCapture(IUserMove move, IBoardState chessBoard)
         {
-            var validPath = Captures().Where(x => x.ReachesTarget(move) && chessBoard.IsCapturePathClear(x));
+            var validPath = Captures().Where(x => x.End == move.MoveIndex && chessBoard.IsCapturePathClear(x));
         }
 
         public void FlagAsMoved(bool isMoved) => IsMoved = isMoved;
