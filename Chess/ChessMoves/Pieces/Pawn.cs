@@ -15,7 +15,7 @@ namespace ChessMoves
 
         public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.Pawn).GetEnumerator();
         public override IEnumerable<IPath> Captures() => new PathGenerator(this, PathType.PawnCapture).GetEnumerator();
-        public override void PerformCapture(IUserMove move, IBoardState chessBoard)
+        public override void PerformCapture(IUserMove move, IBoard chessBoard)
         {
             var targetPiece = chessBoard[move.MoveIndex];
 

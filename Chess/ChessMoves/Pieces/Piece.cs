@@ -41,10 +41,10 @@ namespace ChessMoves
             }
         }
 
-        public virtual bool CanReach(IUserMove move, IBoardState chessBoard) => 
+        public virtual bool CanReach(IUserMove move, IBoard chessBoard) => 
             Moves().Any(x => x.End == move.MoveIndex && chessBoard.IsMovePathClear(x));
 
-        public virtual bool CanCapture(IUserMove move, IBoardState chessBoard) =>
+        public virtual bool CanCapture(IUserMove move, IBoard chessBoard) =>
             Captures().Any(x => x.End == move.MoveIndex && chessBoard.IsCapturePathClear(x));
 
         public virtual IEnumerable<IPath> Moves() => null;
@@ -58,7 +58,7 @@ namespace ChessMoves
             Rank = rankAndFile.Rank;
         }
 
-        public void Promote(IBoardState chessBoard) => chessBoard.Promote(this);
+        public void Promote(IBoard chessBoard) => chessBoard.Promote(this);
 
         public static Player Opponent(Player player)
         {
@@ -73,12 +73,12 @@ namespace ChessMoves
             }
         }
 
-        public virtual void PerformMove(IUserMove move, IBoardState chessBoard)
+        public virtual void PerformMove(IUserMove move, IBoard chessBoard)
         {
             var validPath = Moves().Where(x => x.End == move.MoveIndex && chessBoard.IsMovePathClear(x));
         }
 
-        public virtual void PerformCapture(IUserMove move, IBoardState chessBoard)
+        public virtual void PerformCapture(IUserMove move, IBoard chessBoard)
         {
             var validPath = Captures().Where(x => x.End == move.MoveIndex && chessBoard.IsCapturePathClear(x));
         }

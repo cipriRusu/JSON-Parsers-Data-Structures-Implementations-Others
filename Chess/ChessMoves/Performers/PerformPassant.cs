@@ -6,9 +6,9 @@ namespace ChessMoves
 {
     public class PerformPassant
     {
-        private ChessBoard chessBoard;
+        private Board chessBoard;
 
-        public PerformPassant(ChessBoard chessBoard) => this.chessBoard = chessBoard;
+        public PerformPassant(Board chessBoard) => this.chessBoard = chessBoard;
 
         internal void Perform(IUserMove move, IChessPiece chessPiece)
         {

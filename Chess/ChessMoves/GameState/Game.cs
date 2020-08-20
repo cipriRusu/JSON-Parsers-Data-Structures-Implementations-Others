@@ -8,13 +8,13 @@ namespace ChessMoves
     public class Game : IGame
     {
         private readonly IChessPiece[,] board = new Piece[8, 8];
-        private readonly IBoardState boardState;
+        private readonly IBoard boardState;
 
         public Game()
         {
             InitializeBlack();
             InitializeWhite();
-            boardState = new ChessBoard(board);
+            boardState = new Board(board);
         }
 
         public bool IsCheckMate { get; private set; }

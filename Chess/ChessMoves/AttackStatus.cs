@@ -7,12 +7,12 @@ namespace ChessMoves
 {
     public class AttackStatus
     {
-        private IBoardState boardState;
+        private IBoard boardState;
         private IChessPiece chessPiece;
         public bool IsAttacked => IsCurrentAttacked();
         public bool IsCheckMated => IsCurrentCheckMate();
 
-        public AttackStatus(IBoardState boardState, IChessPiece chessPiece)
+        public AttackStatus(IBoard boardState, IChessPiece chessPiece)
         {
             this.boardState = boardState;
             this.chessPiece = chessPiece;

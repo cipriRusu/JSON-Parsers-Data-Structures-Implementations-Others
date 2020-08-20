@@ -7,9 +7,9 @@ namespace ChessMoves
 {
     public class PassantMoveValidator
     {
-        private IBoardState chessBoard;
+        private IBoard chessBoard;
 
-        public PassantMoveValidator(IBoardState chessBoard) => this.chessBoard = chessBoard;
+        public PassantMoveValidator(IBoard chessBoard) => this.chessBoard = chessBoard;
 
         public bool IsValid(IUserMove move, out IChessPiece chessPiece)
         {

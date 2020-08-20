@@ -7,9 +7,9 @@ namespace ChessMoves
 {
     public class PerformCastling
     {
-        private ChessBoard chessBoard;
+        private Board chessBoard;
 
-        public PerformCastling(ChessBoard chessBoard)
+        public PerformCastling(Board chessBoard)
         {
             this.chessBoard = chessBoard;
         }

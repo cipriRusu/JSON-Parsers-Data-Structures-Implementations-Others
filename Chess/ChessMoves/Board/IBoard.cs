@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IBoardState
+    public interface IBoard
     {
         IChessPiece this[(int, int) index] { get; }
         IChessPiece this[int first, int second] { get; }

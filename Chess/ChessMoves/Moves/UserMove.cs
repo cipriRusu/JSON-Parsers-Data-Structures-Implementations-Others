@@ -13,9 +13,9 @@ namespace ChessMoves
         protected string NotationIndex { get; private set; }
         public char SourceFile { get; private set; }
         public char SourceRank { get; private set; }
-        public void GetCurrentState(IBoardState board) {}
+        public void GetCurrentState(IBoard board) {}
 
-        public bool ValidateDestination(IChessPiece piece, IBoardState boardState) => false;
+        public bool ValidateDestination(IChessPiece piece, IBoard boardState) => false;
 
         public Player PlayerColor { get; private set; }
 
@@ -87,7 +87,7 @@ namespace ChessMoves
             }
         }
 
-        internal void CheckVerification(IBoardState board)
+        internal void CheckVerification(IBoard board)
         {
             if (new CurrentPlayerStatus(PlayerColor, board).IsChecked)
             {

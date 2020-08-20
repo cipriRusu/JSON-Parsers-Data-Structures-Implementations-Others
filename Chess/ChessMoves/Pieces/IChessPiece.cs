@@ -17,10 +17,10 @@ namespace ChessMoves
         bool IsPassantCapturable { get; }
         IEnumerable<IPath> Moves();
         IEnumerable<IPath> Captures();
-        void Promote(IBoardState chessBoard);
+        void Promote(IBoard chessBoard);
         void MarkPassant(IChessPiece piece, IUserMove move);
-        bool CanReach(IUserMove move, IBoardState chessBoard);
-        bool CanCapture(IUserMove move, IBoardState chessBoard);
+        bool CanReach(IUserMove move, IBoard chessBoard);
+        bool CanCapture(IUserMove move, IBoard chessBoard);
         void Update(IUserMove move);
         void FlagAsMoved(bool isMoved);
     }

@@ -8,10 +8,10 @@ namespace ChessMoves
     public class CurrentPlayerStatus
     {
         private readonly Player turnToMove;
-        private readonly IBoardState chessBoard;
+        private readonly IBoard chessBoard;
         private IChessPiece _currentKing;
 
-        public CurrentPlayerStatus(Player turnToMove, IBoardState chessBoard)
+        public CurrentPlayerStatus(Player turnToMove, IBoard chessBoard)
         {
             this.turnToMove = turnToMove;
             this.chessBoard = chessBoard;

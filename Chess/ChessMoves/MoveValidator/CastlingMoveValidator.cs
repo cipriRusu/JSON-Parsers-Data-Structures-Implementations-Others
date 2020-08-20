@@ -9,9 +9,9 @@ namespace ChessMoves
 {
     public class CastlingMoveValidator
     {
-        private IBoardState chessBoard;
+        private IBoard chessBoard;
 
-        public CastlingMoveValidator(IBoardState chessBoard) => this.chessBoard = chessBoard;
+        public CastlingMoveValidator(IBoard chessBoard) => this.chessBoard = chessBoard;
 
         public bool IsValid(IUserMove move)
         {
@@ -45,7 +45,7 @@ namespace ChessMoves
 
         private bool OnPassAttacks(IEnumerable<(int, int)> castlingPath) => false;
         //castlingPath.Skip(1).Take(2).Select(x => new UserMove(x, chessBoard.TurnToMove))
-            //.Any(x => new AttackStatus(chessBoard, chessBoard.GetKing(chessBoard.TurnToMove)).IsCurrentMoveAttacked(x));
+        //.Any(x => new AttackStatus(chessBoard, chessBoard.GetKing(chessBoard.TurnToMove)).IsCurrentMoveAttacked(x));
 
         private bool NullAndMoveValidation(int columnIndex, int rowIndex) =>
             chessBoard[(columnIndex, 4)] != null &&

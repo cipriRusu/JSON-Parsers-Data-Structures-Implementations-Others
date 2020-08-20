@@ -9,7 +9,7 @@ namespace ChessMoves.Moves
     {
         public EnPassantUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public new void GetCurrentState(IBoardState board)
+        public new void GetCurrentState(IBoard board)
         {
             if(board.CheckPassant(this, out IChessPiece chessPiece))
             {

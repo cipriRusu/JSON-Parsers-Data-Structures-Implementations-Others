@@ -9,7 +9,7 @@ namespace ChessMoves.Moves
     {
         public KingCastlingUserMove(string input, Player turnToMove) : base(input, turnToMove) { }
 
-        public new void GetCurrentState(IBoardState board)
+        public new void GetCurrentState(IBoard board)
         {
             if (board.CheckCastling(this))
             {

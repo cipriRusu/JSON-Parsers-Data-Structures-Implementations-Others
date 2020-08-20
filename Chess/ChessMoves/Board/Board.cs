@@ -7,9 +7,9 @@ using System.Linq;
 namespace ChessMoves
 {
     [Serializable]
-    public class ChessBoard : IBoardState
+    public class Board : IBoard
     {
-        public ChessBoard(IChessPiece[,] board) => this.board = board;
+        public Board(IChessPiece[,] board) => this.board = board;
 
         private IChessPiece[,] board = new IChessPiece[ChessboardSize, ChessboardSize];
         private const int ChessboardSize = 8;

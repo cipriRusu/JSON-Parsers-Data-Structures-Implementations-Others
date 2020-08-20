@@ -9,8 +9,8 @@ namespace ChessMoves.Moves
     {
         public MoveUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public new virtual void GetCurrentState(IBoardState board) => board.PerformMove(this);
+        public new virtual void GetCurrentState(IBoard board) => board.PerformMove(this);
 
-        public new bool ValidateDestination(IChessPiece piece, IBoardState boardState) => piece.CanReach(this, boardState);
+        public new bool ValidateDestination(IChessPiece piece, IBoard boardState) => piece.CanReach(this, boardState);
     }
 }
