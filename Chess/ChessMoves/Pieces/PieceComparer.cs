@@ -8,7 +8,7 @@ namespace ChessMoves
         {
             return x.PlayerColour == y.PlayerColour &&
                 x.PieceType == y.PieceType &&
-                x.CurrentPosition == y.CurrentPosition &&
+                x.Index == y.Index &&
                 x.File == y.File &&
                 x.Rank == y.Rank;
         }

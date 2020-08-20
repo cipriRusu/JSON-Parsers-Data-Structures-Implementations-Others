@@ -8,9 +8,9 @@ namespace ChessMoves
     {
         PieceType PieceType { get; }
         Player PlayerColor { get; }
-        (int, int) MoveIndex { get; }
-        char SourceFile { get; }
-        char SourceRank { get; }
+        (int, int) Index { get; }
+        char File { get; }
+        char Rank { get; }
         void GetCurrentState(IBoard board);
         bool ValidateDestination(IPiece piece, IBoard boardState);
     }

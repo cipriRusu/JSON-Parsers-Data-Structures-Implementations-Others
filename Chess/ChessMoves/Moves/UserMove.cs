@@ -9,10 +9,10 @@ namespace ChessMoves
     public class UserMove : IUserMove
     {
         public PieceType PieceType { get; private set; }
-        public (int, int) MoveIndex { get; private set; }
+        public (int, int) Index { get; private set; }
         protected string NotationIndex { get; private set; }
-        public char SourceFile { get; private set; }
-        public char SourceRank { get; private set; }
+        public char File { get; private set; }
+        public char Rank { get; private set; }
         public void GetCurrentState(IBoard board) {}
 
         public bool ValidateDestination(IPiece piece, IBoard boardState) => false;
@@ -34,14 +34,14 @@ namespace ChessMoves
             //Custom constructor for checking king status
             PieceType = PieceType.King;
             PlayerColor = playerTurn;
-            MoveIndex = movementLocation;
+            Index = movementLocation;
         }
 
         private void GetSource(string source)
         {
             if (source.All(x => IsRank(x) || IsFile(x)))
             {
-                MoveIndex = new Index().GetMatrixIndex(source);
+                Index = new Index().GetMatrixIndex(source);
             }
         }
 
@@ -49,8 +49,8 @@ namespace ChessMoves
         {
             foreach (var element in origin)
             {
-                if (IsRank(element)) { SourceRank = element; }
-                if (IsFile(element)) { SourceFile = element; }
+                if (IsRank(element)) { Rank = element; }
+                if (IsFile(element)) { File = element; }
             }
         }
         private bool IsRank(char c) => "12345678".Contains(c);

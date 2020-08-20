@@ -12,13 +12,13 @@ namespace ChessMoves
 
         public Piece(string chessBoardIndex, Player playerColour)
         {
-            CurrentPosition = matrixIndexConvertor.GetMatrixIndex(chessBoardIndex);
+            Index = matrixIndexConvertor.GetMatrixIndex(chessBoardIndex);
             PlayerColour = playerColour;
             File = chessBoardIndex.First();
             Rank = chessBoardIndex.Last();
         }
 
-        public (int, int) CurrentPosition { get; internal set; }
+        public (int, int) Index { get; internal set; }
         public Player PlayerColour { get; internal set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
@@ -32,28 +32,28 @@ namespace ChessMoves
                 switch (piece.PlayerColour)
                 {
                     case Player.White:
-                        IsPassantCapturable = piece.CurrentPosition.Item1 - move.MoveIndex.Item1 == 2;
+                        IsPassantCapturable = piece.Index.Item1 - move.Index.Item1 == 2;
                         break;
                     case Player.Black:
-                        IsPassantCapturable = move.MoveIndex.Item1 - piece.CurrentPosition.Item1 == 2;
+                        IsPassantCapturable = move.Index.Item1 - piece.Index.Item1 == 2;
                         break;
                 }
             }
         }
 
         public virtual bool CanReach(IUserMove move, IBoard chessBoard) => 
-            Moves().Any(x => x.End == move.MoveIndex && chessBoard.IsMovePathClear(x));
+            Moves().Any(x => x.End == move.Index && chessBoard.IsMovePathClear(x));
 
         public virtual bool CanCapture(IUserMove move, IBoard chessBoard) =>
-            Captures().Any(x => x.End == move.MoveIndex && chessBoard.IsCapturePathClear(x));
+            Captures().Any(x => x.End == move.Index && chessBoard.IsCapturePathClear(x));
 
         public virtual IEnumerable<IPath> Moves() => null;
         public virtual IEnumerable<IPath> Captures() => null;
 
         public void Update(IUserMove move)
         {
-            var rankAndFile = new RankAndFile(move.MoveIndex);
-            CurrentPosition = move.MoveIndex;
+            var rankAndFile = new RankAndFile(move.Index);
+            Index = move.Index;
             File = rankAndFile.File;
             Rank = rankAndFile.Rank;
         }
@@ -75,12 +75,12 @@ namespace ChessMoves
 
         public virtual void PerformMove(IUserMove move, IBoard chessBoard)
         {
-            var validPath = Moves().Where(x => x.End == move.MoveIndex && chessBoard.IsMovePathClear(x));
+            var validPath = Moves().Where(x => x.End == move.Index && chessBoard.IsMovePathClear(x));
         }
 
         public virtual void PerformCapture(IUserMove move, IBoard chessBoard)
         {
-            var validPath = Captures().Where(x => x.End == move.MoveIndex && chessBoard.IsCapturePathClear(x));
+            var validPath = Captures().Where(x => x.End == move.Index && chessBoard.IsCapturePathClear(x));
         }
 
         public void FlagAsMoved(bool isMoved) => IsMoved = isMoved;

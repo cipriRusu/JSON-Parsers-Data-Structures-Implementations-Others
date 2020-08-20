@@ -24,24 +24,24 @@ namespace ChessMoves
             NoConstraint(move);
 
         private bool NoConstraint(IUserMove move) =>
-                move.SourceFile == '\0' &&
-                move.SourceRank == '\0';
+                move.File == '\0' &&
+                move.Rank == '\0';
 
         private bool FileAndRankConstraint(IUserMove move, IPiece x) =>
-            move.SourceRank != '\0' &&
-            move.SourceFile != '\0' &&
-            move.SourceRank == x.Rank &&
-            move.SourceFile == x.File;
+            move.Rank != '\0' &&
+            move.File != '\0' &&
+            move.Rank == x.Rank &&
+            move.File == x.File;
 
         private bool FileConstraint(IUserMove move, IPiece x) =>
-            move.SourceFile != '\0' &&
-            move.SourceRank == '\0' &&
-            move.SourceFile == x.File;
+            move.File != '\0' &&
+            move.Rank == '\0' &&
+            move.File == x.File;
 
         private bool RankConstraint(IUserMove move, IPiece x) =>
-            move.SourceRank != '\0' &&
-            move.SourceFile == '\0' &&
-            move.SourceRank == x.Rank;
+            move.Rank != '\0' &&
+            move.File == '\0' &&
+            move.Rank == x.Rank;
 
     }
 }

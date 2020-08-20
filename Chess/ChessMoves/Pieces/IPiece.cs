@@ -10,7 +10,7 @@ namespace ChessMoves
     {
         char File { get; }
         char Rank { get; }
-        (int, int) CurrentPosition { get; }
+        (int, int) Index { get; }
         Player PlayerColour { get; }
         PieceType PieceType { get; }
         bool IsMoved { get; }

@@ -16,15 +16,15 @@ namespace ChessMoves
             var internalMove = new MoveType(NotationIndex, PlayerColor).Move;
             internalMove.GetCurrentState(board);
 
-            if (board[MoveIndex] != null && board[MoveIndex].PieceType == PieceType.Pawn)
+            if (board[Index] != null && board[Index].PieceType == PieceType.Pawn)
             {
                 switch (PlayerColor)
                 {
-                    case Player.White when board[MoveIndex].CurrentPosition.Item1 == WhiteEnd:
-                        board[MoveIndex].Promote(board);
+                    case Player.White when board[Index].Index.Item1 == WhiteEnd:
+                        board[Index].Promote(board);
                         break;
-                    case Player.Black when board[MoveIndex].CurrentPosition.Item1 == BlackEnd:
-                        board[MoveIndex].Promote(board);
+                    case Player.Black when board[Index].Index.Item1 == BlackEnd:
+                        board[Index].Promote(board);
                         break;
                 }
             }

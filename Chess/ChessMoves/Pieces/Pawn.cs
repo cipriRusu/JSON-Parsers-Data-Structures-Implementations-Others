@@ -17,7 +17,7 @@ namespace ChessMoves
         public override IEnumerable<IPath> Captures() => new PathGenerator(this, PathType.PawnCapture).GetEnumerator();
         public override void PerformCapture(IUserMove move, IBoard chessBoard)
         {
-            var targetPiece = chessBoard[move.MoveIndex];
+            var targetPiece = chessBoard[move.Index];
 
             if (Opponent(PlayerColour) == targetPiece.PlayerColour)
             {

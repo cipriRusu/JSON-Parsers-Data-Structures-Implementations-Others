@@ -33,9 +33,9 @@ namespace ChessMoves
         private bool IsClearAndMarkedForCapture(IUserMove move, IPiece performerPiece, int neighbouringIndex)
         {
             return 
-                chessBoard[performerPiece.CurrentPosition.Item1, performerPiece.CurrentPosition.Item2 + neighbouringIndex] != null &&
-                chessBoard[performerPiece.CurrentPosition.Item1, performerPiece.CurrentPosition.Item2 + neighbouringIndex].IsPassantCapturable &&
-                chessBoard[move.MoveIndex] == null;
+                chessBoard[performerPiece.Index.Item1, performerPiece.Index.Item2 + neighbouringIndex] != null &&
+                chessBoard[performerPiece.Index.Item1, performerPiece.Index.Item2 + neighbouringIndex].IsPassantCapturable &&
+                chessBoard[move.Index] == null;
         }
     }
 }

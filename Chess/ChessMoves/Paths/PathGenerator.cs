@@ -12,7 +12,7 @@ namespace ChessMoves
     {
         public PathGenerator(IPiece piece, params PathType[] paths)
         {
-            StartIndex = piece.CurrentPosition;
+            StartIndex = piece.Index;
             PathTypes = paths;
             PlayerColour = piece.PlayerColour;
         }

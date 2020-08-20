@@ -37,25 +37,25 @@ namespace ChessMoves
             CurrentMovablePiece = GetMovablePiece(move);
 
             CurrentMovablePiece.MarkPassant(CurrentMovablePiece, move);
-            var (firstIndex, secondIndex) = CurrentMovablePiece.CurrentPosition;
+            var (firstIndex, secondIndex) = CurrentMovablePiece.Index;
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2] =
-            board[CurrentMovablePiece.CurrentPosition.Item1, CurrentMovablePiece.CurrentPosition.Item2];
+            board[move.Index.Item1, move.Index.Item2] =
+            board[CurrentMovablePiece.Index.Item1, CurrentMovablePiece.Index.Item2];
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].Update(move);
+            board[move.Index.Item1, move.Index.Item2].Update(move);
 
             board[firstIndex, secondIndex] = null;
 
-            board[move.MoveIndex.Item1, move.MoveIndex.Item2].FlagAsMoved(true);
+            board[move.Index.Item1, move.Index.Item2].FlagAsMoved(true);
         }
 
         public void Promote(IPiece piece) =>
-            board[piece.CurrentPosition.Item1, piece.CurrentPosition.Item2] =
+            board[piece.Index.Item1, piece.Index.Item2] =
             new Queen(string.Concat(piece.File, piece.Rank), piece.PlayerColour);
 
         public void Remove(IPiece target) =>
-            board[target.CurrentPosition.Item1,
-                target.CurrentPosition.Item2] = null;
+            board[target.Index.Item1,
+                target.Index.Item2] = null;
 
         private IPiece GetMovablePiece(IUserMove move)
         {

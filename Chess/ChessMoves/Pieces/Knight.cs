@@ -20,7 +20,7 @@ namespace ChessMoves
         public override IEnumerable<IPath> Captures() => Moves();
         public override void PerformMove(IUserMove move, IBoard chessBoard)
         {
-            var validPath = Moves().Where(x => x.End == move.MoveIndex);
+            var validPath = Moves().Where(x => x.End == move.Index);
             chessBoard.PerformMove(move);
         }
     }
