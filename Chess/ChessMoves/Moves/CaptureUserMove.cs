@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessMoves.Paths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,6 @@ namespace ChessMoves
     public class CaptureUserMove : UserMove, IUserMove
     {
         public CaptureUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
-        public new virtual void GetCurrentState(IBoard board) => board.PerformMove(this);
-        public bool ValidateDestination(IPiece piece) => piece.CanCapture(this);
+        public override bool ContainsValidPath(IEnumerable<IPath> allPaths) => allPaths.Any(x => x.End == Index);
     }
 }
