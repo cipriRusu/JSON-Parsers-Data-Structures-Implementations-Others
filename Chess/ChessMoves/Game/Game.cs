@@ -1,4 +1,5 @@
 ﻿using ChessGame;
+using ChessGame.Game;
 using ChessMoves.Moves;
 using System;
 using System.Collections.Generic;
@@ -33,21 +34,15 @@ namespace ChessMoves
 
             foreach (var move in moves)
             {
-                var opponent = Player.White == TurnToMove ? Player.Black : Player.White;
-
                 boardState.Perform(move);
 
                 if (move is KingCheckUserMove || IsCheck)
                 {
-                    var king = (IKing)boardState.Where(x => x is IKing && x.PlayerColour != TurnToMove).Single();
-
-                    IsCheck = king.IsChecked(boardState);
+                    IsCheck = new KingState(boardState).Checked(move);
                 }
                 if (move is KingCheckMateUserMove)
                 {
-                    var king = (IKing)boardState.Where(x => x is IKing && x.PlayerColour != TurnToMove).Single();
-
-                    IsCheckMate = king.IsCheckMate(boardState);
+                    IsCheckMate = new KingState(boardState).CheckMated(move);
                 }
 
                 new PlayerTurn(this).SwitchToNextPlayer();
