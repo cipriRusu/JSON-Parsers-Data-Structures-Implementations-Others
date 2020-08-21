@@ -68,11 +68,11 @@ namespace ChessMoves
                     break;
             }
         }
-        private static void UserMoveInputExceptions(string input)
+        private void UserMoveInputExceptions(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
-                throw new UserMoveException("Current user input is empty!");
+                throw new UserMoveException(this, "Current user input is empty!");
             }
         }
 
