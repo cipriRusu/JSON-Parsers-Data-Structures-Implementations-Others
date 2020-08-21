@@ -4,11 +4,9 @@ namespace ChessMoves
 {
     internal class UserMoveException : Exception
     {
-        private UserMove move;
+        private IUserMove move;
 
-        public UserMoveException(string message) { }
-
-        public UserMoveException(UserMove move, string message) : base(message)
+        public UserMoveException(IUserMove move, string message) : base(message)
         {
             this.move = move;
         }
