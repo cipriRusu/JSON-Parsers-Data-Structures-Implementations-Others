@@ -8,17 +8,5 @@ namespace ChessMoves.Moves
     public class QueenCastlingUserMove : UserMove, IUserMove
     {
         public QueenCastlingUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
-
-        public new void GetCurrentState(IBoard board)
-        {
-            if(board.CheckCastling(this))
-            {
-                board.PerformCastling(this);
-            }
-            else
-            {
-                throw new UserMoveException("Illegal castling move");
-            }
-        }
     }
 }
