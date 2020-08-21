@@ -19,6 +19,8 @@ namespace ChessGame
                 .Where(x => x.GetType() == move.PieceType)
                 .Where(x => x.CanPerform(move));
 
+            if (piece.Count() > 1) throw new PieceException("Multiple pieces can handle current move");
+
             var legalPath = piece.Single().GetPath(move);
 
             path = legalPath;
