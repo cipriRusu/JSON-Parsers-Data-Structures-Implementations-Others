@@ -1,4 +1,7 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame.Moves;
+using ChessGame.Performers;
+using ChessMoves.Moves;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,63 +26,17 @@ namespace ChessMoves
         public char File { get; private set; }
         public char Rank { get; private set; }
         public Type PieceType { get; internal set; }
-        public bool IsMoved { get; internal set; }
-        public bool IsPassantCapturable { get; private set; }
-        public void MarkPassant(IPiece piece, IUserMove move)
-        {
-            if (piece.GetType() == typeof(Pawn))
-            {
-                switch (piece.PlayerColour)
-                {
-                    case Player.White:
-                        IsPassantCapturable = piece.Index.Item1 - move.Index.Item1 == 2;
-                        break;
-                    case Player.Black:
-                        IsPassantCapturable = move.Index.Item1 - piece.Index.Item1 == 2;
-                        break;
-                }
-            }
-        }
-
-        public virtual bool CanReach(IUserMove move) => Moves().Any(x => x.End == move.Index);
-        public virtual bool CanCapture(IUserMove move) => Captures().Any(x => x.End == move.Index);
-
+        public virtual bool CanPerform(IUserMove move) => new MoveChecker(this).CanPerform(move);
+        public virtual IPath GetPath(IUserMove move) => new MovePath(this).GetPath(move);
         public virtual IEnumerable<IPath> Moves() => null;
         public virtual IEnumerable<IPath> Captures() => null;
 
-        public void Update(IUserMove move)
+        public void UpdateAfterMove(IUserMove move)
         {
             var rankAndFile = new RankAndFile(move.Index);
             Index = move.Index;
             File = rankAndFile.File;
             Rank = rankAndFile.Rank;
         }
-
-        public void Promote(IBoard chessBoard) => chessBoard.Promote(this);
-
-        public static Player Opponent(Player player)
-        {
-            switch (player)
-            {
-                case Player.White:
-                    return Player.Black;
-                case Player.Black:
-                    return Player.White;
-                default:
-                    throw new ArgumentException("Invalid player");
-            }
-        }
-
-        public virtual void PerformMove(IUserMove move, IBoard chessBoard)
-        {
-            var validPath = Moves().Where(x => x.End == move.Index && chessBoard.IsMovePathClear(x));
-        }
-
-        public virtual void PerformCapture(IUserMove move, IBoard chessBoard)
-        {
-            var validPath = Captures().Where(x => x.End == move.Index && chessBoard.IsCapturePathClear(x));
-        }
-
-        public void FlagAsMoved(bool isMoved) => IsMoved = isMoved;
     }
 }
