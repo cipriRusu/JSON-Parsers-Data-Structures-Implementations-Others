@@ -173,7 +173,7 @@ namespace ChessMoves
         public void GameReturnsCheckForCheckedKing()
         {
             var game = new Game();
-            game.Input("Nc3 f5,e4 fxe4, Nxe4 Nf6, Nxf6+ gxf6");
+            game.Input("Nc3 f5,e4 fxe4, Nxe4 Nf6, Nxf6+");
 
             Assert.True(game.IsCheck);
         }
