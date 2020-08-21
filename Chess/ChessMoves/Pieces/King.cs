@@ -51,9 +51,9 @@ namespace ChessMoves
                 board.Perform(move);
 
                 if (!IsChecked(board)) { return false; }
-            }
 
-            board.Perform(origin);
+                board.Perform(origin);
+            }
 
             return legalMoves.Count() > 0;
         }
