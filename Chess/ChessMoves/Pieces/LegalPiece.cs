@@ -9,11 +9,11 @@ namespace ChessGame
 {
     public class LegalPiece
     {
-        private readonly IEnumerable<IPiece> AllPieces;
-        public LegalPiece(IEnumerable<IPiece> allPieces) => AllPieces = allPieces;
+        private IBoard board;
+        public LegalPiece(IBoard board) => this.board = board;
         public IPiece GetMovablePiece(IUserMove move, out IPath path)
         {
-            var piece = AllPieces
+            var piece = board
                 .Where(x => x != null)
                 .Where(x => x.PlayerColour == move.PlayerColor)
                 .Where(x => x.GetType() == move.PieceType)
