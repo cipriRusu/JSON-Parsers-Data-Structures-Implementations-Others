@@ -9,7 +9,6 @@ using System.Threading;
 
 namespace ChessMoves
 {
-    [Serializable]
     public class Game : IGame
     {
         private readonly IPiece[,] board = new Piece[8, 8];
@@ -38,11 +37,15 @@ namespace ChessMoves
 
                 if (move is KingCheckUserMove || IsCheck)
                 {
-                    IsCheck = new KingState(boardState).Checked(move);
+                    var currentState = new KingState(boardState);
+                    currentState.FlagInCheck = IsCheck;
+                    IsCheck = currentState.Checked(move);
                 }
-                if (move is KingCheckMateUserMove)
+                if (move is KingCheckMateUserMove || IsCheckMate)
                 {
-                    IsCheckMate = new KingState(boardState).CheckMated(move);
+                    var currentState = new KingState(boardState);
+                    currentState.FlagInCheckMate = IsCheckMate;
+                    IsCheckMate = currentState.CheckMated(move);
                 }
 
                 new PlayerTurn(this).SwitchToNextPlayer();
