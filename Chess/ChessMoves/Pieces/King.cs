@@ -50,10 +50,7 @@ namespace ChessMoves
             {
                 board.Perform(move);
 
-                if (!new AttackStatus(board, PlayerColour).IsAttacked)
-                {
-                    return false;
-                }
+                if (!IsChecked(board)) { return false; }
             }
 
             board.Perform(origin);
