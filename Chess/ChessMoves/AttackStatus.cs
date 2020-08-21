@@ -1,82 +1,83 @@
-﻿using System;
+﻿using ChessMoves.Moves;
+using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace ChessMoves
 {
     public class AttackStatus
     {
-        private IBoard boardState;
-        private IPiece chessPiece;
+        private IPiece chessPiece { get => GetKing(); }
+        private Player player;
+        private IBoard board;
+
         public bool IsAttacked => IsCurrentAttacked();
         public bool IsCheckMated => IsCurrentCheckMate();
 
-        public AttackStatus(IBoard boardState, IPiece chessPiece)
+        public AttackStatus(IBoard board, Player player)
         {
-            this.boardState = boardState;
-            this.chessPiece = chessPiece;
+            this.board = board;
+            this.player = player;
         }
 
-        public bool IsCurrentCheckMate()
+        private bool IsCurrentCheckMate()
         {
-            var legalMoves = boardState.AllKingMoves(chessPiece);
+            var origin = new MoveUserMove($"K{new RankAndFile(chessPiece.Index).GetRankAndFile}", player);
+
+            var clearPaths = chessPiece.Moves().Where(x => board[x.End.Item1, x.End.Item2] == null);
+
+            var legalMoves = clearPaths.Select(x => new MoveUserMove($"K{new RankAndFile(x.End).GetRankAndFile}", player));
 
             foreach (var move in legalMoves)
             {
-                var currentBoardState = boardState.DeepClone();
+                board.Perform(move);
 
-                currentBoardState.PerformMove(move);
-
-                if (!new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked)
+                if (!new AttackStatus(board, player).IsAttacked)
                 {
                     return false;
                 }
             }
 
+            board.Perform(origin);
+
             return legalMoves.Count() > 0;
         }
 
-        public bool IsCurrentAttacked()
+        private bool IsCurrentAttacked()
         {
             var diagonalAttacks =
-                ValidAttacks(chessPiece,
-                new PieceType[] { PieceType.Queen, PieceType.Bishop },
-                PathType.Diagonals);
+                ValidAttacks(chessPiece, new Type[] { typeof(Queen), typeof(Bishop) }, PathType.Diagonals);
 
             var verticalHorizontalAttacks =
-                ValidAttacks(chessPiece,
-                new PieceType[] { PieceType.Queen, PieceType.Rock },
-                PathType.RowsAndColumns);
+                ValidAttacks(chessPiece, new Type[] { typeof(Queen), typeof(Rock) }, PathType.RowsAndColumns);
 
             var knightAttacks =
-                ValidAttacks(chessPiece,
-                new PieceType[] { PieceType.Knight },
-                PathType.Knight);
+                ValidAttacks(chessPiece, new Type[] { typeof(Knight) }, PathType.Knight);
 
             var pawnAttacks =
-                ValidAttacks(chessPiece,
-                new PieceType[] { PieceType.Pawn },
-                PathType.PawnCapture);
+                ValidAttacks(chessPiece, new Type[] { typeof(Pawn) }, PathType.PawnCapture);
 
             return diagonalAttacks || verticalHorizontalAttacks || knightAttacks || pawnAttacks;
         }
 
-        public bool IsCurrentMoveAttacked(IUserMove move)
+        private bool ValidAttacks(IPiece piece, Type[] attackers, params PathType[] pathTypes)
         {
-            var currentBoardState = boardState.DeepClone();
-
-            //currentBoardState.PerformMove(chessPiece, move);
-
-            return new CurrentPlayerStatus(chessPiece.PlayerColour, currentBoardState).IsChecked;
+            return new PathGenerator(piece, pathTypes).GetEnumerator()
+            .Where(x => board[x.End.Item1, x.End.Item2] != null)
+            .Where(x => board.IsPathClear(x))
+            .Where(x => board[x.End.Item1, x.End.Item2].PlayerColour != piece.PlayerColour)
+            .Where(x => attackers.Contains(board[x.End.Item1, x.End.Item2].GetType())).Any();
         }
 
-
-        private bool ValidAttacks(IPiece currentKing, PieceType[] attackers, params PathType[] pathTypes) => false;
-            //new PathGenerator(currentKing, pathTypes).GetEnumerator()
-            //    .Where(x => boardState[x.End] != null)
-            //    .Where(x => boardState.IsCapturePathClear(x))
-            //    .Where(x => boardState[x.End].PlayerColour == Piece.Opponent(currentKing.PlayerColour))
-                //.Where(x => attackers.Contains(boardState[x.End])).Any();
+        private IPiece GetKing() => Enumerable.Range(0, 8)
+                .Select(x => Enumerable.Range(0, 8).Select(y => board[x, y]))
+                .SelectMany(x => x)
+                .Where(x => x != null)
+                .Where(x => x.PlayerColour == player)
+                .Where(x => x.GetType() == typeof(King))
+                .Single();
     }
 }
