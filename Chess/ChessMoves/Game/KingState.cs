@@ -9,21 +9,34 @@ namespace ChessGame.Game
 {
     public class KingState
     {
-        private IBoard board;
-        public KingState(IBoard board) => this.board = board;
+        public bool FlagInCheck { get; set; }
+        public bool FlagInCheckMate { get; set; }
+        private IBoard Board { get; set; }
+        public KingState(IBoard board) => this.Board = board;
 
         public bool Checked(IUserMove move)
         {
-            var king = (IKing)board.Where(x => x is IKing && x.PlayerColour != move.PlayerColor).Single();
+            var king = GetKing(Opponent(move.PlayerColor));
 
-            return king.IsChecked(board);
+            if (!FlagInCheck && king.IsChecked(Board)) return true;
+
+            else if (!FlagInCheck && !king.IsChecked(Board)) throw new UserMoveException(move, "Invalid check move");
+
+            else if (FlagInCheck && GetKing(move.PlayerColor).IsChecked(Board))
+                throw new UserMoveException(move, $"Current move keeps {move.PlayerColor} King in Check");
+
+            else return false;
         }
 
         public bool CheckMated(IUserMove move)
         {
-            var king = (IKing)board.Where(x => x is IKing && x.PlayerColour != move.PlayerColor).Single();
-            
-            return king.IsCheckMate(board);
+            var king = GetKing(Opponent(move.PlayerColor));
+
+            return !FlagInCheckMate && king.IsCheckMate(Board) ? true : throw new UserMoveException(move, "King is CheckMated!");
         }
+
+        private IKing GetKing(Player player) => (IKing)Board.Where(x => x is IKing && x.PlayerColour == player).Single();
+
+        private Player Opponent(Player player) => player == Player.White ? Player.Black : Player.White;
     }
 }
