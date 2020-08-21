@@ -26,7 +26,9 @@ namespace ChessGame.MoveValidator
             if (move is MoveUserMove)
                 return path.Path.Skip(1).All(x => board[x.Item1, x.Item2] == null);
             else if (move is CaptureUserMove)
-                return path.Path.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null);
+                return
+                    path.Path.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null)
+                    && board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
             else return false;
         }
     }
