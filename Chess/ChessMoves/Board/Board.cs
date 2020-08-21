@@ -34,7 +34,7 @@ namespace ChessMoves
         {
             var legalPiece = new LegalPiece(this).GetMovablePiece(move, out IPath path);
 
-            if (new MoveValidator(board, move).ValidatePath(path))
+            if (new MoveValidator(this, move).ValidatePath(path))
             {
                 new Move(board, legalPiece).ApplyMove(move);
             }
