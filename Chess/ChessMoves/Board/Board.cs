@@ -1,6 +1,5 @@
 ﻿using ChessGame;
 using ChessGame.Moves;
-using ChessGame.MoveValidator;
 using ChessMoves.Moves;
 using ChessMoves.Paths;
 using System;
