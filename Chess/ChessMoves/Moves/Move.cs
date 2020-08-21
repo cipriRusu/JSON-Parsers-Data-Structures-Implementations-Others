@@ -8,21 +8,21 @@ namespace ChessGame.Moves
     public class Move
     {
         private IPiece[,] board;
-        private IPiece currentMovablePiece;
+        private IPiece piece;
 
         public Move(IPiece[,] board, IPiece currentMovablePiece)
         {
             this.board = board;
-            this.currentMovablePiece = currentMovablePiece;
+            this.piece = currentMovablePiece;
         }
 
         internal void ApplyMove(IUserMove move)
         {
-            var (firstIndex, secondIndex) = currentMovablePiece.Index;
+            var (firstIndex, secondIndex) = piece.Index;
 
             board[move.Index.Item1, move.Index.Item2] =
-            board[currentMovablePiece.Index.Item1, currentMovablePiece.Index.Item2];
-
+            board[piece.Index.Item1, piece.Index.Item2];
+            board[piece.Index.Item1, piece.Index.Item2].UpdateAfterMove(move);
             board[firstIndex, secondIndex] = null;
         }
     }
