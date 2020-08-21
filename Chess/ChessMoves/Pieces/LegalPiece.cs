@@ -17,9 +17,11 @@ namespace ChessGame
                 .Where(x => x != null)
                 .Where(x => x.PlayerColour == move.PlayerColor)
                 .Where(x => x.GetType() == move.PieceType)
-                .Where(x => x.CanPerform(move));
+                .Where(x => x.CanPerform(move) && new ConstraintValidator(x, move).IsValid);
 
             if (piece.Count() > 1) throw new PieceException("Multiple pieces can handle current move");
+
+            if (!piece.Any()) throw new UserMoveException("Input invalid for available pieces");
 
             var legalPath = piece.Single().GetPath(move);
 
