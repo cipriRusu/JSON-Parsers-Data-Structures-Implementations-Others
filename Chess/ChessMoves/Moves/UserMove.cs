@@ -1,4 +1,5 @@
 ﻿using ChessMoves.Moves;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,6 @@ namespace ChessMoves
         protected string NotationIndex { get; private set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
-        public void GetCurrentState(IBoard board) {}
-
-        public bool ValidateDestination(IPiece piece, IBoard boardState) => false;
 
         public Player PlayerColor { get; private set; }
 
@@ -110,5 +108,7 @@ namespace ChessMoves
                 throw new PieceException(move, pieces, "Multiple pieces found that can perform current move due to ambiguous input");
             }
         }
+
+        public virtual bool ContainsValidPath(IEnumerable<IPath> allPaths) => false;
     }
 }
