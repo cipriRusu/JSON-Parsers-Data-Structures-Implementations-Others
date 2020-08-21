@@ -11,10 +11,9 @@ namespace ChessMoves
     {
         public Type PieceType { get; private set; }
         public (int, int) Index { get; private set; }
-        protected string NotationIndex { get; private set; }
+        public string NotationIndex { get; private set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
-
         public Player PlayerColor { get; private set; }
 
         internal UserMove(string input, Player playerTurn)
@@ -25,14 +24,6 @@ namespace ChessMoves
             GetPieceType(input);
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
-        }
-
-        public UserMove((int, int) movementLocation, Player playerTurn)
-        {
-            //Custom constructor for checking king status
-            PieceType = typeof(King);
-            PlayerColor = playerTurn;
-            Index = movementLocation;
         }
 
         private void GetSource(string source)
@@ -85,30 +76,6 @@ namespace ChessMoves
             }
         }
 
-        internal void CheckVerification(IBoard board)
-        {
-            if (new CurrentPlayerStatus(PlayerColor, board).IsChecked)
-            {
-                throw new UserMoveException(this, "Move invalid");
-            }
-            else
-            {
-
-            }
-        }
-
-        public void MoveAndPieceExceptions(IUserMove move, IEnumerable<IPiece> pieces)
-        {
-            if (!pieces.Any())
-            {
-                throw new UserMoveException(this, "No piece found that can handle current user input");
-            }
-            if (pieces.Count() > 1)
-            {
-                throw new PieceException(move, pieces, "Multiple pieces found that can perform current move due to ambiguous input");
-            }
-        }
-
-        public virtual bool ContainsValidPath(IEnumerable<IPath> allPaths) => false;
+        public virtual bool HasPath(IEnumerable<IPath> allPaths) => false;
     }
 }
