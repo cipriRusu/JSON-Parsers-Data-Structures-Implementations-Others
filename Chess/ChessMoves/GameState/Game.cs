@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace ChessMoves
 {
+    [Serializable]
     public class Game : IGame
     {
         private readonly IPiece[,] board = new Piece[8, 8];
@@ -30,6 +32,40 @@ namespace ChessMoves
             foreach (var move in moves)
             {
                 boardState.Perform(move);
+
+                if (move is KingCheckUserMove || IsCheck)
+                {
+                    var opponent = Player.White == TurnToMove ? Player.Black : Player.White;
+
+                    if (!IsCheck && new AttackStatus(boardState, opponent).IsAttacked)
+                    {
+                        IsCheck = true;
+                    }
+                    else if (IsCheck && !new AttackStatus(boardState, TurnToMove).IsAttacked)
+                    {
+                        IsCheck = false;
+                    }
+                    else if (IsCheck && new AttackStatus(boardState, TurnToMove).IsAttacked)
+                    {
+                        throw new UserMoveException($"Move not valid, as Check state of {TurnToMove} is maintained");
+                    }
+                    else if (!IsCheck && !new AttackStatus(boardState, opponent).IsAttacked)
+                    {
+                        throw new UserMoveException($"Invalid Check move");
+                    }
+                }
+
+                if (IsCheckMate)
+                {
+                    throw new UserMoveException("Cannot continue due to end state of game");
+                }
+
+                if (move is KingCheckMateUserMove)
+                {
+                    var opponent = Player.White == TurnToMove ? Player.Black : Player.White;
+                    IsCheckMate = new AttackStatus(boardState, opponent).IsCheckMated;
+                }
+
                 new PlayerTurn(this).SwitchToNextPlayer();
             }
         }
