@@ -10,10 +10,10 @@ namespace ChessGame.MoveValidator
 {
     public class MoveValidator
     {
-        private IPiece[,] board;
+        private IBoard board;
         private IUserMove move;
 
-        public MoveValidator(IPiece[,] board, IUserMove move)
+        public MoveValidator(IBoard board, IUserMove move)
         {
             this.board = board;
             this.move = move;
