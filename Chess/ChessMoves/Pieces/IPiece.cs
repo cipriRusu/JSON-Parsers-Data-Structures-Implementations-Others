@@ -1,4 +1,5 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,9 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IPiece : ILocation, IMovable
+    public interface IPiece : ILocation, IPerformer, IPerformable
     {
         Player PlayerColour { get; }
-        bool CanPerform(IUserMove move);
-        IPath GetPath(IUserMove move);
+        void UpdateAfterMove(IUserMove move);
     }
 }
