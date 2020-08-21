@@ -11,5 +11,6 @@ namespace ChessMoves
     {
         public IPiece this[int first, int second] { get; }
         void Perform(IUserMove move);
+        bool IsPathClear(IPath path);
     }
 }
