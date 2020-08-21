@@ -4,8 +4,10 @@ using ChessGame.MoveValidator;
 using ChessMoves.Moves;
 using ChessMoves.Paths;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ChessMoves
 {
@@ -30,7 +32,7 @@ namespace ChessMoves
 
         private void PerformMove(IUserMove move)
         {
-            var legalPiece = new LegalPiece(GetAllPieces()).GetMovablePiece(move, out IPath path);
+            var legalPiece = new LegalPiece(this).GetMovablePiece(move, out IPath path);
 
             if (new MoveValidator(board, move).ValidatePath(path))
             {
@@ -52,8 +54,20 @@ namespace ChessMoves
             Perform(internalMove);
         }
 
-        private IEnumerable<IPiece> GetAllPieces() =>
-            Enumerable.Range(0, ChessboardSize).SelectMany(i =>
-            Enumerable.Range(0, ChessboardSize).Select(j => board[i, j]));
+        public IEnumerator<IPiece> GetEnumerator()
+        {
+            for(int i = 0; i < ChessboardSize; i++)
+            {
+                for(int j = 0; j < ChessboardSize; j++)
+                {
+                    yield return board[i, j];
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

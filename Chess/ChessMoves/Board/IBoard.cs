@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IBoard
+    public interface IBoard : IEnumerable<IPiece>
     {
         public IPiece this[int first, int second] { get; }
         void Perform(IUserMove move);
