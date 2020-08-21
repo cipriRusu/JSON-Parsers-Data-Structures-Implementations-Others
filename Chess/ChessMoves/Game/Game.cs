@@ -1,6 +1,8 @@
-﻿using ChessMoves.Moves;
+﻿using ChessGame;
+using ChessMoves.Moves;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -31,39 +33,21 @@ namespace ChessMoves
 
             foreach (var move in moves)
             {
+                var opponent = Player.White == TurnToMove ? Player.Black : Player.White;
+
                 boardState.Perform(move);
 
                 if (move is KingCheckUserMove || IsCheck)
                 {
-                    var opponent = Player.White == TurnToMove ? Player.Black : Player.White;
+                    var king = (IKing)boardState.Where(x => x is IKing && x.PlayerColour != TurnToMove).Single();
 
-                    if (!IsCheck && new AttackStatus(boardState, opponent).IsAttacked)
-                    {
-                        IsCheck = true;
-                    }
-                    else if (IsCheck && !new AttackStatus(boardState, TurnToMove).IsAttacked)
-                    {
-                        IsCheck = false;
-                    }
-                    else if (IsCheck && new AttackStatus(boardState, TurnToMove).IsAttacked)
-                    {
-                        throw new UserMoveException($"Move not valid, as Check state of {TurnToMove} is maintained");
-                    }
-                    else if (!IsCheck && !new AttackStatus(boardState, opponent).IsAttacked)
-                    {
-                        throw new UserMoveException($"Invalid Check move");
-                    }
+                    IsCheck = king.IsChecked(boardState);
                 }
-
-                if (IsCheckMate)
-                {
-                    throw new UserMoveException("Cannot continue due to end state of game");
-                }
-
                 if (move is KingCheckMateUserMove)
                 {
-                    var opponent = Player.White == TurnToMove ? Player.Black : Player.White;
-                    IsCheckMate = new AttackStatus(boardState, opponent).IsCheckMated;
+                    var king = (IKing)boardState.Where(x => x is IKing && x.PlayerColour != TurnToMove).Single();
+
+                    IsCheckMate = king.IsCheckMate(boardState);
                 }
 
                 new PlayerTurn(this).SwitchToNextPlayer();
