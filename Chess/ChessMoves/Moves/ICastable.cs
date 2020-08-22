@@ -10,6 +10,6 @@ namespace ChessGame
     {
         CastlingDirection CastlingDirection { get; set; }
         bool IsMoved { get; set; }
-        bool CanPerformCastling(IBoard board);
+        bool CanCastle(IBoard board);
     }
 }
