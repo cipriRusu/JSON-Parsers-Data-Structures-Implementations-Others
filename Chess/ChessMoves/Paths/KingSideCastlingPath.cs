@@ -3,16 +3,18 @@ using ChessMoves.Paths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ChessGame.Paths
 {
     public class KingSideCastlingPath : IEnumerable<IPath>
     {
-        private int BLACKINDEX = 0;
         private int WHITEINDEX = 7;
+        private int BLACKINDEX = 0;
         private (int, int) StartIndex;
         private Player PlayerColour;
+
         public KingSideCastlingPath((int, int) startIndex, Player playerColour)
         {
             StartIndex = startIndex;
@@ -25,7 +27,7 @@ namespace ChessGame.Paths
 
             if(PlayerColour == Player.White)
             {
-                for(int i = StartIndex.Item2; i >= 4; i--)
+                for (int i = StartIndex.Item2; i >= 4; i--)
                 {
                     path.Add((WHITEINDEX, i));
                 }
