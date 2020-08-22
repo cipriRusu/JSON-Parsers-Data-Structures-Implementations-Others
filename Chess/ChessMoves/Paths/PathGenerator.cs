@@ -1,4 +1,5 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame.Paths;
+using ChessMoves.Paths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ChessMoves
             PathTypes = paths;
             PlayerColour = piece.PlayerColour;
         }
-        private (int, int) StartIndex;
+        private (int, int) StartIndex { get; }
         private Player PlayerColour { get; }
 
         private readonly IEnumerable<PathType> PathTypes;
@@ -75,6 +76,24 @@ namespace ChessMoves
                     case PathType.PawnCapture:
 
                         foreach (var currentPath in new PawnCapturePath(StartIndex, PlayerColour))
+                        {
+                            yield return currentPath;
+                        }
+
+                        break;
+
+                    case PathType.KingCastling:
+
+                        foreach(var currentPath in new KingCastlingPath(StartIndex, PlayerColour))
+                        {
+                            yield return currentPath;
+                        }
+
+                        break;
+
+                    case PathType.QueenCastling:
+
+                        foreach(var currentPath in new QueenCastlingPath(StartIndex, PlayerColour))
                         {
                             yield return currentPath;
                         }

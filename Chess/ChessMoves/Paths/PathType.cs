@@ -7,6 +7,8 @@
         Knight,
         King,
         Pawn,
-        PawnCapture
+        PawnCapture,
+        KingCastling,
+        QueenCastling
     }
 }
