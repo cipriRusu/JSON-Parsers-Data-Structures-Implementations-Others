@@ -31,11 +31,10 @@ namespace ChessGame
                     return false;
             }
         }
-
+        public bool ValidateKingCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, true);
+        public bool ValidateQueenCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, false);
         private bool IsMovePathValid(IPath path) => board.IsPathClear(path, 1, 0);
         private bool IsCapturePathValid(IPath path) => board.IsPathClear(path, 1, 1)
             && board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
-        public bool ValidateKingCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, true);
-        public bool ValidateQueenCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, false);
     }
 }
