@@ -11,7 +11,7 @@ namespace ChessMoves
     public class King : Piece, IPiece, IKing, ICastable
     {
         private IBoard board { get; set; }
-        public bool IsMoved => throw new NotImplementedException();
+        public bool IsMoved { get; set; }
         public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) => PieceType = typeof(King);
 
@@ -63,6 +63,11 @@ namespace ChessMoves
             .Where(x => board.IsPathClear(x))
             .Where(x => board[x.End.Item1, x.End.Item2].PlayerColour != piece.PlayerColour)
             .Where(x => attackers.Contains(board[x.End.Item1, x.End.Item2].GetType())).Any();
+        }
+
+        public bool CanPerformCastling(IBoard board)
+        {
+            throw new NotImplementedException();
         }
     }
 }
