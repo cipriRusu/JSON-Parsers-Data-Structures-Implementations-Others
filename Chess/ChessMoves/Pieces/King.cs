@@ -8,16 +8,14 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace ChessMoves
 {
-    [Serializable]
-    public class King : Piece, IPiece, IKing
+    public class King : Piece, IPiece, IKing, ICastable
     {
         private IBoard board { get; set; }
-
+        public bool IsMoved => throw new NotImplementedException();
         public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) => PieceType = typeof(King);
 
         public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.King).GetEnumerator();
-
         public override IEnumerable<IPath> Captures() => Moves();
 
         public bool IsChecked(IBoard board)
