@@ -38,18 +38,8 @@ namespace ChessGame
             .All(x => board[x.Item1, x.Item2] == null) && 
             board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
 
-        public bool ValidateKingCastling(IUserMove move)
-        {
-            new CastingValidator(board).IsValid(move.PlayerColor, true);
+        public bool ValidateKingCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, true);
 
-            return false;
-        }
-
-        internal bool ValidateQueenCastling(IUserMove move)
-        {
-            new CastingValidator(board).IsValid(move.PlayerColor, false);
-
-            return false;
-        }
+        internal bool ValidateQueenCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, false);
     }
 }
