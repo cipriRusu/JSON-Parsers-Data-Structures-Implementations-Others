@@ -29,7 +29,7 @@ namespace ChessGame
 
             castableKing.CastlingDirection = IsKingSide ? CastlingDirection.KingSide : CastlingDirection.QueenSide;
 
-            return castlableRock.CanPerformCastling(board) && castableKing.CanPerformCastling(board);
+            return castlableRock.CanCastle(board) && castableKing.CanCastle(board);
         }
     }
 }
