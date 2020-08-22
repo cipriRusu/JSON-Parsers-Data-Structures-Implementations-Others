@@ -21,15 +21,35 @@ namespace ChessGame
 
         internal bool ValidatePath(IPath path)
         {
-            var test = path.Path.Skip(1).SkipLast(1);
+            switch (move)
+            {
+                case MoveUserMove _:
+                    return IsMovePathValid(path);
+                case CaptureUserMove _:
+                    return IsCapturePathValid(path);
+                default:
+                    return false;
+            }
+        }
 
-            if (move is MoveUserMove)
-                return path.Path.Skip(1).All(x => board[x.Item1, x.Item2] == null);
-            else if (move is CaptureUserMove)
-                return
-                    path.Path.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null)
-                    && board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
-            else return false;
+        private bool IsMovePathValid(IPath path) => path.Path.Skip(1).All(x => board[x.Item1, x.Item2] == null);
+
+        private bool IsCapturePathValid(IPath path) => path.Path.Skip(1).SkipLast(1)
+            .All(x => board[x.Item1, x.Item2] == null) && 
+            board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
+
+        public bool ValidateKingCastling(IUserMove move)
+        {
+            new CastingValidator(board).IsValid(move.PlayerColor, true);
+
+            return false;
+        }
+
+        internal bool ValidateQueenCastling(IUserMove move)
+        {
+            new CastingValidator(board).IsValid(move.PlayerColor, false);
+
+            return false;
         }
     }
 }
