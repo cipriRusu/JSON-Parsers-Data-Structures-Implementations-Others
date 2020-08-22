@@ -7,7 +7,8 @@ using System.Text;
 namespace ChessGame
 {
     public interface ICastable : IPiece 
-    { 
+    {
+        CastlingDirection CastlingDirection { get; set; }
         bool IsMoved { get; set; }
         bool CanPerformCastling(IBoard board);
     }
