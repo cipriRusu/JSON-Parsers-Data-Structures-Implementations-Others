@@ -4,13 +4,17 @@ using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ChessMoves
 {
     public class King : Piece, IPiece, IKing, ICastable
     {
-        private IBoard board { get; set; }
+        private int BLACKINDEX = 0;
+        private int WHITEINDEX = 7;
+        private IBoard Board { get; set; }
         public bool IsMoved { get; set; }
+        public CastlingDirection CastlingDirection { get; set; }
         public King(string chessBoardIndex, Player playerColour) :
             base(chessBoardIndex, playerColour) => PieceType = typeof(King);
 
@@ -19,7 +23,7 @@ namespace ChessMoves
 
         public bool IsChecked(IBoard board)
         {
-            this.board = board;
+            this.Board = board;
             var diagonalAttacks =
                 ValidAttacks(this, new Type[] { typeof(Queen), typeof(Bishop) }, PathType.Diagonals);
 
@@ -37,36 +41,55 @@ namespace ChessMoves
 
         public bool IsCheckMate(IBoard board)
         {
-            var origin = new MoveUserMove($"K{new RankAndFile(Index).GetRankAndFile}", PlayerColour);
+            var allClearPaths = Moves().Where(x => board[x.End.Item1, x.End.Item2] == null);
 
-            var clearPaths = Moves().Where(x => board[x.End.Item1, x.End.Item2] == null);
+            var allClearMoves = allClearPaths.Select(x => new King(new RankAndFile(x.End).GetRankAndFile, PlayerColour));
 
-            var legalMoves = clearPaths.Select(x => new MoveUserMove($"K{new RankAndFile(x.End).GetRankAndFile}", PlayerColour));
+            var hasUnattackedMoves = allClearMoves.Any(x => !x.IsChecked(board));
 
-            foreach (var move in legalMoves)
-            {
-                board.Perform(move);
-
-                if (!IsChecked(board)) { return false; }
-
-                board.Perform(origin);
-            }
-
-            return legalMoves.Count() > 0;
+            return IsChecked(board) && !hasUnattackedMoves;
         }
 
         private bool ValidAttacks(IPiece piece, Type[] attackers, params PathType[] pathTypes)
         {
             return new PathGenerator(piece, pathTypes).GetEnumerator()
-            .Where(x => board[x.End.Item1, x.End.Item2] != null)
-            .Where(x => board.IsPathClear(x))
-            .Where(x => board[x.End.Item1, x.End.Item2].PlayerColour != piece.PlayerColour)
-            .Where(x => attackers.Contains(board[x.End.Item1, x.End.Item2].GetType())).Any();
+            .Where(x => Board[x.End.Item1, x.End.Item2] != null)
+            .Where(x => Board.IsPathClear(x))
+            .Where(x => Board[x.End.Item1, x.End.Item2].PlayerColour != piece.PlayerColour)
+            .Where(x => attackers.Contains(Board[x.End.Item1, x.End.Item2].GetType())).Any();
         }
 
-        public bool CanPerformCastling(IBoard board)
+        public bool CanCastle(IBoard board)
         {
-            throw new NotImplementedException();
+            if (IsMoved) return false;
+
+            var allMoves = CastlingPath().Select(x => new King(new RankAndFile(x).GetRankAndFile, PlayerColour));
+
+            return !allMoves.Any(x => x.IsChecked(board));
+        }
+
+        private IEnumerable<(int, int)> CastlingPath()
+        {
+            int boardSize = 8;
+            var fullPath = Enumerable.Empty<(int, int)>();
+            var rowIndex = Enumerable.Empty<int>();
+            var columnIndex = Enumerable.Range(0, boardSize);
+
+            switch (PlayerColour)
+            {
+                case Player.White:
+                    rowIndex = Enumerable.Repeat(WHITEINDEX, boardSize);
+                    break;
+                case Player.Black:
+                    rowIndex = Enumerable.Repeat(BLACKINDEX, boardSize);
+                    break;
+            }
+
+            fullPath = rowIndex.Zip(columnIndex);
+
+            return CastlingDirection == CastlingDirection.KingSide
+                ? fullPath.SkipWhile(x => x != Index).Skip(1).Take(2)
+                : fullPath.TakeWhile(x => x != Index).Reverse().Take(2);
         }
     }
 }
