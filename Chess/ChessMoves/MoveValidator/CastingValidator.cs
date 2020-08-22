@@ -11,7 +11,7 @@ namespace ChessGame
         private IBoard board;
         public CastingValidator(IBoard board) => this.board = board;
 
-        public void IsValid(Player player, bool IsKingSide)
+        public bool IsValid(Player player, bool IsKingSide)
         {
             var castlings = board
                 .Where(x => x is ICastable)
@@ -21,6 +21,11 @@ namespace ChessGame
             var rock = castlings.Where(x => x is IRock).Select(x => (IRock)x);
 
             rock = IsKingSide ? rock.Where(x => x.IsKingSide) : rock.Where(x => !x.IsKingSide);
+
+            var castlableRock = (ICastable)rock.Single();
+            var castableKing = (ICastable)king.Single();
+
+            return castlableRock.CanPerformCastling(board) && castableKing.CanPerformCastling(board);
         }
     }
 }
