@@ -8,6 +8,7 @@ namespace ChessGame
 {
     public interface ICastable : IPiece 
     { 
-        bool IsMoved { get; }
+        bool IsMoved { get; set; }
+        bool CanPerformCastling(IBoard board);
     }
 }
