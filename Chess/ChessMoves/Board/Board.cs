@@ -33,22 +33,6 @@ namespace ChessMoves
                 PerformCheckMate(move);
         }
 
-        private void PerformQueenCastling(IUserMove move)
-        {
-            if (new MoveValidator(this, move).ValidateQueenCastling(move))
-            {
-
-            }
-        }
-
-        private void PerformKingCastling(IUserMove move)
-        {
-            if(new MoveValidator(this, move).ValidateKingCastling(move))
-            {
-
-            }
-        }
-
         private void PerformMove(IUserMove move)
         {
             var legalPiece = new LegalPiece(this).GetMovablePiece(move, out IPath path);
@@ -60,6 +44,22 @@ namespace ChessMoves
         }
 
         private void PerformCapture(IUserMove move) => PerformMove(move);
+
+        private void PerformKingCastling(IUserMove move)
+        {
+            if (new MoveValidator(this, move).ValidateKingCastling(move))
+            {
+
+            }
+        }
+
+        private void PerformQueenCastling(IUserMove move)
+        {
+            if (new MoveValidator(this, move).ValidateQueenCastling(move))
+            {
+
+            }
+        }
 
         private void PerformCheck(IUserMove move)
         {
