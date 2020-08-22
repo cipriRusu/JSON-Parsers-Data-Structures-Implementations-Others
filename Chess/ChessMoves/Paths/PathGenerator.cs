@@ -81,24 +81,6 @@ namespace ChessMoves
                         }
 
                         break;
-
-                    case PathType.KingCastling:
-
-                        foreach(var currentPath in new KingCastlingPath(StartIndex, PlayerColour))
-                        {
-                            yield return currentPath;
-                        }
-
-                        break;
-
-                    case PathType.QueenCastling:
-
-                        foreach(var currentPath in new QueenCastlingPath(StartIndex, PlayerColour))
-                        {
-                            yield return currentPath;
-                        }
-
-                        break;
                 }
             }
         }
