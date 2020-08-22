@@ -7,13 +7,13 @@ using System.Text;
 
 namespace ChessGame.Paths
 {
-    public class QueenCastlingPath : IEnumerable<IPath>
+    public class KingSideCastlingPath : IEnumerable<IPath>
     {
         private int BLACKINDEX = 0;
         private int WHITEINDEX = 7;
         private (int, int) StartIndex;
         private Player PlayerColour;
-        public QueenCastlingPath((int, int) startIndex, Player playerColour)
+        public KingSideCastlingPath((int, int) startIndex, Player playerColour)
         {
             StartIndex = startIndex;
             PlayerColour = playerColour;
@@ -23,16 +23,16 @@ namespace ChessGame.Paths
         {
             var path = new List<(int, int)>();
 
-            if (PlayerColour == Player.White)
+            if(PlayerColour == Player.White)
             {
-                for (int i = StartIndex.Item2; i <= 4; i++)
+                for(int i = StartIndex.Item2; i >= 4; i--)
                 {
                     path.Add((WHITEINDEX, i));
                 }
             }
             else
             {
-                for (int i = StartIndex.Item2; i <= 4; i++)
+                for (int i = StartIndex.Item2; i >= 4; i--)
                 {
                     path.Add((BLACKINDEX, i));
                 }
