@@ -16,7 +16,8 @@ namespace ChessMoves
         private IPiece[,] board = new IPiece[ChessboardSize, ChessboardSize];
         public Board(IPiece[,] board) => this.board = board;
         public IPiece this[int first, int second] => board[first, second];
-        public bool IsPathClear(IPath path) => path.Path.Skip(1).SkipLast(1).All(x => board[x.Item1, x.Item2] == null);
+        public bool IsPathClear(IPath path, int frontSkip = 0, int endSkip = 0) => 
+            path.Path.Skip(frontSkip).SkipLast(endSkip).All(x => board[x.Item1, x.Item2] == null);
         public void Perform(IUserMove move)
         {
             if (move is MoveUserMove)
@@ -49,7 +50,7 @@ namespace ChessMoves
         {
             if (new MoveValidator(this, move).ValidateKingCastling(move))
             {
-
+                new Move(board).ApplyKingCastling(move);
             }
         }
 
@@ -57,7 +58,7 @@ namespace ChessMoves
         {
             if (new MoveValidator(this, move).ValidateQueenCastling(move))
             {
-
+                new Move(board).ApplyQueenCastling(move);
             }
         }
 
