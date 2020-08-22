@@ -4,6 +4,6 @@ namespace ChessMoves
 {
     public interface IRock : IPiece, ICastable
     {
-        public bool IsKingSide => Index.Item2 >= 4;
+        public bool IsKingSide { get; }
     }
 }
