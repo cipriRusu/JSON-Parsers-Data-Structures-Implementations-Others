@@ -15,9 +15,9 @@ namespace ChessGame.Performers
         internal bool CanPerform(IUserMove move)
         {
             if (move is MoveUserMove)
-                return move.HasPath(Piece.Moves());
+                return move.Contains(Piece.Moves());
             else if (move is CaptureUserMove)
-                return move.HasPath(Piece.Captures());
+                return move.Contains(Piece.Captures());
             return false;
         }
     }

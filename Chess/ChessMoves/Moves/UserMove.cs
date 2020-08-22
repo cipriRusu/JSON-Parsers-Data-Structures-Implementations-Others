@@ -76,6 +76,6 @@ namespace ChessMoves
             }
         }
 
-        public virtual bool HasPath(IEnumerable<IPath> allPaths) => false;
+        public virtual bool Contains(IEnumerable<IPath> allPaths) => false;
     }
 }

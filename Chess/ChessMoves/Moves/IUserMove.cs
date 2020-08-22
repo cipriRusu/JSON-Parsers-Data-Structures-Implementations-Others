@@ -10,6 +10,6 @@ namespace ChessMoves
         Type PieceType { get; }
         Player PlayerColor { get; }
         string NotationIndex { get; }
-        bool HasPath(IEnumerable<IPath> paths);
+        bool Contains(IEnumerable<IPath> paths);
     }
 }
