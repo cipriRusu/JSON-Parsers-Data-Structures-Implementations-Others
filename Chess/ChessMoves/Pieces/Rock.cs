@@ -23,18 +23,18 @@ namespace ChessMoves
         public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.RowsAndColumns).GetEnumerator();
         public override IEnumerable<IPath> Captures() => Moves();
 
-        public bool CanPerformCastling(IBoard board)
+        public bool CanCastle(IBoard board)
         {
             if (IsMoved) return false;
 
             if(CastlingDirection == CastlingDirection.KingSide)
             {
-                var path = new PathGenerator(this, PathType.KingCastling).GetEnumerator().Single();
+                var path = new PathGenerator(this, PathType.KingSideCastling).GetEnumerator().Single();
                 return board.IsPathClear(path);
             }
             else
             {
-                var path = new PathGenerator(this, PathType.QueenCastling).GetEnumerator().Single();
+                var path = new PathGenerator(this, PathType.QueenSideCastling).GetEnumerator().Single();
                 return board.IsPathClear(path);
             }
         }
