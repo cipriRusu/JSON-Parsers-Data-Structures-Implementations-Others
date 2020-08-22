@@ -4,7 +4,6 @@ using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ChessMoves
 {
@@ -54,18 +53,18 @@ namespace ChessMoves
         {
             return new PathGenerator(piece, pathTypes).GetEnumerator()
             .Where(x => Board[x.End.Item1, x.End.Item2] != null)
-            .Where(x => Board.IsPathClear(x))
+            .Where(x => Board.IsPathClear(x, 1, 1))
             .Where(x => Board[x.End.Item1, x.End.Item2].PlayerColour != piece.PlayerColour)
             .Where(x => attackers.Contains(Board[x.End.Item1, x.End.Item2].GetType())).Any();
         }
 
         public bool CanCastle(IBoard board)
         {
-            if (IsMoved) return false;
+            if (IsMoved) throw new UserMoveException(null, "Castling cannot be performed due to moved state of Piece");
 
             var allMoves = CastlingPath().Select(x => new King(new RankAndFile(x).GetRankAndFile, PlayerColour));
 
-            return !allMoves.Any(x => x.IsChecked(board));
+            return !allMoves.Any(x => x.IsChecked(board)) ? true : throw new UserMoveException(null, "Cannot cast through Check!");
         }
 
         private IEnumerable<(int, int)> CastlingPath()
@@ -90,6 +89,21 @@ namespace ChessMoves
             return CastlingDirection == CastlingDirection.KingSide
                 ? fullPath.SkipWhile(x => x != Index).Skip(1).Take(2)
                 : fullPath.TakeWhile(x => x != Index).Reverse().Take(2);
+        }
+        public override void UpdateAfterMove(IUserMove move)
+        {
+            if (move is QueenCastlingUserMove)
+            {
+                Index = (Index.Item1, Index.Item2 - 2);
+            }
+            if (move is KingCastlingUserMove)
+            {
+                Index = (Index.Item1, Index.Item2 + 2);
+            }
+            else
+            {
+                base.UpdateAfterMove(move);
+            }
         }
     }
 }
