@@ -23,10 +23,30 @@ namespace ChessMoves
                 PerformMove(move);
             else if (move is CaptureUserMove)
                 PerformCapture(move);
+            else if (move is KingCastlingUserMove)
+                PerformKingCastling(move);
+            else if (move is QueenCastlingUserMove)
+                PerformQueenCastling(move);
             else if (move is KingCheckUserMove)
                 PerformCheck(move);
             else if (move is KingCheckMateUserMove)
                 PerformCheckMate(move);
+        }
+
+        private void PerformQueenCastling(IUserMove move)
+        {
+            if (new MoveValidator(this, move).ValidateQueenCastling(move))
+            {
+
+            }
+        }
+
+        private void PerformKingCastling(IUserMove move)
+        {
+            if(new MoveValidator(this, move).ValidateKingCastling(move))
+            {
+
+            }
         }
 
         private void PerformMove(IUserMove move)
