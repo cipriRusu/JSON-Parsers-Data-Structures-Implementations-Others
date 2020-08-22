@@ -32,14 +32,10 @@ namespace ChessGame
             }
         }
 
-        private bool IsMovePathValid(IPath path) => path.Path.Skip(1).All(x => board[x.Item1, x.Item2] == null);
-
-        private bool IsCapturePathValid(IPath path) => path.Path.Skip(1).SkipLast(1)
-            .All(x => board[x.Item1, x.Item2] == null) && 
-            board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
-
+        private bool IsMovePathValid(IPath path) => board.IsPathClear(path, 1, 0);
+        private bool IsCapturePathValid(IPath path) => board.IsPathClear(path, 1, 1)
+            && board[path.End.Item1, path.End.Item2].PlayerColour != move.PlayerColor;
         public bool ValidateKingCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, true);
-
-        internal bool ValidateQueenCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, false);
+        public bool ValidateQueenCastling(IUserMove move) => new CastingValidator(board).IsValid(move.PlayerColor, false);
     }
 }
