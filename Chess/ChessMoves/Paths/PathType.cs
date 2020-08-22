@@ -8,7 +8,7 @@
         King,
         Pawn,
         PawnCapture,
-        KingCastling,
-        QueenCastling
+        KingSideCastling,
+        QueenSideCastling
     }
 }
