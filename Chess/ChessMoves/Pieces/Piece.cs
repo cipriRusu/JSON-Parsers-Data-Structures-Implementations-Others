@@ -30,8 +30,7 @@ namespace ChessMoves
         public virtual IPath GetPath(IUserMove move) => new MovePath(this).GetPath(move);
         public virtual IEnumerable<IPath> Moves() => null;
         public virtual IEnumerable<IPath> Captures() => null;
-
-        public void UpdateAfterMove(IUserMove move)
+        public virtual void UpdateAfterMove(IUserMove move)
         {
             var rankAndFile = new RankAndFile(move.Index);
             Index = move.Index;
