@@ -2,6 +2,7 @@
 using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 
@@ -9,10 +10,13 @@ namespace ChessMoves
 {
     public class Rock : Piece, IPiece, IRock, ICastable
     {
-        private int BLACKSIDEINDEX = 0;
-        private int WHITESIDEINDEX = 7;
         public bool IsKingSide => Index.Item2 >= 4;
         public bool IsMoved { get; set; }
+        public CastlingDirection CastlingDirection 
+        {
+            get => IsKingSide ? CastlingDirection.KingSide : CastlingDirection.QueenSide;
+            set => CastlingDirection = value;
+        }
 
         public Rock(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) =>
             PieceType = typeof(Rock);
@@ -23,7 +27,16 @@ namespace ChessMoves
         {
             if (IsMoved) return false;
 
-            return false;
+            if(CastlingDirection == CastlingDirection.KingSide)
+            {
+                var path = new PathGenerator(this, PathType.KingCastling).GetEnumerator().Single();
+                return board.IsPathClear(path);
+            }
+            else
+            {
+                var path = new PathGenerator(this, PathType.QueenCastling).GetEnumerator().Single();
+                return board.IsPathClear(path);
+            }
         }
     }
 }
