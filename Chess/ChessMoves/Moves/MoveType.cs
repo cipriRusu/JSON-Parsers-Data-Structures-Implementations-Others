@@ -27,7 +27,7 @@ namespace ChessMoves.Moves
             else if (input.Contains("x"))
                 return new CaptureUserMove(input, playerTurn);
             else
-                return new MoveUserMove(input, playerTurn);
+                return new StandardUserMove(input, playerTurn);
         }
     }
 }
