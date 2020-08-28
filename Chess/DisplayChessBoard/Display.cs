@@ -16,12 +16,12 @@ namespace DisplayChessBoard
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (game[i, j] != null)
+                    if (game[(i, j)] != null)
                     {
-                        switch (game[i, j])
+                        switch (game[(i, j)])
                         {
                             case Rock _:
-                                if (game[i, j].PlayerColour == Player.White)
+                                if (game[(i, j)].PlayerColour == Player.White)
                                 {
                                     Console.Write(" RkW ");
                                 }
@@ -31,7 +31,7 @@ namespace DisplayChessBoard
                                 }
                                 break;
                             case Knight _:
-                                if (game[i, j].PlayerColour == Player.White)
+                                if (game[(i, j)].PlayerColour == Player.White)
                                 {
                                     Console.Write(" KnW ");
                                 }
@@ -41,7 +41,7 @@ namespace DisplayChessBoard
                                 }
                                 break;
                             case Bishop _:
-                                if (game[i, j].PlayerColour == Player.White)
+                                if (game[(i, j)].PlayerColour == Player.White)
                                 {
                                     Console.Write(" BiW ");
                                 }
@@ -51,7 +51,7 @@ namespace DisplayChessBoard
                                 }
                                 break;
                             case King _:
-                                if (game[i, j].PlayerColour == Player.White)
+                                if (game[(i, j)].PlayerColour == Player.White)
                                 {
                                     Console.Write(" KgW ");
                                 }
@@ -61,7 +61,7 @@ namespace DisplayChessBoard
                                 }
                                 break;
                             case Queen _:
-                                if (game[i, j].PlayerColour == Player.White)
+                                if (game[(i, j)].PlayerColour == Player.White)
                                 {
                                     Console.Write(" QuW ");
                                 }
@@ -71,7 +71,7 @@ namespace DisplayChessBoard
                                 }
                                 break;
                             case Pawn _:
-                                if (game[i, j].PlayerColour == Player.White)
+                                if (game[(i, j)].PlayerColour == Player.White)
                                 {
                                     Console.Write(" PwW ");
                                 }

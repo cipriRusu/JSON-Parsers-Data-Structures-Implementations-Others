@@ -8,6 +8,6 @@ namespace ChessMoves
     public class FileInput
     {
         public string GetFileContent() => 
-            new StreamReader(@"C:\Users\sysuser\Desktop\Reps\JMRepo\Chess\ChessMoves\Moves.txt").ReadToEnd().Replace("\r\n", "");
+            new StreamReader(@"C:\Users\sysuser\Desktop\Repos\Chess\ChessMoves\Moves.txt").ReadToEnd().Replace("\r\n", "");
     }
 }
