@@ -18,9 +18,11 @@ namespace ChessMoves.Moves
 
         public override void Move(IBoardOperation boardOperation)
         {
-            if (!boardOperation.CurrentPieces.Any()) throw new UserMoveException(this, "No pieces!!");
+            if (!boardOperation.CurrentPieces.Any()) 
+                throw new UserMoveException(this, "No piece available to handle current move");
 
-            if (boardOperation.CurrentPieces.Count() > 1) throw new UserMoveException(this, "Multiple pieces!!");
+            if (boardOperation.CurrentPieces.Count() > 1) 
+                throw new PieceException(this, boardOperation.CurrentPieces, "Multiple pieces can handle current move");
 
             boardOperation.Apply(boardOperation.CurrentPieces.Single(), this);
         }
