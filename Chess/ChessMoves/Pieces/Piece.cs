@@ -1,5 +1,4 @@
-﻿using ChessGame.Moves;
-using ChessGame.Performers;
+﻿using ChessGame.Interfaces;
 using ChessMoves.Moves;
 using ChessMoves.Paths;
 using System;
@@ -8,7 +7,6 @@ using System.Linq;
 
 namespace ChessMoves
 {
-    [Serializable]
     public abstract class Piece : IPiece
     {
         private readonly Index matrixIndexConvertor = new Index();
@@ -20,17 +18,23 @@ namespace ChessMoves
             File = chessBoardIndex.First();
             Rank = chessBoardIndex.Last();
         }
-
         public (int, int) Index { get; internal set; }
         public Player PlayerColour { get; internal set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
         public Type PieceType { get; internal set; }
-        public virtual bool CanPerform(IUserMove move) => new MoveChecker(this).CanPerform(move);
-        public virtual IPath GetPath(IUserMove move) => new MovePath(this).GetPath(move);
-        public virtual IEnumerable<IPath> Moves() => null;
-        public virtual IEnumerable<IPath> Captures() => null;
-        public virtual void UpdateAfterMove(IUserMove move)
+        public virtual IEnumerable<IPath> Moves { get; private set; }
+        public virtual IEnumerable<IPath> Captures { get; private set; }
+
+        public bool CanMove(IBoardOperation boardOperation) => 
+            boardOperation.CurrentMove.PieceType == PieceType
+            && boardOperation.CurrentMove.PlayerColor == PlayerColour;
+
+        public virtual bool CanPerform(IBoardOperation boardOperation) => 
+            CanMove(boardOperation) && 
+            boardOperation.CurrentMove.CanReach(boardOperation, this);
+
+        public virtual void Update(IUserMove move)
         {
             var rankAndFile = new RankAndFile(move.Index);
             Index = move.Index;

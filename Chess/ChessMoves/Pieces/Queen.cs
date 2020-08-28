@@ -10,7 +10,8 @@ namespace ChessMoves
     {
         public Queen(string chessBoardIndex, Player playerColour) : base(chessBoardIndex, playerColour) => 
             PieceType = typeof(Queen);
-        public override IEnumerable<IPath> Moves() => new PathGenerator(this, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator();
-        public override IEnumerable<IPath> Captures() => Moves();
+
+        public override IEnumerable<IPath> Moves => new PathGenerator(this, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator();
+        public override IEnumerable<IPath> Captures => Moves;
     }
 }
