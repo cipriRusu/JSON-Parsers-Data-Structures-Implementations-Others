@@ -1,5 +1,4 @@
 ﻿using ChessGame;
-using ChessGame.Game;
 using ChessMoves.Moves;
 using System;
 using System.Collections.Generic;
@@ -24,29 +23,15 @@ namespace ChessMoves
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
         public Player TurnToMove { get; set; }
-
-        public IPiece this[int i, int j] => boardState[i, j];
+        public IPiece this[(int, int) input] => boardState[(input.Item1, input.Item2)];
 
         public void Input(string input)
         {
-            var moves = new MovementParser(input.Split(',')).AllMoves;
+            var moves = new MoveParser(input.Split(',')).AllMoves;
 
             foreach (var move in moves)
             {
                 boardState.Perform(move);
-
-                if (move is KingCheckUserMove || IsCheck)
-                {
-                    var currentState = new KingState(boardState);
-                    currentState.FlagInCheck = IsCheck;
-                    IsCheck = currentState.Checked(move);
-                }
-                if (move is KingCheckMateUserMove || IsCheckMate)
-                {
-                    var currentState = new KingState(boardState);
-                    currentState.FlagInCheckMate = IsCheckMate;
-                    IsCheckMate = currentState.CheckMated(move);
-                }
 
                 new PlayerTurn(this).SwitchToNextPlayer();
             }
