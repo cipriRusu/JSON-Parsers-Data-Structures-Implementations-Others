@@ -1,90 +1,56 @@
-﻿using ChessGame;
-using ChessGame.Moves;
-using ChessMoves.Moves;
+﻿using ChessGame.Interfaces;
 using ChessMoves.Paths;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace ChessMoves
 {
-    public class Board : IBoard
-    {
+    public class Board : IBoard, IBoardOperation
+    { 
         private const int ChessboardSize = 8;
         private IPiece[,] board = new IPiece[ChessboardSize, ChessboardSize];
+        public delegate void Move(IPath path);
         public Board(IPiece[,] board) => this.board = board;
-        public IPiece this[int first, int second] => board[first, second];
-        public bool IsPathClear(IPath path, int frontSkip = 0, int endSkip = 0) => 
-            path.Path.Skip(frontSkip).SkipLast(endSkip).All(x => board[x.Item1, x.Item2] == null);
+        public IPiece this[(int, int) input]
+        {
+            get => board[input.Item1, input.Item2];
+            set => board[input.Item1, input.Item2] = value; 
+        }
+
+        public IUserMove CurrentMove { get; private set; }
+        public IEnumerable<IPiece> CurrentPieces { get; private set; }
+        public bool IsClear(IPath path, int frontSkip = 0, int endSkip = 0) => 
+            path.Path.Skip(frontSkip)
+                     .SkipLast(endSkip)
+                     .All(x => board[x.Item1, x.Item2] == null);
+
         public void Perform(IUserMove move)
         {
-            if (move is MoveUserMove)
-                PerformMove(move);
-            else if (move is CaptureUserMove)
-                PerformCapture(move);
-            else if (move is KingCastlingUserMove)
-                PerformKingCastling(move);
-            else if (move is QueenCastlingUserMove)
-                PerformQueenCastling(move);
-            else if (move is KingCheckUserMove)
-                PerformCheck(move);
-            else if (move is KingCheckMateUserMove)
-                PerformCheckMate(move);
+            CurrentMove = move;
+
+            CurrentPieces = AllPieces().Where(x => x != null).Where(x => x.CanPerform(this));
+
+            CurrentMove.Move(this);
         }
 
-        private void PerformMove(IUserMove move)
+        public void Apply(IPiece piece, IUserMove move)
         {
-            var legalPiece = new LegalPiece(this).GetMovablePiece(move, out IPath path);
+            this[move.Index] = this[piece.Index];
+            this[piece.Index] = null;
+            this[move.Index].Update(move);
+        }
 
-            if (new MoveValidator(this, move).ValidatePath(path))
+        public bool IsOpponent(IPath path, Player player) => this[path.End].PlayerColour != player;
+
+        private IEnumerable<IPiece> AllPieces()
+        {
+            for (int i = 0; i < ChessboardSize; i++)
             {
-                new Move(board, legalPiece).ApplyMove(move);
-            }
-        }
-
-        private void PerformCapture(IUserMove move) => PerformMove(move);
-
-        private void PerformKingCastling(IUserMove move)
-        {
-            if (new MoveValidator(this, move).ValidateKingCastling(move))
-            {
-                new Move(board).ApplyKingCastling(move);
-            }
-        }
-
-        private void PerformQueenCastling(IUserMove move)
-        {
-            if (new MoveValidator(this, move).ValidateQueenCastling(move))
-            {
-                new Move(board).ApplyQueenCastling(move);
-            }
-        }
-
-        private void PerformCheck(IUserMove move)
-        {
-            var internalMove = new MoveType(move.NotationIndex, move.PlayerColor).Move;
-            Perform(internalMove);
-        }
-
-        private void PerformCheckMate(IUserMove move)
-        {
-            var internalMove = new MoveType(move.NotationIndex, move.PlayerColor).Move;
-            Perform(internalMove);
-        }
-
-        public IEnumerator<IPiece> GetEnumerator()
-        {
-            for(int i = 0; i < ChessboardSize; i++)
-            {
-                for(int j = 0; j < ChessboardSize; j++)
+                for (int j = 0; j < ChessboardSize; j++)
                 {
                     yield return board[i, j];
                 }
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
