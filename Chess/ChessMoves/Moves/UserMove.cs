@@ -1,9 +1,8 @@
-﻿using ChessMoves.Moves;
+﻿using ChessGame.Interfaces;
 using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace ChessMoves
 {
@@ -26,6 +25,9 @@ namespace ChessMoves
             GetOrigin(input[0..^2]);
         }
 
+        public virtual bool CanReach(IBoardOperation boardOperation, IPathTypes pathTypes) => false;
+        public virtual void Move(IBoardOperation boardOperation) { }
+
         private void GetSource(string source)
         {
             if (source.All(x => IsRank(x) || IsFile(x)))
@@ -46,27 +48,15 @@ namespace ChessMoves
         private bool IsFile(char c) => "abcdefgh".Contains(c);
         private void GetPieceType(string input)
         {
-            switch (input.First())
+            PieceType = (input.First()) switch
             {
-                case 'K':
-                    PieceType = typeof(King);
-                    break;
-                case 'Q':
-                    PieceType = typeof(Queen);
-                    break;
-                case 'R':
-                    PieceType = typeof(Rock);
-                    break;
-                case 'B':
-                    PieceType = typeof(Bishop);
-                    break;
-                case 'N':
-                    PieceType = typeof(Knight);
-                    break;
-                default:
-                    PieceType = typeof(Pawn);
-                    break;
-            }
+                'K' => typeof(King),
+                'Q' => typeof(Queen),
+                'R' => typeof(Rock),
+                'B' => typeof(Bishop),
+                'N' => typeof(Knight),
+                _ => typeof(Pawn),
+            };
         }
         private void UserMoveInputExceptions(string input)
         {
@@ -75,7 +65,5 @@ namespace ChessMoves
                 throw new UserMoveException(this, "Current user input is empty!");
             }
         }
-
-        public virtual bool Contains(IEnumerable<IPath> allPaths) => false;
     }
 }
