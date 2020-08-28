@@ -166,7 +166,7 @@ namespace ChessMoves
             var game = new Game();
             game.Input("Nc3 f5, e4 fxe4, Nxe4");
 
-            Assert.Equal(Player.White, game[4, 4].PlayerColour);
+            Assert.Equal(Player.White, game[(4, 4)].PlayerColour);
         }
         
         [Fact]
@@ -233,8 +233,8 @@ namespace ChessMoves
         {
             var board = new Game();
 
-            Assert.True(board[1, 0] is Pawn);
-            Assert.True(board[1, 0].PlayerColour == Player.Black);
+            Assert.True(board[(1, 0)] is Pawn);
+            Assert.True(board[(1, 0)].PlayerColour == Player.Black);
         }
 
         [Fact]
@@ -242,7 +242,7 @@ namespace ChessMoves
         {
             var board = new Game();
 
-            Assert.False(board[1, 0] is Rock);
+            Assert.False(board[(1, 0)] is Rock);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace ChessMoves
         {
             var board = new Game();
 
-            Assert.False(board[1, 0].PlayerColour == Player.White);
+            Assert.False(board[(1, 0)].PlayerColour == Player.White);
         }
 
         [Fact]
@@ -259,8 +259,8 @@ namespace ChessMoves
             var game = new Game();
             game.Input("d4 Nf6,c4 g6,Nc3 Bg7,e4 d6,Nf3 0-0");
 
-            Assert.True(game[0, 6] is King);
-            Assert.True(game[0, 5] is Rock);
+            Assert.True(game[(0, 6)] is King);
+            Assert.True(game[(0, 5)] is Rock);
             Assert.True(game.TurnToMove == Player.White);
         }
 
@@ -270,8 +270,8 @@ namespace ChessMoves
             var game = new Game();
             game.Input("e4 e5,Nf3 Nc6,Bb5 a6,Ba4 Nf6,0-0 Be7");
 
-            Assert.True(game[7, 6] is King);
-            Assert.True(game[7, 5] is Rock);
+            Assert.True(game[(7, 6)] is King);
+            Assert.True(game[(7, 5)] is Rock);
             Assert.True(game.TurnToMove == Player.White);
         }
 
@@ -282,8 +282,8 @@ namespace ChessMoves
 
             game.Input("e4 g6, d4 Bg7, Nc3 d6, Be3 c6, Qd2 b5, 0-0-0 Nd7");
 
-            Assert.True(game[7, 2] is King);
-            Assert.True(game[7, 3] is Rock);
+            Assert.True(game[(7, 2)] is King);
+            Assert.True(game[(7, 3)] is Rock);
         }
 
         [Fact]
@@ -293,7 +293,7 @@ namespace ChessMoves
 
             game.Input("e4 Nf6, Nc3 d5, e5 d4, exf6 dxc3,d4 cxb2, fxg7 bxa1=Q");
 
-            Assert.True(game[7, 0] is Queen);
+            Assert.True(game[(7, 0)] is Queen);
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace ChessMoves
 
             game.Input( "e4 Nf6, Nc3 d5, e5 d4, exf6 dxc3, d4 cxb2, fxg7 bxa1=Q, gxh8=Q Qxa2");
 
-            Assert.True(game[0, 7] is Queen);
+            Assert.True(game[(0, 7)] is Queen);
         }
 
         [Fact]
@@ -314,8 +314,8 @@ namespace ChessMoves
             game.Input("d4 Nf6, Bg5 c6, e3 Qa5+, Qd2 Qxg5, h4 Qg6, h5 Nxh5, Nf3 d6, " +
                 "Nh4 Qe6, Bd3 g6, Nc3 b6, 0-0-0 Ba6, d5 Qd7, dxc6 Qc8, c7 Qxc7, Bxa6 Nxa6, Qd4 0-0-0");
 
-            Assert.True(game[0, 2] is King);
-            Assert.True(game[0, 3] is Rock);
+            Assert.True(game[(0, 2)] is King);
+            Assert.True(game[(0, 3)] is Rock);
         }
 
         [Fact]
@@ -323,9 +323,9 @@ namespace ChessMoves
         {
             var game = new Game();
             game.Input("d3 Nh6, d4 Na6, Na3 Ng4, d5 e5, dxe6e.p." );
-            Assert.True(game[2, 4] is Pawn);
-            Assert.True(game[2, 4].PlayerColour == Player.White);
-            Assert.Null(game[3, 4]);
+            Assert.True(game[(2, 4)] is Pawn);
+            Assert.True(game[(2, 4)].PlayerColour == Player.White);
+            Assert.Null(game[(3, 4)]);
         }
 
         [Fact]
@@ -333,9 +333,9 @@ namespace ChessMoves
         {
             var game = new Game();
             game.Input("Na3 e5, Nh3 e4, d4 exd3e.p.");
-            Assert.True(game[5, 3] is Pawn);
-            Assert.True(game[5, 3].PlayerColour == Player.Black);
-            Assert.Null(game[4, 3]);
+            Assert.True(game[(5, 3)] is Pawn);
+            Assert.True(game[(5, 3)].PlayerColour == Player.Black);
+            Assert.Null(game[(4, 3)]);
         }
 
         [Fact]
