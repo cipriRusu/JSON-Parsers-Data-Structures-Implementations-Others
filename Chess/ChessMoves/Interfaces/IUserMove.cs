@@ -1,7 +1,5 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ChessMoves
 {
@@ -10,6 +8,7 @@ namespace ChessMoves
         Type PieceType { get; }
         Player PlayerColor { get; }
         string NotationIndex { get; }
-        bool Contains(IEnumerable<IPath> paths);
+        bool CanReach(IBoardOperation boardOperation, IPathTypes pathTypes);
+        void Move(IBoardOperation boardOperation);
     }
 }
