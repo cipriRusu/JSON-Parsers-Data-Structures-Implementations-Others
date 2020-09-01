@@ -12,6 +12,5 @@ namespace ChessMoves
     {
         Player PlayerColour { get; }
         void Update(IUserMove move);
-        bool CanPerform(IBoardOperation boardOperation);
     }
 }
