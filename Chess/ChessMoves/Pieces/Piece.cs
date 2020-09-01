@@ -1,6 +1,4 @@
-﻿using ChessGame.Interfaces;
-using ChessMoves.Moves;
-using ChessMoves.Paths;
+﻿using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,15 +23,6 @@ namespace ChessMoves
         public Type PieceType { get; internal set; }
         public virtual IEnumerable<IPath> Moves { get; private set; }
         public virtual IEnumerable<IPath> Captures { get; private set; }
-
-        public bool CanMove(IBoardOperation boardOperation) => 
-            boardOperation.CurrentMove.PieceType == PieceType
-            && boardOperation.CurrentMove.PlayerColor == PlayerColour;
-
-        public virtual bool CanPerform(IBoardOperation boardOperation) => 
-            CanMove(boardOperation) && 
-            boardOperation.CurrentMove.CanReach(boardOperation, this);
-
         public virtual void Update(IUserMove move)
         {
             var rankAndFile = new RankAndFile(move.Index);

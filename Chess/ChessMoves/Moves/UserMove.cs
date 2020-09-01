@@ -1,6 +1,4 @@
-﻿using ChessGame.Interfaces;
-using ChessMoves.Paths;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,9 +22,6 @@ namespace ChessMoves
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
         }
-
-        public virtual bool CanReach(IBoardOperation boardOperation, IPathTypes pathTypes) => false;
-        public virtual void Move(IBoardOperation boardOperation) { }
 
         private void GetSource(string source)
         {
