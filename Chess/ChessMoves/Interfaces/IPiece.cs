@@ -10,7 +10,7 @@ namespace ChessMoves
 {
     public interface IPiece : ILocation, IPathTypes
     {
-        Player PlayerColour { get; }
+        Player Player { get; }
         void Update(IUserMove move);
     }
 }

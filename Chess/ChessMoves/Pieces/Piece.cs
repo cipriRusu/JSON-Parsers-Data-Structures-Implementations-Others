@@ -7,17 +7,17 @@ namespace ChessMoves
 {
     public abstract class Piece : IPiece
     {
-        private readonly Index matrixIndexConvertor = new Index();
+        private readonly Index Convertor = new Index();
 
         public Piece(string chessBoardIndex, Player playerColour)
         {
-            Index = matrixIndexConvertor.GetMatrixIndex(chessBoardIndex);
-            PlayerColour = playerColour;
+            Index = Convertor.GetMatrixIndex(chessBoardIndex);
+            Player = playerColour;
             File = chessBoardIndex.First();
             Rank = chessBoardIndex.Last();
         }
         public (int, int) Index { get; internal set; }
-        public Player PlayerColour { get; internal set; }
+        public Player Player { get; internal set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
         public Type PieceType { get; internal set; }

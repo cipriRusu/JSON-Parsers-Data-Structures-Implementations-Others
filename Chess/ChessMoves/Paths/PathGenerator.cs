@@ -15,7 +15,7 @@ namespace ChessMoves
         {
             StartIndex = piece.Index;
             PathTypes = paths;
-            PlayerColour = piece.PlayerColour;
+            PlayerColour = piece.Player;
         }
         private (int, int) StartIndex { get; }
         private Player PlayerColour { get; }
