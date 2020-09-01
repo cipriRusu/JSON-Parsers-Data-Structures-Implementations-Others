@@ -1,10 +1,4 @@
-﻿using ChessGame;
-using ChessMoves.Moves;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using ChessMoves.Moves;
 
 namespace ChessMoves
 {
@@ -23,7 +17,6 @@ namespace ChessMoves
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
         public Player TurnToMove { get; set; }
-        public IPiece this[(int, int) input] => boardState[(input.Item1, input.Item2)];
 
         public void Input(string input)
         {
