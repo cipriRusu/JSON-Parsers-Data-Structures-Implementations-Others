@@ -1,5 +1,4 @@
-﻿using ChessGame.Interfaces;
-using System;
+﻿using System;
 
 namespace ChessMoves
 {
@@ -8,7 +7,5 @@ namespace ChessMoves
         Type PieceType { get; }
         Player PlayerColor { get; }
         string NotationIndex { get; }
-        bool CanReach(IBoardOperation boardOperation, IPathTypes pathTypes);
-        void Move(IBoardOperation boardOperation);
     }
 }
