@@ -13,12 +13,12 @@ namespace ChessMoves
         public char Rank { get; private set; }
         public Player PlayerColor { get; private set; }
 
-        internal UserMove(string input, Player playerTurn)
+        internal UserMove(string input, Player player)
         {
             NotationIndex = input;
-            PlayerColor = playerTurn;
-            UserMoveInputExceptions(input);
-            GetPieceType(input);
+            PlayerColor = player;
+            UserMoveExceptions(input);
+            GetType(input);
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
         }
@@ -41,7 +41,7 @@ namespace ChessMoves
         }
         private bool IsRank(char c) => "12345678".Contains(c);
         private bool IsFile(char c) => "abcdefgh".Contains(c);
-        private void GetPieceType(string input)
+        private void GetType(string input)
         {
             PieceType = (input.First()) switch
             {
@@ -53,7 +53,7 @@ namespace ChessMoves
                 _ => typeof(Pawn),
             };
         }
-        private void UserMoveInputExceptions(string input)
+        private void UserMoveExceptions(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
