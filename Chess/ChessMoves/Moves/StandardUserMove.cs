@@ -7,7 +7,7 @@ namespace ChessMoves.Moves
     {
         public StandardUserMove(string input, Player playerTurn) : base(input, playerTurn) { }
 
-        public override bool CanHandle(IPieceValidator validator, IBoardCheck boardCheck)
+        public override bool CanHandle(IValidate validator, IBoardCheck boardCheck)
         {
             if (validator.IsPiece(this))
             {
