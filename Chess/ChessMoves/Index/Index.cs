@@ -10,7 +10,7 @@ namespace ChessMoves
 
         private string[] letters = new string[] { "a", "b", "c", "d", "e", "f", "g", "h" };
 
-        public (int, int) GetMatrixIndex(string chessBoardIndex)
+        public (int, int) GetIndex(string chessBoardIndex)
         {
             var isIndexPresent = letters.Select((x, y) =>
                 letters.Select((a, b) =>

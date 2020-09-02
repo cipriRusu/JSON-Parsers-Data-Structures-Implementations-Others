@@ -9,21 +9,21 @@ namespace ChessMoves
         public void GetMatrixIndexReturnsAppropriateValueForValidPawnIndexInCorner()
         {
             var cIndex = new Index();
-            Assert.Equal((0, 0), cIndex.GetMatrixIndex("a8"));
+            Assert.Equal((0, 0), cIndex.GetIndex("a8"));
         }
 
         [Fact]
         public void GetMatrixIndexReturnsAppropriateValuesForValidPawnIndexInBoard()
         {
             var cIndex = new Index();
-            Assert.Equal((4, 4), cIndex.GetMatrixIndex("e4"));
+            Assert.Equal((4, 4), cIndex.GetIndex("e4"));
         }
 
         [Fact]
         public void GetMatrixIndexThrowsArgumentExceptionForInvalidIndex()
         {
             var cIndex = new Index();
-            Assert.Throws<ArgumentException>(() => cIndex.GetMatrixIndex("z9"));
+            Assert.Throws<ArgumentException>(() => cIndex.GetIndex("z9"));
         }
     }
 }
