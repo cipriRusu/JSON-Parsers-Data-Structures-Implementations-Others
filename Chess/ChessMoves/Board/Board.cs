@@ -19,13 +19,9 @@ namespace ChessMoves
 
         private IEnumerable<IPiece> AllPieces()
         {
-            for (int i = 0; i < ChessboardSize; i++)
-            {
-                for (int j = 0; j < ChessboardSize; j++)
-                {
-                    yield return board[i, j];
-                }
-            }
+            var allIndices = Enumerable.Range(0, ChessboardSize);
+
+            return allIndices.SelectMany(x => allIndices.Select(y => board[x, y]));
         }
     }
 }
