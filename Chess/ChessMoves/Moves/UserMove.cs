@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessGame.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +23,8 @@ namespace ChessMoves
             GetSource(string.Concat(input.TakeLast(2)));
             GetOrigin(input[0..^2]);
         }
+
+        public virtual bool CanHandle(IPieceValidator validator, IBoardCheck boardCheck) => false;
 
         private void GetSource(string source)
         {
