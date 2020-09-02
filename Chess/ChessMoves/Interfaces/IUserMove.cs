@@ -1,11 +1,7 @@
-﻿using System;
+﻿using ChessGame.Interfaces;
+using System;
 
 namespace ChessMoves
 {
-    public interface IUserMove : ILocation
-    {
-        Type PieceType { get; }
-        Player PlayerColor { get; }
-        string NotationIndex { get; }
-    }
+    public interface IUserMove : ILocation, IPlayer, INotation, IPieceType { }
 }

@@ -8,9 +8,8 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IPiece : ILocation, IPathTypes
+    public interface IPiece : ILocation, IPlayer, IPathTypes
     {
-        Player Player { get; }
         void Update(IUserMove move);
     }
 }
