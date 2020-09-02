@@ -1,20 +1,21 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame.Interfaces;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ChessMoves
 {
-    public abstract class Piece : IPiece
+    public abstract class Piece : IPiece, IPieceValidator
     {
         private readonly Index Convertor = new Index();
 
-        public Piece(string chessBoardIndex, Player playerColour)
+        public Piece(string index, Player player)
         {
-            Index = Convertor.GetMatrixIndex(chessBoardIndex);
-            Player = playerColour;
-            File = chessBoardIndex.First();
-            Rank = chessBoardIndex.Last();
+            Index = Convertor.GetIndex(index);
+            Player = player;
+            File = index.First();
+            Rank = index.Last();
         }
         public (int, int) Index { get; internal set; }
         public Player Player { get; internal set; }
@@ -23,6 +24,7 @@ namespace ChessMoves
         public Type PieceType { get; internal set; }
         public virtual IEnumerable<IPath> Moves { get; private set; }
         public virtual IEnumerable<IPath> Captures { get; private set; }
+
         public virtual void Update(IUserMove move)
         {
             var rankAndFile = new RankAndFile(move.Index);
