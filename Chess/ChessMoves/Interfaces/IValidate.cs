@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChessGame.Interfaces
 {
-    public interface IPieceValidator : IPathTypes
+    public interface IValidate : IPathTypes
     {
         bool IsPiece(IUserMove userMove);
     }
