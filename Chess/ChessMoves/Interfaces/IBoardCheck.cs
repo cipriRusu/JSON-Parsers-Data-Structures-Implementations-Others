@@ -2,7 +2,7 @@
 
 namespace ChessGame.Interfaces
 {
-    public interface IOperation
+    public interface IBoardCheck
     {
         bool IsClear(IPath path);
     }
