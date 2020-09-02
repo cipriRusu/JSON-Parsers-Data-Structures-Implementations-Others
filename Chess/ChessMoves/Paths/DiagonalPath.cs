@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessGame.Paths;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,34 +13,17 @@ namespace ChessMoves.Paths
         public DiagonalPaths((int, int) startIndex) => StartIndex = startIndex;
         private IEnumerable<IEnumerable<(int, int)>> AllDiagonals()
         {
-            var firstDiag = new List<(int, int)>();
-            var secondDiag = new List<(int, int)>();
-            var thirdDiag = new List<(int, int)>();
-            var fourthDiag = new List<(int, int)>();
+            var firstDiag = CustomEnumerableExtensions.CountDown(StartIndex.Item1, 0)
+                .Zip(CustomEnumerableExtensions.CountDown(StartIndex.Item2, 0)).ToList();
 
-            for (int i = StartIndex.Item1, j = StartIndex.Item2;
-                i >= 0 && j >= 0; i--, j--)
-            {
-                firstDiag.Add((i, j));
-            }
+            var secondDiag = CustomEnumerableExtensions.CountDown(StartIndex.Item1, 0)
+                .Zip(CustomEnumerableExtensions.CountUp(StartIndex.Item2, 7)).ToList();
 
-            for (int i = StartIndex.Item1, j = StartIndex.Item2;
-                i >= 0 && j <= 7; i--, j++)
-            {
-                secondDiag.Add((i, j));
-            }
+            var thirdDiag = CustomEnumerableExtensions.CountUp(StartIndex.Item1, 7)
+               .Zip(CustomEnumerableExtensions.CountDown(StartIndex.Item2, 0)).ToList();
 
-            for (int i = StartIndex.Item1, j = StartIndex.Item2;
-               i <= 7 && j >= 0; i++, j--)
-            {
-                thirdDiag.Add((i, j));
-            }
-
-            for (int i = StartIndex.Item1, j = StartIndex.Item2;
-               i <= 7 && j <= 7; i++, j++)
-            {
-                fourthDiag.Add((i, j));
-            }
+            var fourthDiag = CustomEnumerableExtensions.CountUp(StartIndex.Item1, 7)
+                .Zip(CustomEnumerableExtensions.CountUp(StartIndex.Item2, 7)).ToList();
 
             var firstSubArrays = firstDiag.Select((x, y) => firstDiag.Take(y + 1)).Skip(1);
             var secondSubArrays = secondDiag.Select((x, y) => secondDiag.Take(y + 1)).Skip(1);
