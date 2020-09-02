@@ -24,7 +24,7 @@ namespace ChessMoves
             GetOrigin(input[0..^2]);
         }
 
-        public virtual bool CanHandle(IPieceValidator validator, IBoardCheck boardCheck) => false;
+        public virtual bool CanHandle(IValidate validator, IBoardCheck boardCheck) => false;
 
         private void GetSource(string source)
         {

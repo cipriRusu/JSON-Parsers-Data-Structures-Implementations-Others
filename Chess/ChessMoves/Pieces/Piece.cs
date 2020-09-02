@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ChessMoves
 {
-    public abstract class Piece : IPiece, IPieceValidator
+    public abstract class Piece : IPiece, IValidate
     {
         private readonly Index Convertor = new Index();
 
