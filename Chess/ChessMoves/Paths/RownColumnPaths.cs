@@ -1,4 +1,6 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame.Paths;
+using ChessMoves.Paths;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,30 +14,17 @@ namespace ChessMoves
 
         private IEnumerable<IEnumerable<(int, int)>> AllRownColumnPaths()
         {
-            var firstColumn = new List<(int, int)>();
-            var firstRow = new List<(int, int)>();
-            var secondColumn = new List<(int, int)>();
-            var secondRow = new List<(int, int)>();
+            var firstColumn = CustomEnumerable.CountDown(StartIndex.Item1, 0)
+                .Select(x => (x, StartIndex.Item2)).ToList();
 
-            for (int i = StartIndex.Item1; i >= 0; i--)
-            {
-                firstColumn.Add((i, StartIndex.Item2));
-            }
+            var firstRow = CustomEnumerable.CountUp(StartIndex.Item2, 7)
+                .Select(x => (StartIndex.Item1, x)).ToList();
 
-            for (int i = StartIndex.Item2; i <= 8 - 1; i++)
-            {
-                firstRow.Add((StartIndex.Item1, i));
-            }
+            var secondColumn = CustomEnumerable.CountUp(StartIndex.Item1, 7)
+                .Select(x => (x, StartIndex.Item2)).ToList();
 
-            for (int i = StartIndex.Item1; i <= 8 - 1; i++)
-            {
-                secondColumn.Add((i, StartIndex.Item2));
-            }
-
-            for (int i = StartIndex.Item2; i >= 0; i--)
-            {
-                secondRow.Add((StartIndex.Item1, i));
-            }
+            var secondRow = CustomEnumerable.CountDown(StartIndex.Item2, 0)
+                .Select(x => (StartIndex.Item1, x)).ToList();
 
             var firstSubs = firstColumn.Select((x, y) => firstColumn.Take(y + 1)).Skip(1);
             var firstRowSubs = firstRow.Select((x, y) => firstRow.Take(y + 1)).Skip(1);
