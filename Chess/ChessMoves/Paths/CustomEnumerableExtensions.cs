@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChessGame.Paths
 {
-    public static class CustomEnumerable
+    public static class CustomEnumerableExtensions
     {
         public static IEnumerable<int> CountUp(int from, int to)
         {
