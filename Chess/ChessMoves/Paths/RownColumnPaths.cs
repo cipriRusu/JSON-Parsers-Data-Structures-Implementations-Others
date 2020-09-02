@@ -14,16 +14,16 @@ namespace ChessMoves
 
         private IEnumerable<IEnumerable<(int, int)>> AllRownColumnPaths()
         {
-            var firstColumn = CustomEnumerable.CountDown(StartIndex.Item1, 0)
+            var firstColumn = CustomEnumerableExtensions.CountDown(StartIndex.Item1, 0)
                 .Select(x => (x, StartIndex.Item2)).ToList();
 
-            var firstRow = CustomEnumerable.CountUp(StartIndex.Item2, 7)
+            var firstRow = CustomEnumerableExtensions.CountUp(StartIndex.Item2, 7)
                 .Select(x => (StartIndex.Item1, x)).ToList();
 
-            var secondColumn = CustomEnumerable.CountUp(StartIndex.Item1, 7)
+            var secondColumn = CustomEnumerableExtensions.CountUp(StartIndex.Item1, 7)
                 .Select(x => (x, StartIndex.Item2)).ToList();
 
-            var secondRow = CustomEnumerable.CountDown(StartIndex.Item2, 0)
+            var secondRow = CustomEnumerableExtensions.CountDown(StartIndex.Item2, 0)
                 .Select(x => (StartIndex.Item1, x)).ToList();
 
             var firstSubs = firstColumn.Select((x, y) => firstColumn.Take(y + 1)).Skip(1);
