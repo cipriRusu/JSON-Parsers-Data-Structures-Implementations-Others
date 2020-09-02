@@ -5,6 +5,5 @@ namespace ChessMoves
     public interface IBoard
     {
         void Perform(IUserMove move);
-        bool IsClear(IPath path);
     }
 }
