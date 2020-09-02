@@ -6,17 +6,17 @@ namespace ChessMoves
 {
     public class UserMove : IUserMove
     {
-        public Type PieceType { get; private set; }
+        public Type Type { get; private set; }
         public (int, int) Index { get; private set; }
-        public string NotationIndex { get; private set; }
+        public string Notation { get; private set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
-        public Player PlayerColor { get; private set; }
+        public Player Player { get; private set; }
 
         internal UserMove(string input, Player player)
         {
-            NotationIndex = input;
-            PlayerColor = player;
+            Notation = input;
+            Player = player;
             UserMoveExceptions(input);
             GetType(input);
             GetSource(string.Concat(input.TakeLast(2)));
@@ -27,7 +27,7 @@ namespace ChessMoves
         {
             if (source.All(x => IsRank(x) || IsFile(x)))
             {
-                Index = new Index().GetMatrixIndex(source);
+                Index = new Index().GetIndex(source);
             }
         }
 
@@ -43,7 +43,7 @@ namespace ChessMoves
         private bool IsFile(char c) => "abcdefgh".Contains(c);
         private void GetType(string input)
         {
-            PieceType = (input.First()) switch
+            Type = (input.First()) switch
             {
                 'K' => typeof(King),
                 'Q' => typeof(Queen),
