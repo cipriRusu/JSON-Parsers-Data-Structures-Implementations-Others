@@ -14,17 +14,17 @@ namespace ChessMoves.Paths
 
         private IEnumerable<IEnumerable<(int, int)>> AllDiagonals()
         {
-            var firstDiag = CustomEnumerableExtensions.CountDown(StartIndex.Item1, 0)
-                .Zip(CustomEnumerableExtensions.CountDown(StartIndex.Item2, 0)).ToList();
+            var firstDiag = EnumerableExtensions.CountDown(StartIndex.Item1, 0)
+                .Zip(EnumerableExtensions.CountDown(StartIndex.Item2, 0)).ToList();
 
-            var secondDiag = CustomEnumerableExtensions.CountDown(StartIndex.Item1, 0)
-                .Zip(CustomEnumerableExtensions.CountUp(StartIndex.Item2, 7)).ToList();
+            var secondDiag = EnumerableExtensions.CountDown(StartIndex.Item1, 0)
+                .Zip(EnumerableExtensions.CountUp(StartIndex.Item2, 7)).ToList();
 
-            var thirdDiag = CustomEnumerableExtensions.CountUp(StartIndex.Item1, 7)
-               .Zip(CustomEnumerableExtensions.CountDown(StartIndex.Item2, 0)).ToList();
+            var thirdDiag = EnumerableExtensions.CountUp(StartIndex.Item1, 7)
+               .Zip(EnumerableExtensions.CountDown(StartIndex.Item2, 0)).ToList();
 
-            var fourthDiag = CustomEnumerableExtensions.CountUp(StartIndex.Item1, 7)
-                .Zip(CustomEnumerableExtensions.CountUp(StartIndex.Item2, 7)).ToList();
+            var fourthDiag = EnumerableExtensions.CountUp(StartIndex.Item1, 7)
+                .Zip(EnumerableExtensions.CountUp(StartIndex.Item2, 7)).ToList();
 
             var firstSubArrays = firstDiag.Select((x, y) => firstDiag.Take(y + 1)).Skip(1);
             var secondSubArrays = secondDiag.Select((x, y) => secondDiag.Take(y + 1)).Skip(1);
