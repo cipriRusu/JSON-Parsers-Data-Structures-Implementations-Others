@@ -12,9 +12,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteBishopReturnsAllPossibleMoves()
         {
-            var bishop = new Bishop("c1", Player.White);
-
-            var path = new PathGenerator(bishop, PathType.Diagonals).GetEnumerator().ToList();
+            var path = new Bishop("c1", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -33,9 +31,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteBishopReturnsAllPossibleMovesBoardInterior()
         {
-            var bishop = new Bishop("f4", Player.White);
-
-            var path = new PathGenerator(bishop, PathType.Diagonals).GetEnumerator().ToList();
+            var path = new Bishop("f4", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -62,9 +58,7 @@ namespace ChessMoves
         [Fact]
         public void BlackBishopReturnsAllPossibleMovesBoardInterior()
         {
-            var bishop = new Bishop("d6", Player.Black);
-
-            var path = new PathGenerator(bishop, PathType.Diagonals).GetEnumerator().ToList();
+            var path = new Bishop("d6", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {

@@ -12,9 +12,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKnigtReturnsAllPossibleMovesDownwardBoardOnStartPosition()
         {
-            var knight = new Knight("b8", Player.Black);
-
-            var actual = new PathGenerator(knight, PathType.Knight).GetEnumerator().ToList();
+            var actual = new Knight("b8", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -29,9 +27,7 @@ namespace ChessMoves
         [Fact]
         public void SecondBlackKnightReturnsAllPossibleMovesDownwardBoardOnStartPosition()
         {
-            var knight = new Knight("g8", Player.Black);
-
-            var actual = new PathGenerator(knight, PathType.Knight).GetEnumerator().ToList();
+            var actual = new Knight("g8", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -46,9 +42,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKnightReturnsAllPossibleMovesUpwardBoardOnStartPosition()
         {
-            var knight = new Knight("b1", Player.White);
-
-            var actual = new PathGenerator(knight, PathType.Knight).GetEnumerator().ToList();
+            var actual = new Knight("b1", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -63,9 +57,7 @@ namespace ChessMoves
         [Fact]
         public void SecondWhiteKnightReturnsAllPossibleMovesUpwardBoardOnStartPosition()
         {
-            var knight = new Knight("g1", Player.White);
-
-            var actual = new PathGenerator(knight, PathType.Knight).GetEnumerator().ToList();
+            var actual = new Knight("g1", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -80,9 +72,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKnightReturnsAllPossibleMovesDownwardBoardMiddleBoard()
         {
-            var knight = new Knight("c6", Player.Black);
-
-            var actual = new PathGenerator(knight, PathType.Knight).GetEnumerator().ToList();
+            var actual = new Knight("c6", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -102,9 +92,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKnightReturnsAllPossibleMovesUpwardBoardMiddleBoard()
         {
-            var knight = new Knight("f3", Player.Black);
-
-            var actual = new PathGenerator(knight, PathType.Knight).GetEnumerator().ToList();
+            var actual = new Knight("f3", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {

@@ -13,9 +13,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKingReturnsAllLegalMovesStartPosition()
         {
-            var king = new King("e8", Player.Black);
-
-            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+            var actual = new King("e8", Player.Black).Moves;
 
             var expected = new List<IPath>
             {
@@ -32,9 +30,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKingReturnsAllLegalMovesStartPosition()
         {
-            var king = new King("e1", Player.White);
-
-            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+            var actual = new King("e1", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -51,9 +47,7 @@ namespace ChessMoves
         [Fact]
         public void BlackKingReturnsAllLegalMovesDownwardTable()
         {
-            var king = new King("d6", Player.Black);
-
-            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+            var actual = new King("d6", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -73,9 +67,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteKingReturnsAllLegalMovesUpwardTable()
         {
-            var king = new King("g3", Player.White);
-
-            var actual = new PathGenerator(king, PathType.King).GetEnumerator().ToList();
+            var actual = new King("g3", Player.White).Moves;
 
             var expected = new List<IPath>()
             {

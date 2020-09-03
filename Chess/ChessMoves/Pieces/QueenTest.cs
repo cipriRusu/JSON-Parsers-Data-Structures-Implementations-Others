@@ -13,9 +13,7 @@ namespace ChessMoves
         [Fact]
         public void BlackQueenReturnsAllLegalMovesDownwardTable()
         {
-            var queen = new Queen("d8", Player.Black);
-
-            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+            var actual = new Queen("d8", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -52,9 +50,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteQueenReturnsAllLegalMovesUpwardTable()
         {
-            var queen = new Queen("d1", Player.Black);
-
-            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+            var actual = new Queen("d1", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -91,9 +87,7 @@ namespace ChessMoves
         [Fact]
         public void BlackQueenReturnsAllLegalMovesMiddleTable()
         {
-            var queen = new Queen("e5", Player.Black);
-
-            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+            var actual = new Queen("e5", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -143,9 +137,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteQueenReturnsAllLegalMovesMiddleTable()
         {
-            var queen = new Queen("d3", Player.Black);
-
-            var actual = new PathGenerator(queen, PathType.RowsAndColumns, PathType.Diagonals).GetEnumerator().ToList();
+            var actual = new Queen("d3", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {

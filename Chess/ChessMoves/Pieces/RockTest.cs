@@ -12,9 +12,7 @@ namespace ChessMoves
         [Fact]
         public void BlackRockReturnsAllPossibleMovesFromStart()
         {
-            var rock = new Rock("a8", Player.Black);
-
-            var actual = new PathGenerator(rock, PathType.RowsAndColumns).GetEnumerator().ToList();
+            var actual = new Rock("a8", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -41,9 +39,7 @@ namespace ChessMoves
         [Fact]
         public void BlackRockReturnsAllPossibleMovesFurtherDownBoard()
         {
-            var rock = new Rock("c5", Player.Black);
-
-            var actual = new PathGenerator(rock, PathType.RowsAndColumns).GetEnumerator().ToList();
+            var actual = new Rock("c5", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -72,9 +68,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteRockReturnsAllPossibleMovesFromStart()
         {
-            var rock = new Rock("a1", Player.White);
-
-            var actual = new PathGenerator(rock, PathType.RowsAndColumns).GetEnumerator().ToList();
+            var actual = new Rock("a1", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -101,9 +95,7 @@ namespace ChessMoves
         [Fact]
         public void WhiteRockReturnsAllPossibleMovesFurtherUpBoard()
         {
-            var rock = new Rock("c3", Player.White);
-
-            var actual = new PathGenerator(rock, PathType.RowsAndColumns).GetEnumerator().ToList();
+            var actual = new Rock("c3", Player.White).Moves;
 
             var expected = new List<IPath>()
             {

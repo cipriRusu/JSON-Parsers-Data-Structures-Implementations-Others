@@ -12,9 +12,7 @@ namespace ChessMoves
         [Fact]
         public void BlackPawnReturnsCorrectLegalMoveDownwardTableFromStartIndex()
         {
-            var pawn = new Pawn("a7", Player.Black);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("a7", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -28,9 +26,7 @@ namespace ChessMoves
         [Fact]
         public void BlackPawnReturnsCorrectLegalMoveFurther()
         {
-            var pawn = new Pawn("a4", Player.Black);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("a4", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -43,9 +39,7 @@ namespace ChessMoves
         [Fact]
         public void BlackPawnInsideBoardReturnsCorrectLegalMoveDownwardTableFromStartIndex()
         {
-            var pawn = new Pawn("f7", Player.Black);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("f7", Player.Black).Moves;
 
             var expected = new List<IPath>()
             {
@@ -59,9 +53,7 @@ namespace ChessMoves
         [Fact]
         public void BlackPawnInsideBoardReturnsNoMovesAtEdgeOfBoard()
         {
-            var pawn = new Pawn("f1", Player.Black);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("f1", Player.Black).Moves;
 
             var expected = new List<IPath>() { };
 
@@ -71,9 +63,7 @@ namespace ChessMoves
         [Fact]
         public void BlackPawnReturnsEmptyListForEndOfBoard()
         {
-            var pawn = new Pawn("a1", Player.Black);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("a1", Player.Black).Moves;
 
             var expected = new List<IPath>() { };
 
@@ -83,9 +73,7 @@ namespace ChessMoves
         [Fact]
         public void WhitePawnReturnsCorrectLegalMoveDownwardTableFromStartIndex()
         {
-            var pawn = new Pawn("a2", Player.White);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("a2", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -99,9 +87,7 @@ namespace ChessMoves
         [Fact]
         public void WhitePawnReturnsCorrectLegalMovementsFromStartIndexBoardInterior()
         {
-            var pawn = new Pawn("d2", Player.White);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("d2", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -115,9 +101,7 @@ namespace ChessMoves
         [Fact]
         public void WhitePawnInsideBoardReturnsCorrectLegalMoveFurther()
         {
-            var pawn = new Pawn("a3", Player.White);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("a3", Player.White).Moves;
 
             var expected = new List<IPath>()
             {
@@ -130,9 +114,7 @@ namespace ChessMoves
         [Fact]
         public void WhitePawnInsideBoardReturnsEmptyListForEndOfBoard()
         {
-            var pawn = new Pawn("e8", Player.White);
-
-            var actual = new PathGenerator(pawn, PathType.Pawn).GetEnumerator().ToList();
+            var actual = new Pawn("e8", Player.White).Moves;
 
             var expected = new List<IPath>() { };
 
