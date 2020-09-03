@@ -1,4 +1,5 @@
-﻿using ChessMoves.Paths;
+﻿using ChessGame.Paths;
+using ChessMoves.Paths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace ChessMoves
 
             var expected = new List<IPath>()
             {
-                new Path(new List<(int, int)>{(1, 0), (2, 0) }, (1, 0)),
-                new Path(new List<(int, int)>{(1, 0), (2, 0), (3, 0) }, (1, 0))
+                new MovePath(new List<(int, int)>{(1, 0), (2, 0) }, (1, 0)),
+                new MovePath(new List<(int, int)>{(1, 0), (2, 0), (3, 0) }, (1, 0))
             };
 
             Assert.Equal(expected, actual, new PathComparer());
@@ -30,7 +31,7 @@ namespace ChessMoves
 
             var expected = new List<IPath>()
             {
-                new Path(new List<(int, int)>{(4, 0), (5, 0)}, (4, 0))
+                new MovePath(new List<(int, int)>{(4, 0), (5, 0)}, (4, 0))
             };
 
             Assert.Equal(expected, actual, new PathComparer());
@@ -43,8 +44,8 @@ namespace ChessMoves
 
             var expected = new List<IPath>()
             {
-                new Path(new List<(int, int)>{(1, 5), (2, 5) }, (1, 5)),
-                new Path(new List<(int, int)>{(1, 5), (2, 5), (3, 5) }, (1, 5))
+                new MovePath(new List<(int, int)>{(1, 5), (2, 5) }, (1, 5)),
+                new MovePath(new List<(int, int)>{(1, 5), (2, 5), (3, 5) }, (1, 5))
             };
 
             Assert.Equal(expected, actual, new PathComparer());
@@ -77,8 +78,8 @@ namespace ChessMoves
 
             var expected = new List<IPath>()
             {
-                new Path(new List<(int, int)>{(6, 0), (5, 0) }, (6, 0)),
-                new Path(new List<(int, int)>{(6, 0), (5, 0), (4, 0) }, (6, 0))
+                new MovePath(new List<(int, int)>{(6, 0), (5, 0) }, (6, 0)),
+                new MovePath(new List<(int, int)>{(6, 0), (5, 0), (4, 0) }, (6, 0))
             };
 
             Assert.Equal(expected, actual, new PathComparer());
@@ -91,8 +92,8 @@ namespace ChessMoves
 
             var expected = new List<IPath>()
             {
-                new Path(new List<(int, int)>{(6, 3), (5, 3) }, (6, 3)),
-                new Path(new List<(int, int)>{(6, 3), (5, 3), (4, 3) }, (6, 3))
+                new MovePath(new List<(int, int)>{(6, 3), (5, 3) }, (6, 3)),
+                new MovePath(new List<(int, int)>{(6, 3), (5, 3), (4, 3) }, (6, 3))
             };
 
             Assert.Equal(expected, actual, new PathComparer());
@@ -105,7 +106,7 @@ namespace ChessMoves
 
             var expected = new List<IPath>()
             {
-                new Path(new List<(int, int)>{(5, 0), (4, 0) }, (5, 0))
+                new MovePath(new List<(int, int)>{(5, 0), (4, 0) }, (5, 0))
             };
 
             Assert.Equal(expected, actual, new PathComparer());
