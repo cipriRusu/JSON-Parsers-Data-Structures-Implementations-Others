@@ -10,7 +10,7 @@ namespace ChessMoves
         private const int ChessboardSize = 8;
         private IPiece[,] board = new IPiece[ChessboardSize, ChessboardSize];
         public Board(IPiece[,] board) => this.board = board;
-        public bool IsClear(IPath path) => true;
+        public bool IsClear(IPath path) => path.Path.All(x => board[x.Item1, x.Item2] == null);
 
         public void Perform(IUserMove move)
         {
