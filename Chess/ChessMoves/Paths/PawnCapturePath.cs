@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChessMoves.Paths
 {
-    class PawnCapturePath : IEnumerable<IPath>
+    class PawnCapturePath : IEnumerable<IEnumerable<(int, int)>>
     {
         private (int, int) StartIndex;
         private Player PlayerColour;
@@ -48,10 +48,13 @@ namespace ChessMoves.Paths
 
             return captures;
         }
-        public IEnumerator<IPath> GetEnumerator()
+
+        public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
-            foreach (var path in AllPawnCapture())
-                yield return new Path(path, StartIndex);
+            foreach(var path in AllPawnCapture())
+            {
+                yield return path;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

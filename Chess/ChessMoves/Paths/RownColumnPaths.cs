@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ChessMoves
 {
-    internal class RownColumnPaths : IEnumerable<IPath>
+    internal class RownColumnPaths : IEnumerable<IEnumerable<(int, int)>>
     {
         private (int, int) StartIndex;
         public RownColumnPaths((int, int) startIndex) => StartIndex = startIndex;
@@ -34,10 +34,12 @@ namespace ChessMoves
             return firstSubs.Concat(firstRowSubs).Concat(secondSubs).Concat(secondColSubs);
         }
 
-        public IEnumerator<IPath> GetEnumerator()
+        public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
             foreach (var path in AllRownColumnPaths())
-                yield return new Path(path, StartIndex);
+            {
+                yield return path;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

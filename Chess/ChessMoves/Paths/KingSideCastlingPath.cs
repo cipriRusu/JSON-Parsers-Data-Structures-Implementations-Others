@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ChessGame.Paths
 {
-    public class KingSideCastlingPath : IEnumerable<IPath>
+    public class KingSideCastlingPath : IEnumerable<IEnumerable<(int, int)>>
     {
         private int WHITEINDEX = 7;
         private int BLACKINDEX = 0;
@@ -25,7 +25,7 @@ namespace ChessGame.Paths
         {
             var path = new List<(int, int)>();
 
-            if(PlayerColour == Player.White)
+            if (PlayerColour == Player.White)
             {
                 for (int i = StartIndex.Item2; i >= 4; i--)
                 {
@@ -43,10 +43,12 @@ namespace ChessGame.Paths
             yield return path;
         }
 
-        public IEnumerator<IPath> GetEnumerator()
+        public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
-            foreach (var position in Positions())
-                yield return new Path(position, StartIndex);
+            foreach (var path in Positions())
+            {
+                yield return path;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

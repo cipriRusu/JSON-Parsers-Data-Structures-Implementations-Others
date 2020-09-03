@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChessMoves.Paths
 {
-    public class KingPaths : IEnumerable<IPath>
+    public class KingPaths : IEnumerable<IEnumerable<(int, int)>>
     {
         private (int, int) StartIndex;
         public KingPaths((int, int) startIndex) => StartIndex = startIndex;
@@ -52,10 +52,12 @@ namespace ChessMoves.Paths
             return legalMoves;
         }
 
-        public IEnumerator<IPath> GetEnumerator()
+        public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
-            foreach (var path in AllKingPaths())
-                yield return new Path(path, StartIndex);
+            foreach(var path in AllKingPaths())
+            {
+                yield return path;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

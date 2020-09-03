@@ -30,72 +30,72 @@ namespace ChessMoves
                 {
                     case PathType.RowsAndColumns:
 
-                        foreach (var currentPath in new RownColumnPaths(StartIndex))
+                        foreach(var path in new RownColumnPaths(StartIndex))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.Diagonals:
 
-                        foreach (var currentPath in new DiagonalPaths(StartIndex))
+                        foreach (var path in new DiagonalPaths(StartIndex))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.Knight:
 
-                        foreach (var currentPath in new KnightPath(StartIndex))
+                        foreach (var path in new KnightPath(StartIndex))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.King:
 
-                        foreach (var currentPath in new KingPaths(StartIndex))
+                        foreach (var path in new KingPaths(StartIndex))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.Pawn:
 
-                        foreach (var currentPath in new PawnPath(StartIndex, PlayerColour))
+                        foreach (var path in new PawnPath(StartIndex, PlayerColour))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.PawnCapture:
 
-                        foreach (var currentPath in new PawnCapturePath(StartIndex, PlayerColour))
+                        foreach (var path in new PawnCapturePath(StartIndex, PlayerColour))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.KingSideCastling:
 
-                        foreach(var currentPath in new KingSideCastlingPath(StartIndex, PlayerColour))
+                        foreach(var path in new KingSideCastlingPath(StartIndex, PlayerColour))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;
 
                     case PathType.QueenSideCastling:
 
-                        foreach(var currentPath in new QueenSideCastlingPath(StartIndex, PlayerColour))
+                        foreach(var path in new QueenSideCastlingPath(StartIndex, PlayerColour))
                         {
-                            yield return currentPath;
+                            yield return new Path(path, StartIndex);
                         }
 
                         break;

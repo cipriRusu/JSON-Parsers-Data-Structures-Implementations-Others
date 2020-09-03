@@ -7,10 +7,11 @@ using System.Text;
 
 namespace ChessMoves.Paths
 {
-    public class DiagonalPaths : IEnumerable<IPath>
+    public class DiagonalPaths : IEnumerable<IEnumerable<(int, int)>>
     {
         private (int, int) StartIndex;
         public DiagonalPaths((int, int) startIndex) => StartIndex = startIndex;
+
         private IEnumerable<IEnumerable<(int, int)>> AllDiagonals()
         {
             var firstDiag = CustomEnumerableExtensions.CountDown(StartIndex.Item1, 0)
@@ -33,10 +34,12 @@ namespace ChessMoves.Paths
             return firstSubArrays.Concat(secondSubArrays).Concat(thirdSubArrays).Concat(fourthSubArrays);
         }
 
-        public IEnumerator<IPath> GetEnumerator()
+        public IEnumerator<IEnumerable<(int, int)>> GetEnumerator()
         {
-            foreach (var diagonal in AllDiagonals())
-                yield return new Path(diagonal, StartIndex);
+            foreach(var path in AllDiagonals())
+            {
+                yield return path;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
