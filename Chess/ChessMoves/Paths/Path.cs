@@ -8,19 +8,18 @@ namespace ChessMoves.Paths
 {
     public class Path : IPath
     {
-        private IEnumerable<(int, int)> FullPath;
+        internal IEnumerable<(int, int)> FullPath;
         public Path(IEnumerable<(int, int)> path, (int, int) pathStart)
         {
-            FullPath = path;
             if (path.Count() >= 2)
             {
                 Start = pathStart;
-                End = FullPath.Last();
+                End = path.Last();
             }
             else
             {
                 Start = pathStart;
-                End = FullPath.Single();
+                End = path.Single();
             }
         }
 
