@@ -8,9 +8,9 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public interface IPiece : ILocation, IPlayer, IPathTypes
+    public interface IPiece : IPieceState
     {
         void Update(IUserMove move);
-        bool CanPerform(IUserMove move, IBoardCheck boardCheck);
+        bool CanPerform(IUserMove move, IMoveCheck boardCheck);
     }
 }
