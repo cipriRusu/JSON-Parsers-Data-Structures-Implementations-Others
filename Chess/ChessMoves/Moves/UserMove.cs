@@ -7,12 +7,14 @@ namespace ChessMoves
 {
     public class UserMove : IUserMove
     {
-        public Type Type { get; private set; }
+        public Type PieceType { get; private set; }
         public (int, int) Index { get; private set; }
         public string Notation { get; private set; }
         public char File { get; private set; }
         public char Rank { get; private set; }
         public Player Player { get; private set; }
+        internal Action<IPiece, (int, int)> Action { get; set; }
+        public void CallBack(Action<IPiece, (int, int)> action) => this.Action = action;
 
         internal UserMove(string input, Player player)
         {
@@ -24,7 +26,8 @@ namespace ChessMoves
             GetOrigin(input[0..^2]);
         }
 
-        public virtual bool CanHandle(IValidate validator, IBoardCheck boardCheck) => false;
+        public virtual bool CanHandle(IPieceState pieceCheck, IMoveCheck boardCheck) => false;
+        public virtual void Perform(IMovePerform boardMove) { }
 
         private void GetSource(string source)
         {
@@ -46,7 +49,7 @@ namespace ChessMoves
         private bool IsFile(char c) => "abcdefgh".Contains(c);
         private void GetType(string input)
         {
-            Type = (input.First()) switch
+            PieceType = (input.First()) switch
             {
                 'K' => typeof(King),
                 'Q' => typeof(Queen),
