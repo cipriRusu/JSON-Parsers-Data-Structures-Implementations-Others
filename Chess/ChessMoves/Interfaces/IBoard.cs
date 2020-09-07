@@ -4,6 +4,6 @@ namespace ChessMoves
 {
     public interface IBoard
     {
-        void Perform(IUserMove move);
+        void GetCurrent(IUserMove move);
     }
 }
