@@ -24,7 +24,7 @@ namespace ChessMoves
 
             foreach (var move in moves)
             {
-                boardState.Perform(move);
+                boardState.GetCurrent(move);
 
                 new PlayerTurn(this).SwitchToNextPlayer();
             }
