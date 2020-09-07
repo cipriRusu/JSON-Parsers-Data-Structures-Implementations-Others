@@ -6,6 +6,6 @@ namespace ChessGame.Interfaces
 {
     public interface IPieceType
     {
-        Type Type { get; }
+        Type PieceType { get; }
     }
 }
