@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ChessMoves
 {
-    public abstract class Piece : IPiece, IValidate
+    public abstract class Piece : IPiece, IPieceState
     {
         private readonly Index Convertor = new Index();
 
@@ -24,14 +24,7 @@ namespace ChessMoves
         public Type PieceType { get; internal set; }
         public virtual IEnumerable<IPath> Moves { get; private set; }
         public virtual IEnumerable<IPath> Captures { get; private set; }
-        public virtual bool CanPerform(IUserMove move, IBoardCheck boardCheck) => 
-            move.CanHandle(this, boardCheck);
-
-        public bool IsPiece(IUserMove move) => 
-            Player == move.Player && 
-            PieceType == move.Type && 
-            new ConstraintValidator(this, move).IsValid;
-
+        public virtual bool CanPerform(IUserMove move, IMoveCheck moveCheck) => move.CanHandle(this, moveCheck);
         public virtual void Update(IUserMove move)
         {
             var rankAndFile = new RankAndFile(move.Index);
