@@ -17,7 +17,7 @@ namespace ChessMoves
         public bool IsCheckMate { get; private set; }
         public bool IsCheck { get; private set; }
         public Player TurnToMove { get; set; }
-
+        public IPiece this[(int, int) index] => board[index.Item1, index.Item2];
         public void Input(string input)
         {
             var moves = new MoveParser(input.Split(',')).AllMoves;
