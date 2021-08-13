@@ -14,7 +14,7 @@ namespace ChessMoves.Moves
             {
                 var path = pieceState.Moves.Where(x => x.End == Index);
 
-                return path.Any() && (path.Any() && moveCheck.IsClear(path.Single()));
+                return path.Any() && path.Any() && moveCheck.IsClear(path.Single());
             }
 
             return false;
