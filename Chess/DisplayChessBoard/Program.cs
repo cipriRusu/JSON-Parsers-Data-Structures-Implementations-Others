@@ -11,7 +11,7 @@ namespace DisplayChessBoard
             var currentGame = new Game();
             var fileContent = new FileInput().GetFileContent();
             currentGame.Input(fileContent);
-            //new Display(currentGame).DisplayStateInConsole();
+            new Display(currentGame).DisplayStateInConsole();
         }
     }
 }
