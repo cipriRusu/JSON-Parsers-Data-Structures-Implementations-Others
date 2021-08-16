@@ -4,13 +4,13 @@ using System.Text;
 
 namespace ChessMoves
 {
-    public class ConstraintValidator
+    public class MoveConstraintValidator
     {
         public IPiece Piece { get; private set; }
         public IUserMove Move { get; private set; }
         public bool IsValid { get; private set; }
 
-        public ConstraintValidator(IPiece piece, IUserMove move)
+        public MoveConstraintValidator(IPiece piece, IUserMove move)
         {
             Piece = piece;
             Move = move;
