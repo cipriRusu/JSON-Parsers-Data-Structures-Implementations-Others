@@ -14,8 +14,8 @@ namespace ChessMoves
             boardState = new Board(board);
         }
 
-        public bool IsCheckMate { get; private set; }
-        public bool IsCheck { get; private set; }
+        public bool IsCheckMate => boardState.IsCheckMate;
+        public bool IsCheck => boardState.IsCheck;
         public Player TurnToMove { get; set; }
         public IPiece this[(int, int) index] => board[index.Item1, index.Item2];
         public void Input(string input)
