@@ -14,6 +14,13 @@ namespace ChessMoves.Moves
         {
             if (pieceState.PieceType == PieceType && pieceState.Player == Player)
             {
+                var path = pieceState.Captures.Where(x => x.End == Index);
+
+                return path.Any() && path.Any() && moveCheck.IsClear(path.Single());
+            }
+
+            if (pieceState.PieceType == PieceType && pieceState.Player == Player)
+            {
                 var path = pieceState.Moves.Where(x => x.End == Index);
 
                 return path.Any() && path.Any() && moveCheck.IsClear(path.Single());
